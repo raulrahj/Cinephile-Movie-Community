@@ -26,7 +26,6 @@ class _ProgressCircleState extends State<ProgressCircle>
         parent: controller!,
         curve: const Interval(0.0, 1.0, curve: Curves.linear)));
     controller!.addListener(() {
-      setState(() {});
     });
     controller!.repeat();
   }
@@ -38,8 +37,8 @@ class _ProgressCircleState extends State<ProgressCircle>
         width: 35,
         height: 35,
         decoration: BoxDecoration(
-            color: Colors.black12,
-            border: Border.all(style: BorderStyle.solid, color: Colors.black26),
+            color: Colors.grey[700],
+            border: Border.all(style: BorderStyle.solid, color: Colors.black12),
             borderRadius: BorderRadius.circular(50)),
         child: Center(
           child: RotationTransition(
@@ -47,8 +46,9 @@ class _ProgressCircleState extends State<ProgressCircle>
             child: Stack(
               children: [
                 const Dot(
-                  radious: 12.0,
-                  color: Colors.black12,
+                  radious: 8.0,
+                  color: Colors.black,
+                  border: Border.symmetric(),
                 ),
                 Transform.translate(
                   offset: Offset(
@@ -87,7 +87,8 @@ class _ProgressCircleState extends State<ProgressCircle>
 class Dot extends StatelessWidget {
   final double? radious;
   final Color? color;
-  const Dot({Key? key, this.radious, this.color}) : super(key: key);
+  final Border? border;
+  const Dot({Key? key, this.radious, this.color, this.border}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +97,8 @@ class Dot extends StatelessWidget {
         width: radious ?? 8,
         height: radious ?? 8,
         decoration: BoxDecoration(
-            color: color ?? Colors.black54, shape: BoxShape.circle),
+          border:border ??Border.all(),
+            color: color ?? Colors.white54, shape: BoxShape.circle),
       ),
     );
   }

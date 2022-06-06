@@ -8,7 +8,7 @@ const kHeight3 = SizedBox(height: 30,);
 const kHeight4 = SizedBox(height: 40,);
 const kWidth1 =SizedBox(width: 10,);
 const kWidth2 =SizedBox(width: 20,);
-
+const kWidth4 = SizedBox(width: 40,);
 
 final kBorderRadius = BorderRadius.circular(kRadius);
 dHeight(context) => MediaQuery.of(context).size.height;

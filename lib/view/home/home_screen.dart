@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //   centerTitle: true,
       // ),
       // backgroundColor: Theme.of(context).primaryColorLight,
-      bottomNavigationBar: const BottomNav(),
+      // bottomNavigationBar: const BottomNav(),
       body: SafeArea(
         child: ListView(
           // shrinkWrap: true,

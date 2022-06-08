@@ -8,3 +8,5 @@ const String lorem =
 final TextStyle fH1 =
     TextStyle(fontFamily: GoogleFonts.spaceGrotesk().fontFamily);
 final TextStyle fH2 = TextStyle(fontFamily:  GoogleFonts.openSans().fontFamily);
+  const Color kBlack = Color(0xFF383838);
+  const Color kWhite = Color(0xFFF2F2F2);

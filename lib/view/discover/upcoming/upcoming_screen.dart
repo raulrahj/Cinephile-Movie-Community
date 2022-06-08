@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:open_box/view/constants.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 
-class NewReleaseScreen extends StatelessWidget {
-  const NewReleaseScreen({Key? key}) : super(key: key);
+class UpcomingScreen extends StatelessWidget {
+  const UpcomingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        const LargeHeadlineWidget(title: 'New Releases'),
+        const LargeHeadlineWidget(title: 'Upcoming Movies'),
         ListView.builder(
             itemCount: 10,
             shrinkWrap: true,
@@ -20,7 +20,7 @@ class NewReleaseScreen extends StatelessWidget {
                 width: double.infinity,
                 height: dHeight(context) / 3,
                 decoration: BoxDecoration(
-                    color: Colors.accents[index].withOpacity(0.2),
+                    color: Colors.black.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(kRadius)),
               );
             })

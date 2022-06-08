@@ -18,7 +18,7 @@ class _ProgressCircleState extends State<ProgressCircle>
   void initState() {
     super.initState();
     controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 650));
     animationRotation = Tween<double>(
       begin: 0.0,
       end: 1.0,

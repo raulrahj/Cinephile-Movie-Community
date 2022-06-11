@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:open_box/view/constants.dart';
 import 'package:open_box/view/core.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
+import 'package:open_box/view/widgets/common.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
 
@@ -13,6 +14,10 @@ class ProfileEditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: close(context),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: SafeArea(
           child: Column(
         children: [
@@ -26,6 +31,7 @@ class ProfileEditScreen extends StatelessWidget {
                   children: [
                     kWidth1,
                     const CircleAvatar(
+                      backgroundImage: NetworkImage(urlImg1),
                       radius: 54,
                     ),
                     kWidth2,

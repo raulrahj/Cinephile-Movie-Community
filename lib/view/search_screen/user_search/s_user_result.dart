@@ -12,8 +12,8 @@ class UserSResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        separatorBuilder: (context, index) => None,
-        itemCount: 10,
+        separatorBuilder: (context, index) => none,
+        itemCount: 3,
         shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {

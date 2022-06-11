@@ -4,6 +4,9 @@ import 'package:open_box/view/constants.dart';
 import 'package:open_box/view/core.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
+import 'package:open_box/view/settings/widgets/s_tile.dart';
+import 'package:open_box/view/settings/widgets/s_title.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -14,9 +17,9 @@ class SettingsScreen extends StatelessWidget {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
-          children: const [
-            LargeHeadlineWidget(title: 'Settings'),
-            SettingsTitleWidget(
+          children:  [
+            const LargeHeadlineWidget(title: 'Settings'),
+            const SettingsTitleWidget(
               title: 'Account',
             ),
             ExpWidget(
@@ -25,29 +28,30 @@ class SettingsScreen extends StatelessWidget {
                 SettingsTileWidget(
                   icon: Icons.account_circle,
                   title: 'Profile',
+                  function: ()=> Navigator.pushNamed(context, '/account'),
                 ),
-                SettingsTileWidget(
+                const SettingsTileWidget(
                   icon: Icons.settings_outlined,
                   title: 'Preferences',
                 ),
                 // SettingsTileWidget(),
               ],
             ),
-            ExpWidget(
+            const ExpWidget(
               title: 'Privacy Policy',
               children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
+                // SettingsTileWidget(
+                //   icon: Icons.account_circle,
+                //   title: 'Profile',
+                // ),
+                // SettingsTileWidget(
+                //   icon: Icons.settings_outlined,
+                //   title: 'Preferences',
+                // ),
+                // // SettingsTileWidget(),
               ],
             ),
-            ExpWidget(
+            const ExpWidget(
               title: 'Notification',
               children: [
                 SettingsTileWidget(
@@ -61,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
                 // SettingsTileWidget(),
               ],
             ),
-            ExpWidget(
+            const ExpWidget(
               title: 'Content Preferences',
               children: [
                 SettingsTileWidget(
@@ -75,10 +79,10 @@ class SettingsScreen extends StatelessWidget {
                 // SettingsTileWidget(),
               ],
             ),
-            SettingsTitleWidget(
+            const SettingsTitleWidget(
               title: 'General',
             ),
-            ExpWidget(
+            const ExpWidget(
               title: 'Display and Sound',
               children: [
                 SettingsTileWidget(
@@ -92,7 +96,7 @@ class SettingsScreen extends StatelessWidget {
                 // SettingsTileWidget(),
               ],
             ),
-            ExpWidget(
+            const ExpWidget(
               title: ('Accesibility'),
               children: [
                 SettingsTileWidget(
@@ -106,7 +110,7 @@ class SettingsScreen extends StatelessWidget {
                 // SettingsTileWidget(),
               ],
             ),
-            ExpWidget(
+            const ExpWidget(
               title: 'About',
               children: [
                 SettingsTileWidget(
@@ -120,10 +124,10 @@ class SettingsScreen extends StatelessWidget {
                 // SettingsTileWidget(),
               ],
             ),
-            ExpWidget(
+            const ExpWidget(
               title: 'Developer',
               children: [
-                SettingsTileWidget(
+                const SettingsTileWidget(
                   icon: Icons.account_circle,
                   title: 'Profile',
                 ),
@@ -137,78 +141,6 @@ class SettingsScreen extends StatelessWidget {
           ],
         ),
       )),
-    );
-  }
-}
-
-class ExpWidget extends StatelessWidget {
-  const ExpWidget({
-    Key? key,
-    required this.title,
-    required this.children,
-  }) : super(key: key);
-  final String title;
-  // final Function function
-  final List<Widget> children;
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      collapsedTextColor: Theme.of(context).primaryColor,
-      title: Text(title),
-      children: children,
-    );
-  }
-}
-
-class SettingsTileWidget extends StatelessWidget {
-  const SettingsTileWidget({
-    Key? key,
-    required this.icon,
-    required this.title,
-  }) : super(key: key);
-  final IconData icon;
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-      color: Theme.of(context).primaryColorLight,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-          child: Row(
-            children: [
-              Icon(icon,color: kBlack,),
-              kWidth1,
-              Text(
-                title,
-                style: GoogleFonts.dmSans()
-                    .copyWith(fontSize: 18, color: kBlack),
-              )
-            ],
-          ),
-        ),
-      ),
-        onTap: (){},
-    );
-  }
-}
-
-class SettingsTitleWidget extends StatelessWidget {
-  const SettingsTitleWidget({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: dHeight(context) / 23,
-      color: Theme.of(context).primaryColorLight,
-      child: HeadlineWidget(
-        title: title,
-        color: kBlack,
-      ),
     );
   }
 }

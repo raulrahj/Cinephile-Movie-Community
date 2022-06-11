@@ -23,21 +23,12 @@ class SignUpScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Icon(Icons.theaters),
+                    // const Icon(Icons.theaters),
                     kHeight1,
                     const LargeHeadlineWidget(
                       title: 'Welcome',
                     ),
                     kHeight1,
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       "        First things first..",
-                    //       style: TextStyle(
-                    //           color: Theme.of(context).primaryColorLight),
-                    //     ),
-                    //   ],
-                    // ),
                     kHeight2,
                      HeadlineWidget(title: 'Sign up with Cinephile',color: Theme.of(context).primaryColorLight,),
                     kHeight1
@@ -65,11 +56,11 @@ class SignUpScreen extends StatelessWidget {
                         prefix: Icon(Icons.key),
                       ),
                       kHeight1,
-                      const DefaultTextField(
-                        label: 'Re-enter Password',
-                        obscureText: true,
-                        prefix: Icon(Icons.key),
-                      ),
+                      // const DefaultTextField(
+                      //   label: 'Re-enter Password',
+                      //   obscureText: true,
+                      //   prefix: Icon(Icons.key),
+                      // ),
                       kHeight3,
                       DefaultButton(
                         text: const Text(

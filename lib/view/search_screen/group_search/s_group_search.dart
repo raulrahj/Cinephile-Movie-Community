@@ -12,15 +12,15 @@ class GroupSResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        separatorBuilder: (context, index) => None,
-        itemCount: 10,
+        separatorBuilder: (context, index) => none,
+        itemCount: 1,
         shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {},
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 4,vertical: 3),
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
               height: dHeight(context) / 8.9,
               // width: dWidth(context)/5,
               color: kWhite,
@@ -28,19 +28,19 @@ class GroupSResult extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Container(
-                    width: dWidth(context)/13,
-                    height: dHeight(context)/8.9,
-                    child: Icon(
+                    width: dWidth(context) / 13,
+                    height: dHeight(context) / 8.9,
+                    color: Colors.transparent.withOpacity(0.5),
+                    child: const Icon(
                       Icons.group,
                       size: 44,
                     ),
-                    color: Colors.transparent.withOpacity(0.5),
                   ),
-                ),
+                ),kWidth1,
                 Expanded(
                     flex: 7,
                     child: Text(
-                      'Username',
+                      'GroupName',
                       style: GoogleFonts.dmSans().copyWith(fontSize: 18),
                     ))
               ]),

@@ -137,7 +137,7 @@ class Form extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal:0.0),
+      padding: const EdgeInsets.symmetric(horizontal: 0.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kRadius),
         child: BackdropFilter(
@@ -153,10 +153,12 @@ class Form extends StatelessWidget {
                 color: Colors.white.withOpacity(.05),
                 borderRadius: BorderRadius.circular(kRadius)),
             child: TextFormField(
-              decoration:  InputDecoration(
+              decoration: InputDecoration(
                   labelText: 'Email',
-                  enabledBorder:
-                      OutlineInputBorder(borderSide: BorderSide(width: 2,color: Theme.of(context).primaryColorLight))),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 2,
+                          color: Theme.of(context).primaryColorLight))),
             ),
           ),
         ),

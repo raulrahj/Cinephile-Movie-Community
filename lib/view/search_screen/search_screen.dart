@@ -7,9 +7,15 @@ import 'package:open_box/view/widgets/progress_indicator.dart';
 
 import 'movie_search/s_movie_result.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+int search= 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,18 +33,40 @@ class SearchScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ActionChip(label: const Text('Users'), onPressed: () {}),
-                ActionChip(label: const Text('Groups'), onPressed: () {}),
-                ActionChip(label: const Text('Movies'), onPressed: () {}),
+                ActionChip(label: const Text('Users'), onPressed: () {
+                    setState(() {
+                      search=0;
+                    });
+                }),
+                ActionChip(label: const Text('Groups'), onPressed: () {
+                   setState(() {
+                      search=1;
+                    });
+                }),
+                ActionChip(label: const Text('Movies'), onPressed: () {
+                   setState(() {
+                      search=2;
+                    });
+                }),
               ],
             ),
           )),
-          Expanded(child: const MovieSResult())
+          Expanded(child: _searchresult())
           // SingleChildScrollView(
           //   child: ProgressCircle(),
           // )
         ],
       )),
     );
+  }
+ Widget _searchresult(){
+    if(search==2){
+      return const MovieSResult();
+    }
+    else if(search==1){
+      return const GroupSResult();
+    }else{
+      return const UserSResult();
+    }
   }
 }

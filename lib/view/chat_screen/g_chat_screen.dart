@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_box/app.dart';
 import 'package:open_box/view/constants.dart';
+import 'package:open_box/view/core.dart';
 
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+class GChatScreen extends StatefulWidget {
+  GChatScreen({Key? key}) : super(key: key);
 
+  @override
+  State<GChatScreen> createState() => _GChatScreenState();
+}
+
+class _GChatScreenState extends State<GChatScreen> {
   @override
   Widget build(BuildContext context) {
     _chatBubble(bool isMe) {
@@ -21,7 +26,7 @@ class ChatScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(kRadius),
+                  borderRadius: kBorderRadius,
                   boxShadow: [
                     BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
@@ -51,6 +56,8 @@ class ChatScreen extends StatelessWidget {
                         BoxShadow(color: Colors.grey.withOpacity(0.5))
                       ]),
                   child: const CircleAvatar(
+                    backgroundImage: NetworkImage(profImg1),
+
                     radius: 19,
                   ),
                 ),
@@ -70,7 +77,7 @@ class ChatScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(kRadius),
+                    borderRadius: kBorderRadius,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -89,6 +96,7 @@ class ChatScreen extends StatelessWidget {
                         BoxShadow(color: Colors.grey.withOpacity(0.5))
                       ]),
                   child: const CircleAvatar(
+                    backgroundImage: NetworkImage(profImg),
                     radius: 19,
                   ),
                 ),
@@ -106,20 +114,21 @@ class ChatScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-              text: 'User',
+              text: 'Cinephiles',
               style: GoogleFonts.dmSans().copyWith(fontSize: 18),
               children: const [
                 TextSpan(text: '\n'),
-                TextSpan(text: 'online', style: TextStyle(fontSize: 12))
+                TextSpan(text: '14 online', style: TextStyle(fontSize: 12))
               ]),
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon:const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
       ),
       body: Column(children: [

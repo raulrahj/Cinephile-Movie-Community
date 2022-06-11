@@ -4,6 +4,7 @@ import 'package:open_box/view/core.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/widgets/bottom_nav.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 
 class VerifyScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class VerifyScreen extends StatelessWidget {
               children: [
                 Container(
                   alignment: Alignment.center,
-                  height: dWidth(context) / 4,
+                  height: dWidth(context) / 3,
                   child: const LogoWidget(),
                 ),
                 kHeight4,
@@ -49,25 +50,13 @@ class VerifyScreen extends StatelessWidget {
                   text: const Text('Verify'),
                   function: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const HomeScreen()));
+                        builder: (context) => NavController()));
                   },
                   background: Theme.of(context).primaryColor,
                 ),
               ],
             ),
           ),
-          // AspectRatio(
-          //   aspectRatio: 4 / 4,
-          //   child: Column(
-          //     children: [
-          //       DefaultButton(
-          //         text: const Text('Verify'),
-          //         function: () {},
-          //         background: Theme.of(context).primaryColor,
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ]),
       ),
     );

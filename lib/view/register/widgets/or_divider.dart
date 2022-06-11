@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:open_box/view/constants.dart';
+import 'package:open_box/view/core.dart';
 
 class OrDivider extends StatelessWidget {
   const OrDivider({
@@ -9,9 +10,12 @@ class OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: const [KDivider(), Text(' or '), KDivider()],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical:6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [KDivider(), Text(' or ',style: TextStyle(color: kWhite),), KDivider()],
+      ),
     );
   }
 }

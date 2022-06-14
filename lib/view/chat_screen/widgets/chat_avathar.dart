@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/core.dart';
 
 class ChatAvatar extends StatelessWidget {
   const ChatAvatar({

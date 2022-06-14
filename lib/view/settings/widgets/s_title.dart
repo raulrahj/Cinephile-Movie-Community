@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 
 class SettingsTitleWidget extends StatelessWidget {

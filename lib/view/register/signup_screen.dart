@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_box/view/constants.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/widgets/or_divider.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
+import 'package:open_box/view/widgets/l_headline.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -30,7 +33,10 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     kHeight1,
                     kHeight2,
-                     HeadlineWidget(title: 'Sign up with Cinephile',color: Theme.of(context).primaryColorLight,),
+                    HeadlineWidget(
+                      title: 'Sign up with Cinephile',
+                      color: Theme.of(context).primaryColorLight,
+                    ),
                     kHeight1
                   ],
                 ),
@@ -76,16 +82,23 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       const OrDivider(),
                       DefaultButton(
-                        text: RichText(
-                          text: TextSpan(text: 'Continue with ', children: [
-                            TextSpan(
-                                text: 'Google',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                        color: Theme.of(context).primaryColor))
-                          ]),
+                        text: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Continue with",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(
+                                      color: Theme.of(context).primaryColor),
+                            ),
+                            kWidth1,
+                            const FaIcon(
+                              FontAwesomeIcons.google,
+                              color: kRed,
+                            )
+                          ],
                         ),
                         background: Theme.of(context).primaryColorLight,
                         function: () {},
@@ -98,27 +111,6 @@ class SignUpScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class LargeHeadlineWidget extends StatelessWidget {
-  const LargeHeadlineWidget({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        kWidth2,
-        Text(
-          title,
-          style: GoogleFonts.oswald().copyWith(
-              color: Theme.of(context).primaryColorLight, fontSize: 28),
-        ),
-      ],
     );
   }
 }

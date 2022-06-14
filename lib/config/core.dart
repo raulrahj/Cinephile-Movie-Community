@@ -13,3 +13,4 @@ final TextStyle fH1 =
 final TextStyle fH2 = TextStyle(fontFamily:  GoogleFonts.openSans().fontFamily);
   const Color kBlack = Color(0xFF383838);
   const Color kWhite = Color(0xFFF2F2F2);
+  const Color kRed = Color(0xFF990000);

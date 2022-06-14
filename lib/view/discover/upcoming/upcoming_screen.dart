@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 // import 'package:open_box/view/discover/youtube.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/widgets/l_headline.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 // import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class UpcomingScreen extends StatelessWidget {
@@ -28,6 +30,7 @@ class UpcomingScreen extends StatelessWidget {
                 color: Colors.black.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(kRadius),
               ),
+              child: const ProgressCircle(),
 //               child: YoutubePlayer(
 //   controller: YoutubePlayerController(
 //     initialVideoId: 'zn2GwbPG-tc', //Add videoID.

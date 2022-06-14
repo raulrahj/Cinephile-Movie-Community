@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/view/chat_screen/g_chat_screen.dart';
 import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/chat_screen/widgets/chat_avathar.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 
 class InboxScreen extends StatelessWidget {

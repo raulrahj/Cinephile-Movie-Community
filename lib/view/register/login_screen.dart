@@ -1,12 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
+import 'package:open_box/view/widgets/l_headline.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -17,8 +18,9 @@ class LoginScreen extends StatelessWidget {
       widget: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: Column(children: [
-            Expanded(
+          child: Column(
+            children: [
+              Expanded(
                 flex: 4,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -31,12 +33,14 @@ class LoginScreen extends StatelessWidget {
                     ),
                     // Form()
                   ],
-                )),
-            const Expanded(
-              flex: 6,
-              child: LoginWidget(),
-            )
-          ]),
+                ),
+              ),
+              const Expanded(
+                flex: 6,
+                child: LoginWidget(),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -87,25 +91,31 @@ class LoginWidget extends StatelessWidget {
           text: RichText(
             text: TextSpan(text: 'Continue with ', children: [
               TextSpan(
-                  text: 'Google',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Theme.of(context).primaryColor))
+                text: 'Google',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: Theme.of(context).primaryColor),
+              )
             ]),
           ),
           background: Theme.of(context).primaryColorLight,
         ),
         kHeight3,
         RichText(
-            text: TextSpan(text: 'Create account? ', children: [
-          TextSpan(
-              text: 'Sign Up',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: Theme.of(context).iconTheme.color))
-        ]))
+          text: TextSpan(
+            text: 'Create account? ',
+            children: [
+              TextSpan(
+                text: 'Sign Up',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: Theme.of(context).iconTheme.color),
+              )
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -120,13 +130,15 @@ class BackgroundImg extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-            color: Colors.black,
-            backgroundBlendMode: BlendMode.color,
-            image: DecorationImage(
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.7), BlendMode.darken),
-                fit: BoxFit.cover,
-                image: const NetworkImage(urlImg))),
+          color: Colors.black,
+          backgroundBlendMode: BlendMode.color,
+          image: DecorationImage(
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.7), BlendMode.darken),
+            fit: BoxFit.cover,
+            image: const NetworkImage(urlImg),
+          ),
+        ),
         child: widget);
   }
 }
@@ -150,15 +162,17 @@ class Form extends StatelessWidget {
               right: dWidth(context) / 30,
             ),
             decoration: BoxDecoration(
-                color: Colors.white.withOpacity(.05),
-                borderRadius: BorderRadius.circular(kRadius)),
+              color: Colors.white.withOpacity(.05),
+              borderRadius: BorderRadius.circular(kRadius),
+            ),
             child: TextFormField(
               decoration: InputDecoration(
-                  labelText: 'Email',
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 2,
-                          color: Theme.of(context).primaryColorLight))),
+                labelText: 'Email',
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      width: 2, color: Theme.of(context).primaryColorLight),
+                ),
+              ),
             ),
           ),
         ),

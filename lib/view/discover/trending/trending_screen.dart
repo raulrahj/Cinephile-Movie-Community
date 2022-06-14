@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/discover/trending/trending_card.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/widgets/l_headline.dart';
 
 bool isFull = false;
 

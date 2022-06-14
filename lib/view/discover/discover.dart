@@ -32,7 +32,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         child: SafeArea(
             child: PageView(children: const [
           NewReleaseScreen(),
-          TrendingScreen(),
+          // TrendingScreen(),
           UpcomingScreen()
         ])),
       ),

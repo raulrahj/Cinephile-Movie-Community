@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:open_box/view/constants.dart';
+import 'package:open_box/config/constants.dart';
 
 class DefaultTextField extends StatelessWidget {
   const DefaultTextField({

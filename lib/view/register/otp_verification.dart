@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/widgets/bottom_nav.dart';
 import 'package:open_box/view/widgets/default_button.dart';
+import 'package:open_box/view/widgets/l_headline.dart';
 
 class VerifyScreen extends StatelessWidget {
   const VerifyScreen({Key? key}) : super(key: key);

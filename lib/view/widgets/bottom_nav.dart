@@ -1,11 +1,13 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
 // import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 // import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/discover/discover.dart';
 import 'package:open_box/view/discover/trending/trending_screen.dart';
 import 'package:open_box/view/home/home_screen.dart';
@@ -13,13 +15,15 @@ import 'package:open_box/view/home/home_screen.dart';
 // import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/search_screen/search_screen.dart';
 import 'package:open_box/view/settings/settings.dart';
-// import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class BottomNav extends StatelessWidget {
   const BottomNav({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TrendingBloc>().add(const TrendingEvent.getTrending());
+    });
     return BottomNavigationBar(
         backgroundColor: Colors.black.withOpacity(0.1),
         items: const [

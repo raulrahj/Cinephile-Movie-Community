@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 
 class HFeedWdget extends StatefulWidget {
   const HFeedWdget({Key? key}) : super(key: key);
@@ -57,13 +57,20 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
+              setState(
+                () {
+                  isExpanded = !isExpanded;
+                },
+              );
             },
           ),
           kHeight1,
-          const Image(image: NetworkImage(urlImg)),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(kRadius),
+            child: const Image(
+              image: NetworkImage(urlImg1),
+            ),
+          ),
           AspectRatio(
             aspectRatio: 3 / .5,
             child: SizedBox(
@@ -73,13 +80,18 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.whatshot_outlined,
-                            color: kBlack,
-                          )),
-                          const Text('456',),
+                      // SupportButtonW(),
+                      TextButton.icon(
+                        label: Text(
+                          '456',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.whatshot_outlined),
+                      ),
+                      // const Text(
+                      //   '456',
+                      // ),
                       IconButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/comments');
@@ -138,6 +150,71 @@ class _HFeedWdgetState extends State<HFeedWdget> {
           )
         ],
       ),
+    );
+  }
+}
+
+class SupportButtonW extends StatefulWidget {
+  const SupportButtonW({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<SupportButtonW> createState() => _SupportButtonWState();
+}
+
+class _SupportButtonWState extends State<SupportButtonW>
+    with SingleTickerProviderStateMixin {
+  bool isLiked = false;
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 500),
+    vsync: this,
+  );
+  late Animation _colorAnimation;
+  @override
+  void initState() {
+    super.initState();
+    // _controller = AnimationController(
+    //   duration: const Duration(milliseconds: 500),
+    //   vsync: this,
+    // );
+
+    _colorAnimation =
+        ColorTween(begin: kBlack, end: Theme.of(context).iconTheme.color)
+            .animate(_controller);
+    // _controller.forward();
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          isLiked = true;
+        });
+      }
+      if (status == AnimationStatus.dismissed) {
+        setState(() {
+          isLiked = false;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return IconButton(
+          onPressed: () {
+            isLiked ? _controller.reverse() : _controller.forward();
+          },
+          icon: Icon(Icons.whatshot_outlined, color: _colorAnimation.value),
+        );
+      },
     );
   }
 }

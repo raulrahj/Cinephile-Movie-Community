@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_box/view/constants.dart';
-import 'package:open_box/view/core.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
 import 'package:open_box/view/settings/widgets/s_tile.dart';
 import 'package:open_box/view/settings/widgets/s_title.dart';
+import 'package:open_box/view/widgets/l_headline.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);

@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/widgets/or_divider.dart';
@@ -10,9 +12,12 @@ import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
 
+TextEditingController _nameController = TextEditingController();
+TextEditingController _emailController = TextEditingController();
+TextEditingController _passwordController = TextEditingController();
+
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return BackgroundImg(
@@ -46,20 +51,23 @@ class SignUpScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const DefaultTextField(
+                      DefaultTextField(
                         label: 'Name',
-                        prefix: Icon(Icons.person_pin),
+                        prefix: const Icon(Icons.person_pin),
+                        controller: _nameController,
                       ),
                       kHeight1,
-                      const DefaultTextField(
+                      DefaultTextField(
                         label: 'Email',
-                        prefix: Icon(Icons.email),
+                        prefix: const Icon(Icons.email),
+                        controller: _emailController,
                       ),
                       kHeight1,
-                      const DefaultTextField(
+                      DefaultTextField(
                         label: 'Password',
                         obscureText: true,
-                        prefix: Icon(Icons.key),
+                        prefix: const Icon(Icons.key),
+                        controller: _passwordController,
                       ),
                       kHeight1,
                       // const DefaultTextField(
@@ -75,7 +83,12 @@ class SignUpScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        function: () {
+                        function: () async {
+                          final data = UserData(
+                              userName: _nameController.text,
+                              password: _passwordController.text,
+                              firstName: _emailController.text);
+                          Register().signUp(signUpData: data);
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const VerifyScreen()));
                         },

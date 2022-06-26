@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/view/register/otp_verification.dart';
@@ -66,11 +67,11 @@ class LoginWidget extends StatelessWidget {
           keyType: TextInputType.emailAddress,
         ),
         kHeight2,
-        const DefaultTextField(
+        DefaultTextField(
           hint: 'password',
           label: 'Password',
           obscureText: true,
-          prefix: Icon(Icons.key),
+          prefix: const Icon(Icons.key),
           // suffix: const Icon(Icons.remove_red_eye),
         ),
         kHeight4,
@@ -81,39 +82,48 @@ class LoginWidget extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          function: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SignUpScreen()));
-          },
+          function: () {},
         ),
         kHeight1,
         DefaultButton(
-          text: RichText(
-            text: TextSpan(text: 'Continue with ', children: [
-              TextSpan(
-                text: 'Google',
+          text: Row(
+            mainAxisAlignment: MainAxisAlignment.center,  
+            children: [
+              Text(
+                "Continue with",
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge!
                     .copyWith(color: Theme.of(context).primaryColor),
+              ),
+              kWidth1,
+              const FaIcon(
+                FontAwesomeIcons.google,
+                color: kRed,
               )
-            ]),
+            ],
           ),
           background: Theme.of(context).primaryColorLight,
         ),
         kHeight3,
-        RichText(
-          text: TextSpan(
-            text: 'Create account? ',
-            children: [
-              TextSpan(
-                text: 'Sign Up',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Theme.of(context).iconTheme.color),
-              )
-            ],
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const SignUpScreen()));
+          },
+          child: RichText(
+            text: TextSpan(
+              text: 'Create account? ',
+              children: [
+                TextSpan(
+                  text: 'Sign Up',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: Theme.of(context).iconTheme.color),
+                )
+              ],
+            ),
           ),
         ),
       ],

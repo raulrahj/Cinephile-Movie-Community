@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 // import 'package:open_box/view/discover/youtube.dart';
-import 'package:open_box/view/register/signup_screen.dart';
+// import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 // import 'package:youtube_player_flutter/youtube_player_flutter.dart';

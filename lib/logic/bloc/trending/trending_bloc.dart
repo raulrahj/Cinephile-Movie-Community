@@ -1,10 +1,13 @@
-import 'package:bloc/bloc.dart';
+import 'dart:developer';
+
+// import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:open_box/data/core/failures/main_failure.dart';
 import 'package:open_box/data/models/trending/m_trending.dart';
-import 'package:open_box/data/models/trending/trending_repo.dart';
+import 'package:open_box/data/repo/trending_repo.dart';
 part 'trending_event.dart';
 part 'trending_state.dart';
 part 'trending_bloc.freezed.dart';

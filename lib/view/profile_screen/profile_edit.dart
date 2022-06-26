@@ -47,11 +47,11 @@ class ProfileEditScreen extends StatelessWidget {
                 // Text('Username'),
                 // Text('abc@gmail.com'),
                 kHeight1,
-                const DefaultTextField(
+                 DefaultTextField(
                   label: 'Name',
                 ),
                 kHeight1,
-                const DefaultTextField(
+                 DefaultTextField(
                   label: 'Last Name',
                 ),
                 kHeight2,

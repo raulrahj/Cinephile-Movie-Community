@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +23,7 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TrendingBloc>().add(const TrendingEvent.getTrending());
-    });
+  
     return BottomNavigationBar(
         backgroundColor: Colors.black.withOpacity(0.1),
         items: const [
@@ -51,6 +51,8 @@ class _NavControllerState extends State<NavController> {
 
   @override
   Widget build(BuildContext context) {
+      log('nav bar rebuild :(');
+    
     return Scaffold(
       bottomNavigationBar: isFull
           ? none

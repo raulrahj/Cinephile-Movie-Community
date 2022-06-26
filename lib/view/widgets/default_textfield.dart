@@ -1,23 +1,26 @@
-
 import 'package:flutter/material.dart';
 import 'package:open_box/config/constants.dart';
 
 class DefaultTextField extends StatelessWidget {
-  const DefaultTextField({
-    Key? key,
-    this.hint,
-    this.label,
-    this.prefix,
-    this.obscureText,
-    this.keyType,
-    this.suffix,
-  }) : super(key: key);
+  DefaultTextField(
+      {Key? key,
+      this.hint,
+      this.label,
+      this.prefix,
+      this.obscureText,
+      this.keyType,
+      this.suffix,
+      this.controller,
+      this.capText})
+      : super(key: key);
   final String? hint;
   final String? label;
   final Widget? prefix;
   final bool? obscureText;
   final TextInputType? keyType;
   final Widget? suffix;
+  TextEditingController? controller;
+  TextCapitalization? capText;
   @override
   Widget build(BuildContext context) {
     return Padding(

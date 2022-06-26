@@ -1,121 +1,96 @@
+import 'package:json_annotation/json_annotation.dart';
+
+// import 'result.dart';
+
+part 'm_trending.g.dart';
+
+@JsonSerializable()
 class Trending {
-  // int? page;
-  List<Results>? results;
+  @JsonKey(name: 'page')
+  int? page = 1;
+  @JsonKey(name: 'results')
+  List<Result>? results;
+  @JsonKey(name: 'total_pages')
   int? totalPages;
+  @JsonKey(name: 'total_results')
   int? totalResults;
 
-  Trending({ this.results, this.totalPages, this.totalResults});
+  Trending({
+    this.page,
+    this.results = const [],
+     this.totalPages, this.totalResults
+  });
 
-  Trending.fromJson(Map<String, dynamic> json) {
-    // page = json['page'];
-    if (json['results'] != null) {
-      results = <Results>[];
-      json['results'].forEach((v) {
-        results!.add(Results.fromJson(v));
-      });
-    }
-    totalPages = json['total_pages'];
-    totalResults = json['total_results'];
-  }
+  factory Trending.fromJson(Map<String, dynamic> json) =>
+      _$TrendingFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    // data['page'] = page;
-    if (results != null) {
-      data['results'] = results!.map((v) => v.toJson()).toList();
-    }
-    data['total_pages'] = totalPages;
-    data['total_results'] = totalResults;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$TrendingToJson(this);
 }
 
-class Results {
-  List<int>? genreIds;
-  String? originalLanguage;
-  String? originalTitle;
-  int? id;
-  bool? video;
+@JsonSerializable()
+class Result {
+  @JsonKey(name: 'vote_average')
   double? voteAverage;
+
+  @JsonKey(name: 'overview')
   String? overview;
+
+  @JsonKey(name: 'release_date')
   String? releaseDate;
-  int? voteCount;
+
+  @JsonKey(name: 'title')
   String? title;
+
+  @JsonKey(name: 'adult')
   bool? adult;
+
+  @JsonKey(name: 'backdrop_path')
   String? backdropPath;
+
+  @JsonKey(name: 'genre_ids')
+  List<int>? genreIds;
+
+  @JsonKey(name: 'vote_count')
+  int? voteCount;
+
+  @JsonKey(name: 'original_language')
+  String? originalLanguage;
+
+  @JsonKey(name: 'original_title')
+  String? originalTitle;
+
+  @JsonKey(name: 'poster_path')
   String? posterPath;
+
+  @JsonKey(name: 'id')
+  int? id;
+
+  @JsonKey(name: 'popularity')
   double? popularity;
+
+  @JsonKey(name: 'media_type')
   String? mediaType;
-  String? originalName;
-  List<String>? originCountry;
-  String? firstAirDate;
-  String? name;
 
-  Results(
-      {this.genreIds,
-      this.originalLanguage,
-      this.originalTitle,
-      this.id,
-      this.video,
-      this.voteAverage,
-      this.overview,
-      this.releaseDate,
-      this.voteCount,
-      this.title,
-      this.adult,
-      this.backdropPath,
-      this.posterPath,
-      this.popularity,
-      this.mediaType,
-      this.originalName,
-      this.originCountry,
-      this.firstAirDate,
-      this.name});
+  Result({
+    this.voteAverage,
+    this.overview,
+    this.releaseDate,
+    this.title,
+    this.adult,
+    this.backdropPath,
+    this.genreIds,
+    this.voteCount,
+    this.originalLanguage,
+    this.originalTitle,
+    this.posterPath,
+    this.id,
+    this.popularity,
+    this.mediaType,
+  });
 
-  Results.fromJson(Map<String, dynamic> json) {
-    genreIds = json['genre_ids'].cast<int>();
-    originalLanguage = json['original_language'];
-    originalTitle = json['original_title'];
-    id = json['id'];
-    video = json['video'];
-    voteAverage = json['vote_average'];
-    overview = json['overview'];
-    releaseDate = json['release_date'];
-    voteCount = json['vote_count'];
-    title = json['title'];
-    adult = json['adult'];
-    backdropPath = json['backdrop_path'];
-    posterPath = json['poster_path'];
-    popularity = json['popularity'];
-    mediaType = json['media_type'];
-    originalName = json['original_name'];
-    originCountry = json['origin_country'].cast<String>();
-    firstAirDate = json['first_air_date'];
-    name = json['name'];
+  factory Result.fromJson(Map<String, dynamic> json) {
+    return _$ResultFromJson(json);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['genre_ids'] = genreIds;
-    data['original_language'] = originalLanguage;
-    data['original_title'] = originalTitle;
-    data['id'] = id;
-    data['video'] = video;
-    data['vote_average'] = voteAverage;
-    data['overview'] = overview;
-    data['release_date'] = releaseDate;
-    data['vote_count'] = voteCount;
-    data['title'] = title;
-    data['adult'] = adult;
-    data['backdrop_path'] = backdropPath;
-    data['poster_path'] = posterPath;
-    data['popularity'] = popularity;
-    data['media_type'] = mediaType;
-    data['original_name'] = originalName;
-    data['origin_country'] = originCountry;
-    data['first_air_date'] = firstAirDate;
-    data['name'] = name;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$ResultToJson(this);
 }
-

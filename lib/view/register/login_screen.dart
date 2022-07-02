@@ -62,7 +62,7 @@ class LoginWidget extends StatelessWidget {
             Icons.email,
             color: Theme.of(context).primaryColor,
           ),
-          label: 'Email',
+          label: 'E-mail',
           hint: 'abc@gmail.com',
           keyType: TextInputType.emailAddress,
         ),

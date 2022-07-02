@@ -58,7 +58,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       kHeight1,
                       DefaultTextField(
-                        label: 'Email',
+                        label: 'E-mail',
                         prefix: const Icon(Icons.email),
                         controller: _emailController,
                       ),

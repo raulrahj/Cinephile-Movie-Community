@@ -14,6 +14,7 @@ import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/notification_screen/notification_screen.dart';
 import 'package:open_box/view/discover/new_releases/new_release_detailed.dart';
 import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
+import 'package:open_box/view/register/signup_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -22,9 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<TrendingBloc>(
-          create: (context) => getIt<TrendingBloc>(),
-        ),
+        BlocProvider<TrendingBloc>(create: (context) => getIt<TrendingBloc>()),
         BlocProvider(create: (context) => getIt<NewReleasesBloc>())
       ],
       child: MaterialApp(
@@ -53,7 +52,9 @@ class MyApp extends StatelessWidget {
           '/account': (context) => const ProfileScreen(),
           '/profile_edit': (context) => const ProfileEditScreen(),
           '/nearby_theatre': (context) => const NearbyTheatre(),
-          '/new_post': (context) => const NewPost()
+          '/new_post': (context) => const NewPost(),
+          '/login': (context) => const LoginScreen(),
+          '/sign_up': (context) => const SignUpScreen(),
         },
       ),
     );

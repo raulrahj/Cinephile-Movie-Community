@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 
 class DefaultTextField extends StatelessWidget {
-  DefaultTextField(
+  const DefaultTextField(
       {Key? key,
       this.hint,
       this.label,
@@ -11,7 +12,9 @@ class DefaultTextField extends StatelessWidget {
       this.keyType,
       this.suffix,
       this.controller,
-      this.capText})
+      this.capText,
+      this.onSaved,
+      this.validator})
       : super(key: key);
   final String? hint;
   final String? label;
@@ -19,8 +22,10 @@ class DefaultTextField extends StatelessWidget {
   final bool? obscureText;
   final TextInputType? keyType;
   final Widget? suffix;
-  TextEditingController? controller;
-  TextCapitalization? capText;
+  final TextEditingController? controller;
+  final TextCapitalization? capText;
+  final String? Function(String?)? validator;
+  final Function(String?)? onSaved;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -29,6 +34,7 @@ class DefaultTextField extends StatelessWidget {
         borderRadius: kBorderRadius,
         elevation: 3,
         child: TextFormField(
+          validator: validator,
           obscureText: obscureText ?? false,
           keyboardType: keyType,
           decoration: InputDecoration(
@@ -45,7 +51,12 @@ class DefaultTextField extends StatelessWidget {
               hintText: hint,
               hintStyle: const TextStyle(color: Colors.grey),
               labelText: label,
-              labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+              labelStyle: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  background: Paint()
+                    ..color = Theme.of(context).primaryColorLight,
+                  letterSpacing: 2,
+                  fontSize: 13),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       width: .6, color: Theme.of(context).primaryColor),

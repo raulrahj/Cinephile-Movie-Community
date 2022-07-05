@@ -4,7 +4,7 @@ import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 
 class GChatScreen extends StatefulWidget {
-  GChatScreen({Key? key}) : super(key: key);
+  const GChatScreen({Key? key}) : super(key: key);
 
   @override
   State<GChatScreen> createState() => _GChatScreenState();

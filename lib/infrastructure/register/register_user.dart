@@ -20,10 +20,12 @@ class Register {
       //   data: jsonEncode(data),
       // var url = Uri.parse('http://localhost:3000/auth/register');
 
-      var url = Uri.parse('http://192.168.1.102:5000/auth/register/');
-var response = await http.post(url, body: jsonEncode(data));
+      // var url = Uri.parse('http://192.168.1.102:5000/auth/register/');
+      var url = 'http://192.168.1.102:5000/auth/register/';
+      
+var response = await dio.post(url, data: jsonEncode(data));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        retrievedUser = UserData.fromJson(response.headers);
+        retrievedUser = UserData.fromJson(response.data);
         print('user registered');
       }
     } on DioError catch (e) {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/view/profile_screen/profile_screen.dart';
 
 class HFeedWdget extends StatefulWidget {
   const HFeedWdget({Key? key}) : super(key: key);
@@ -24,7 +26,13 @@ class _HFeedWdgetState extends State<HFeedWdget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            onTap: () => Navigator.pushNamed(context, '/account'),
+            onTap: () async {
+              UserFunc user = UserFunc();
+              final userData =
+                  await user.getUser(id: '62be900600b1aef58e50695d');
+              Navigator.pushNamed(context, '/account',
+                  arguments: ProfileArg(user: userData));
+            },
             leading: const CircleAvatar(
               backgroundImage: NetworkImage(profImg),
             ),

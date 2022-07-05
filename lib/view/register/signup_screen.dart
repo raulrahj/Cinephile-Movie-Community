@@ -76,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           label: 'First Name',
                           prefix: const Icon(Icons.person_pin),
                           controller: _nameController,
-                           validator: (value) =>
+                          validator: (value) =>
                               value!.isEmpty ? "* Required" : null,
                         ),
                         kHeight1,
@@ -167,7 +167,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ],
                           ),
                           background: Theme.of(context).primaryColorLight,
-                          function: () {},
+                          function: () {
+                            Navigator.pushNamed(context, '/home');
+                          },
                         ),
                       ],
                     ),

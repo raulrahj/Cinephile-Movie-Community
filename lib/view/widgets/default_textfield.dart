@@ -35,6 +35,7 @@ class DefaultTextField extends StatelessWidget {
         elevation: 3,
         child: TextFormField(
           validator: validator,
+          onSaved: onSaved,
           obscureText: obscureText ?? false,
           keyboardType: keyType,
           decoration: InputDecoration(

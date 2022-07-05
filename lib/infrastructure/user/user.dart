@@ -14,13 +14,13 @@ class UserFunc {
     // final data = signUpData.toJson();
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json',
-      'Authorization': token
     };
 
     try {
       Response response = await dio.get(
         // 'http://localhost:5000/auth/register',
-        '${ApiEndPoints.apiBaseUrl}/user/$id',
+        // '${ApiEndPoints.apiBaseUrl}/user/$id',
+        'http://192.168.8.104:5000/user/62be900600b1aef58e50695d',
         options: Options(headers: requestHeaders),
       );
       // data: jsonEncode(data),
@@ -29,6 +29,7 @@ class UserFunc {
 // var response = await http.post(url, body: jsonEncode(data));
       if (response.statusCode == 200 || response.statusCode == 201) {
         retrievedUser = UserData.fromJson(response.data);
+        // final toc = response.requestOptions.cancelToken;
         print('user found');
       }
     } on DioError catch (e) {
@@ -41,11 +42,13 @@ class UserFunc {
 
   Future<UserData?> updateUser({required String id}) async {
     UserData? retrievedUser;
-
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': token
+    };
     try {
-      Response response = await dio.get(
-        'http://192.168.1.105:5000/user/$id',
-      );
+      Response response = await dio.put('http://192.168.1.105:5000/user/$id',
+          options: Options(headers: requestHeaders));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         retrievedUser = UserData.fromJson(response.data);
@@ -60,12 +63,16 @@ class UserFunc {
 
   Future<UserData?> deleteUser({required String id}) async {
     UserData? retrievedUser;
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': token
+    };
 
     try {
-      Response response = await dio.get(
-        // 'http://localhost:5000/auth/register',
-        'http://192.168.1.105:5000/user/$id',
-      );
+      Response response = await dio.delete(
+          // 'http://localhost:5000/auth/register',
+          'http://192.168.1.105:5000/user/$id',
+          options: Options(headers: requestHeaders));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         retrievedUser = UserData.fromJson(response.data);

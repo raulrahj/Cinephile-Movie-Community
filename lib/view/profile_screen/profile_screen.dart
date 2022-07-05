@@ -32,10 +32,10 @@ class ProfileScreen extends StatelessWidget {
               aspectRatio: 3 / 2.1,
               child: Stack(
                 children: [
-                   SizedBox.expand(
+                  SizedBox.expand(
                     child: Image(
-                       color: const Color(0xff0d69ff).withOpacity(1.0),
-      colorBlendMode: BlendMode.softLight,
+                      color: const Color(0xff0d69ff).withOpacity(1.0),
+                      colorBlendMode: BlendMode.softLight,
                       image: const NetworkImage(urlImg1),
                       fit: BoxFit.cover,
                     ),
@@ -56,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Username',
+                                arg.user!.user!.firstname ?? 'Username',
                                 style: GoogleFonts.oswald()
                                     .copyWith(fontSize: 18, color: kWhite),
                               ),
@@ -85,8 +85,21 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          PFCountWidget(),
-                          PFCountWidget(),
+                          Expanded(
+                              child: PFCountWidget(
+                            count: '0',
+                            title: 'Reviewed',
+                          )),
+                          Expanded(
+                              child: PFCountWidget(
+                            count: '23',
+                            title: 'following',
+                          )),
+                          Expanded(
+                              child: PFCountWidget(
+                            count: '3',
+                            title: 'followers',
+                          ))
                         ],
                       ),
                     ),
@@ -101,13 +114,14 @@ class ProfileScreen extends StatelessWidget {
             ListView.builder(
               shrinkWrap: true,
               // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                // crossAxisCount: 2,
+              // crossAxisCount: 2,
               // ),
               itemCount: 4,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                     height: 100,
                     width: dWidth(context),
                     child: Row(
@@ -119,17 +133,25 @@ class ProfileScreen extends StatelessWidget {
                             image: NetworkImage(urlImg1),
                             fit: BoxFit.cover,
                           ),
-                          
                         ),
-                        const SizedBox(width: 3,)
-                        ,const Expanded(
-                          flex: 4,
-                          child: Text(lorem,maxLines: 4,overflow: TextOverflow.ellipsis,)),
-                          Expanded(
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        const Expanded(
+                            flex: 4,
+                            child: Text(
+                              lorem,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                        Expanded(
                             flex: 1,
-                            child: Row(children: const[
-                            Icon(Icons.whatshot),Text('234')
-                          ],))
+                            child: Row(
+                              children: const [
+                                Icon(Icons.whatshot),
+                                Text('234')
+                              ],
+                            ))
                       ],
                     ),
                   ),
@@ -146,8 +168,11 @@ class ProfileScreen extends StatelessWidget {
 class PFCountWidget extends StatelessWidget {
   const PFCountWidget({
     Key? key,
+    required this.count,
+    required this.title,
   }) : super(key: key);
-
+  final String count;
+  final String title;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -156,10 +181,10 @@ class PFCountWidget extends StatelessWidget {
       // color: Colors.accents[5],
       child:
           Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        const Text('followers'),
+        Text(title),
         // kHeight1,
         Text(
-          '35151',
+          count,
           style: Theme.of(context).textTheme.headline6,
         )
       ]),

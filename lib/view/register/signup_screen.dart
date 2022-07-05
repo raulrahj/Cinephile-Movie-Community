@@ -134,11 +134,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           function: () async {
                             final form = formKey.currentState;
                             if (form!.validate()) {
-                              final data = UserData(
-                                  firstName: _nameController.text,
+                              final data = UserResp(
+                                  firstname: _nameController.text,
                                   password: _passwordController.text,
-                                  userName: _emailController.text,
-                                  lastName: _lastnameController.text);
+                                  username: _emailController.text,
+                                  lastname: _lastnameController.text);
                               Register().signUp(signUpData: data);
                             } else {}
 

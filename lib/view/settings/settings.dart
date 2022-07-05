@@ -1,7 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/infrastructure/register/register_user.dart';
+import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
@@ -18,7 +24,7 @@ class SettingsScreen extends StatelessWidget {
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
-          children:  [
+          children: [
             const LargeHeadlineWidget(title: 'Settings'),
             const SettingsTitleWidget(
               title: 'Account',
@@ -29,11 +35,26 @@ class SettingsScreen extends StatelessWidget {
                 SettingsTileWidget(
                   icon: Icons.account_circle,
                   title: 'Profile',
-                  function: ()=> Navigator.pushNamed(context, '/account'),
+                  function: () async {
+                    final userData = await Register().getUserProfile();
+                    // ignore: use_build_context_synchronously
+                    Navigator.pushNamed(context, '/account',
+                        arguments: ProfileArg(user: userData));
+                  },
                 ),
                 const SettingsTileWidget(
                   icon: Icons.settings_outlined,
                   title: 'Preferences',
+                ),
+                   SettingsTileWidget(
+                  icon: Icons.settings_outlined,
+                  title: 'Log Out',
+                  function: ()async{
+                     await SharedService.logout(context).whenComplete(() {
+                        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                        log('User Logged Out !!!');
+                      });
+                  },
                 ),
                 // SettingsTileWidget(),
               ],

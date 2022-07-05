@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/data/core/di/injectable.dart';
 import 'package:open_box/view/home/comment_screen.dart';
+import 'package:open_box/view/intro_screen/splash_screen.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/new_feed/new_post_screen.dart';
 import 'package:open_box/view/map_view_screen/map_view.dart';
@@ -15,6 +16,7 @@ import 'package:open_box/view/notification_screen/notification_screen.dart';
 import 'package:open_box/view/discover/new_releases/new_release_detailed.dart';
 import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/widgets/bottom_nav.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -41,11 +43,12 @@ class MyApp extends StatelessWidget {
                 primary: Theme.of(context).primaryColor),
           ),
         ),
-        home: const LoginScreen(),
+        home: const SplashScreen(),
         routes: {
           '/home': (context) => const HomeScreen(),
+          '/main': (context) => const NavController(),
           '/personal_chat': (context) => const PChatScreen(),
-          '/group_chat': (context) => GChatScreen(),
+          '/group_chat': (context) => const GChatScreen(),
           '/new_release_detailed': (context) => const NewReleaseDetailed(),
           '/comments': (context) => const CommentsScreen(),
           '/notifications': (context) => const NotificationsScreen(),

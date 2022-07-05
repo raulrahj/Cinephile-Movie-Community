@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_login.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/widgets/default_button.dart';
@@ -22,11 +23,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String? userName;
+  String? password;
   @override
   void dispose() {
     super.dispose();
-    userNameController.dispose();
-    passwordController.dispose();
+    //   userNameController.dispose();
+    //   passwordController.dispose();
   }
 
   @override
@@ -57,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: LoginWidget(
                   controller1: userNameController,
                   controller2: passwordController,
-                  formKey: formKey,
+                  // formKey: formKey,
                 ),
               )
             ],
@@ -68,16 +71,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class LoginWidget extends StatelessWidget {
+class LoginWidget extends StatefulWidget {
   const LoginWidget({
     Key? key,
     required this.controller1,
     required this.controller2,
-    this.formKey,
+
+    // this.formKey,
   }) : super(key: key);
-  final GlobalKey<FormState>? formKey;
+  // final GlobalKey<FormState>? formKey;
   final TextEditingController controller1;
   final TextEditingController controller2;
+
+  @override
+  State<LoginWidget> createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<LoginWidget> {
+  final formKey = GlobalKey<FormState>();
+  String? userName;
+  String? password;
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -86,6 +99,7 @@ class LoginWidget extends StatelessWidget {
         child: Column(
           children: [
             DefaultTextField(
+              // controller: controller1,
               prefix: Icon(
                 Icons.email,
                 color: Theme.of(context).primaryColor,
@@ -94,9 +108,11 @@ class LoginWidget extends StatelessWidget {
               hint: 'abc@gmail.com',
               keyType: TextInputType.emailAddress,
               validator: (value) => value!.isEmpty ? "* Required" : null,
+              onSaved: (onSaved) => {userName = onSaved},
             ),
             kHeight2,
             DefaultTextField(
+              // controller: controller2,
               hint: 'password',
               label: 'Password',
               obscureText: true,
@@ -106,6 +122,7 @@ class LoginWidget extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
               validator: (value) => value!.isEmpty ? "* Required" : null,
+              onSaved: (onsaved) => {password = onsaved},
 
               // suffix: const Icon(Icons.remove_red_eye),
             ),
@@ -118,15 +135,29 @@ class LoginWidget extends StatelessWidget {
                 ),
               ),
               function: () async {
-              final form = formKey!.currentState;
-              if(form!.validate()){
+              
+                final form = formKey.currentState;
+                if (form!.validate()) {
+                  form.save();
+                  final data = LoginModel(
+                      username: userName!, password: password!);
+                  // await Future.delayed(const Duration(seconds: 10));
                   Register reg = Register();
-                final data = LoginModel(
-                    username: controller1.text, password: controller2.text);
-                reg.loginUser(loginData: data);
-              }else{
-                
-              }
+
+                  // final data = LoginModel(username: 'raul', password: '123456');
+                  final user = await reg
+                      .loginUser(loginData: data)
+                      .whenComplete(() async {
+                    final isLogged = await SharedService.isLoggedIn();
+                    if (isLogged) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/main', (route) => false);
+                    }
+                  });
+                  print(data.username);
+                  print(data.password);
+                } else {}
               },
             ),
             kHeight1,

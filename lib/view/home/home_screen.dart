@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
 import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
@@ -18,6 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
     context.read<TrendingBloc>().add(const TrendingEvent.getTrending());
+    context.read<NewReleasesBloc>().add(const NewReleasesEvent.getNewReleased());
+
     // BlocProvider.of<TrendingBloc>(context).add(const TrendingEvent.getTrending());
     });
     return Scaffold(

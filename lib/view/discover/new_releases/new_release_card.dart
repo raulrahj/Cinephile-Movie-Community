@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/data/models/new_releases/new_releases.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
 
 class NewReleaseCardW extends StatelessWidget {
   const NewReleaseCardW({
-    Key? key,
+    Key? key, required this.data,
   }) : super(key: key);
-
+  final NewReleaseResults data;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,9 +42,9 @@ class NewReleaseCardW extends StatelessWidget {
               child: const Text('Book Now'),
             ),
           ),
-          const Positioned(
+           Positioned(
               bottom: 5,
-              child: LargeHeadlineWidget(title: 'Into the wild')),
+              child: LargeHeadlineWidget(title: data.title!)),
           Positioned(
             bottom: 39,
             left: 21,

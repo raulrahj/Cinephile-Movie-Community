@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class ProgressCircle extends StatefulWidget {
   const ProgressCircle({Key? key}) : super(key: key);
@@ -9,25 +10,33 @@ class ProgressCircle extends StatefulWidget {
 
 class _ProgressCircleState extends State<ProgressCircle>
     with SingleTickerProviderStateMixin {
-  AnimationController? controller;
-  Animation<double>? animationRotation;
+  // AnimationController? controller;
+  // Animation<double>? animationRotation;
   double radius = 10.0;
   final double initialRadius = 30.0;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  late final AnimationController controller = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 650))
+    ..repeat();
+  late final Animation<double> animationRotation = Tween<double>(
+    begin: 0.0,
+    end: 1.0,
+  ).animate(CurvedAnimation(
+      parent: controller,
+      curve: const Interval(0.0, 1.0, curve: Curves.linear)));
+  // controller.addListener(() {
+
+  // });
+  // controller!.repeat();
+  // }
   @override
-  void initState() {
-    super.initState();
-    controller =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 650));
-    animationRotation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-        parent: controller!,
-        curve: const Interval(0.0, 1.0, curve: Curves.linear)));
-    controller!.addListener(() {
-    });
-    controller!.repeat();
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -42,7 +51,7 @@ class _ProgressCircleState extends State<ProgressCircle>
             borderRadius: BorderRadius.circular(50)),
         child: Center(
           child: RotationTransition(
-            turns: animationRotation!,
+            turns: animationRotation,
             child: Stack(
               children: [
                 const Dot(
@@ -88,7 +97,8 @@ class Dot extends StatelessWidget {
   final double? radious;
   final Color? color;
   final Border? border;
-  const Dot({Key? key, this.radious, this.color, this.border}) : super(key: key);
+  const Dot({Key? key, this.radious, this.color, this.border})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -97,8 +107,9 @@ class Dot extends StatelessWidget {
         width: radious ?? 8,
         height: radious ?? 8,
         decoration: BoxDecoration(
-          border:border ??Border.all(),
-            color: color ?? Colors.white54, shape: BoxShape.circle),
+            border: border ?? Border.all(),
+            color: color ?? Colors.white54,
+            shape: BoxShape.circle),
       ),
     );
   }

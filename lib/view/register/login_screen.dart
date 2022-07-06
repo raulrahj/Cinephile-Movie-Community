@@ -1,17 +1,36 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/data/models/user/m_login.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/view/register/otp_verification.dart';
-import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  String? userName;
+  String? password;
+  @override
+  void dispose() {
+    super.dispose();
+    //   userNameController.dispose();
+    //   passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +55,13 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const Expanded(
+              Expanded(
                 flex: 6,
-                child: LoginWidget(),
+                child: LoginWidget(
+                  controller1: userNameController,
+                  controller2: passwordController,
+                  // formKey: formKey,
+                ),
               )
             ],
           ),
@@ -48,85 +71,135 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginWidget extends StatelessWidget {
+class LoginWidget extends StatefulWidget {
   const LoginWidget({
     Key? key,
+    required this.controller1,
+    required this.controller2,
+
+    // this.formKey,
   }) : super(key: key);
+  // final GlobalKey<FormState>? formKey;
+  final TextEditingController controller1;
+  final TextEditingController controller2;
 
   @override
+  State<LoginWidget> createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<LoginWidget> {
+  final formKey = GlobalKey<FormState>();
+  String? userName;
+  String? password;
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DefaultTextField(
-          prefix: Icon(
-            Icons.email,
-            color: Theme.of(context).primaryColor,
-          ),
-          label: 'Email',
-          hint: 'abc@gmail.com',
-          keyType: TextInputType.emailAddress,
-        ),
-        kHeight2,
-        DefaultTextField(
-          hint: 'password',
-          label: 'Password',
-          obscureText: true,
-          prefix: const Icon(Icons.key),
-          // suffix: const Icon(Icons.remove_red_eye),
-        ),
-        kHeight4,
-        DefaultButton(
-          text: const Text(
-            'Login',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          function: () {},
-        ),
-        kHeight1,
-        DefaultButton(
-          text: Row(
-            mainAxisAlignment: MainAxisAlignment.center,  
-            children: [
-              Text(
-                "Continue with",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Theme.of(context).primaryColor),
+    return Form(
+      key: formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            DefaultTextField(
+              // controller: controller1,
+              prefix: Icon(
+                Icons.email,
+                color: Theme.of(context).primaryColor,
               ),
-              kWidth1,
-              const FaIcon(
-                FontAwesomeIcons.google,
-                color: kRed,
-              )
-            ],
-          ),
-          background: Theme.of(context).primaryColorLight,
-        ),
-        kHeight3,
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const SignUpScreen()));
-          },
-          child: RichText(
-            text: TextSpan(
-              text: 'Create account? ',
-              children: [
-                TextSpan(
-                  text: 'Sign Up',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Theme.of(context).iconTheme.color),
-                )
-              ],
+              label: 'E-mail',
+              hint: 'abc@gmail.com',
+              keyType: TextInputType.emailAddress,
+              validator: (value) => value!.isEmpty ? "* Required" : null,
+              onSaved: (onSaved) => {userName = onSaved},
             ),
-          ),
+            kHeight2,
+            DefaultTextField(
+              // controller: controller2,
+              hint: 'password',
+              label: 'Password',
+              obscureText: true,
+
+              prefix: Icon(
+                Icons.key,
+                color: Theme.of(context).primaryColor,
+              ),
+              validator: (value) => value!.isEmpty ? "* Required" : null,
+              onSaved: (onsaved) => {password = onsaved},
+
+              // suffix: const Icon(Icons.remove_red_eye),
+            ),
+            kHeight4,
+            DefaultButton(
+              text: const Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              function: () async {
+              
+                final form = formKey.currentState;
+                if (form!.validate()) {
+                  form.save();
+                  final data = LoginModel(
+                      username: userName!, password: password!);
+                  // await Future.delayed(const Duration(seconds: 10));
+                  Register reg = Register();
+
+                  // final data = LoginModel(username: 'raul', password: '123456');
+                  final user = await reg
+                      .loginUser(loginData: data)
+                      .whenComplete(() async {
+                    final isLogged = await SharedService.isLoggedIn();
+                    if (isLogged) {
+                      // ignore: use_build_context_synchronously
+                   await   Navigator.pushNamedAndRemoveUntil(
+                          context, '/main', (route) => false);
+                    }
+                  });
+               
+                } else {}
+              },
+            ),
+            kHeight1,
+            DefaultButton(
+              text: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Continue with",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: Theme.of(context).primaryColor),
+                  ),
+                  kWidth1,
+                  const FaIcon(
+                    FontAwesomeIcons.google,
+                    color: kRed,
+                  )
+                ],
+              ),
+              background: Theme.of(context).primaryColorLight,
+            ),
+            kHeight3,
+            RichText(
+              text: TextSpan(
+                text: 'Create account? ',
+                children: [
+                  TextSpan(
+                    text: 'Sign Up',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: Theme.of(context).iconTheme.color),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Navigator.pushNamed(context, '/sign_up'),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -151,42 +224,42 @@ class BackgroundImg extends StatelessWidget {
         ),
         child: widget);
   }
-}
+// }
 
-class Form extends StatelessWidget {
-  const Form({Key? key}) : super(key: key);
+// class Form extends StatelessWidget {
+//   const Form({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(kRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Container(
-            // height: dHeight(context) / 8,
-            // width: dWidth(context) / 1.2,
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(
-              right: dWidth(context) / 30,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.05),
-              borderRadius: BorderRadius.circular(kRadius),
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                      width: 2, color: Theme.of(context).primaryColorLight),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 0.0),
+//       child: ClipRRect(
+//         borderRadius: BorderRadius.circular(kRadius),
+//         child: BackdropFilter(
+//           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+//           child: Container(
+//             // height: dHeight(context) / 8,
+//             // width: dWidth(context) / 1.2,
+//             alignment: Alignment.center,
+//             padding: EdgeInsets.only(
+//               right: dWidth(context) / 30,
+//             ),
+//             decoration: BoxDecoration(
+//               color: Colors.white.withOpacity(.05),
+//               borderRadius: BorderRadius.circular(kRadius),
+//             ),
+//             child: TextFormField(
+//               decoration: InputDecoration(
+//                 labelText: 'Email',
+//                 enabledBorder: OutlineInputBorder(
+//                   borderSide: BorderSide(
+//                       width: 2, color: Theme.of(context).primaryColorLight),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 }

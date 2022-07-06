@@ -13,19 +13,19 @@ class Register {
 
   Future<UserData?> signUp({required UserResp signUpData}) async {
     UserData? retrievedUser;
-    // final data = {
-    //   "username": signUpData.username,
-    //   "firstname": signUpData.firstname,
-    //   "lastname": signUpData.lastname,
-    //   "password": signUpData.password
-    // };
-    // final data = signUpData.toJson();
     final data = {
-      "username": "cinephile",
-      "firstname": "cine",
-      "lastname": "phisle",
-      "password": "123456"
+      "username": signUpData.username,
+      "firstname": signUpData.firstname,
+      "lastname": signUpData.lastname,
+      "password": signUpData.password
     };
+    // final data = signUpData.toJson();
+    // final data = {
+    //   "username": "cinephile",
+    //   "firstname": "cine",
+    //   "lastname": "phisle",
+    //   "password": "123456"
+    // };
 
     try {
       Response response = await dio.post(
@@ -109,7 +109,9 @@ class Register {
         print(response.statusMessage);
       }
     } on DioError catch (e) {
+      log(e.message);
       throw e.error;
+
     } catch (e) {
       log(e.toString());
     }

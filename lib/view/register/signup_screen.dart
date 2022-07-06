@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,6 +28,10 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  String? userName;
+  String? firstName;
+  String? lastName;
+  String? password;
   final formKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -78,6 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _nameController,
                           validator: (value) =>
                               value!.isEmpty ? "* Required" : null,
+                          onSaved: (onSave) => {firstName = onSave},
                         ),
                         kHeight1,
                         DefaultTextField(
@@ -86,6 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _nameController,
                           validator: (value) =>
                               value!.isEmpty ? "* Required" : null,
+                          onSaved: (onSave) => {lastName = onSave},
                         ),
                         kHeight1,
                         DefaultTextField(
@@ -94,6 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _emailController,
                           validator: (value) =>
                               value!.isEmpty ? "* Required" : null,
+                          onSaved: (onsave) => {userName = onsave},
                         ),
                         kHeight1,
                         DefaultTextField(
@@ -103,6 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _passwordController,
                           validator: (value) =>
                               value!.isEmpty ? "* Required" : null,
+                          onSaved: (onsave) => {password = onsave},
                         ),
                         kHeight1,
                         // DefaultTextField(
@@ -132,14 +142,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                           function: () async {
+                            final reg = Register();
                             final form = formKey.currentState;
                             if (form!.validate()) {
+                              form.save();
                               final data = UserResp(
-                                  firstname: _nameController.text,
-                                  password: _passwordController.text,
-                                  username: _emailController.text,
-                                  lastname: _lastnameController.text);
-                              Register().signUp(signUpData: data);
+                                  firstname: firstName!,
+                                  password: password,
+                                  username: userName!,
+                                  lastname: lastName!);
+                              final user = await reg
+                                  .signUp(signUpData: data)
+                                  .whenComplete(() {
+                                log('New user Registered');
+                              }).then((response) {
+                                if (response != null) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (ctx) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                            'Signup Success !!!',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        '/login',
+                                                        (route) => false);
+                                              },
+                                              child: const Text('OK'),
+                                            )
+                                          ],
+                                        );
+                                      });
+                                }
+                              });
                             } else {}
 
                             // Navigator.of(context).push(MaterialPageRoute(

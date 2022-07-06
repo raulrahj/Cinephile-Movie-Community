@@ -28,17 +28,17 @@ class SharedService {
   }
 
   static Future<bool> isLoggedIn() async {
-    final isLoggedIn = await APICacheManager().isAPICacheKeyExist("login_details");
-    
+    final isLoggedIn = await APICacheManager().isAPICacheKeyExist(LOGIN_KEY);
+
     return isLoggedIn;
   }
 
   static Future<UserData?> getUserProfile() async {
-    final isLoggedIn =
-        await APICacheManager().isAPICacheKeyExist("login_details");
+    final isLoggedIn = await APICacheManager().isAPICacheKeyExist(LOGIN_KEY);
     if (isLoggedIn) {
       final userData = await APICacheManager().getCacheData(LOGIN_KEY);
-      return userDataFromJson(jsonEncode(userData));
+      
+      return userDataFromJson(userData.syncData);
     } else {
       return null;
     }

@@ -10,6 +10,7 @@ import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/settings/preferences.dart';
 import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
 import 'package:open_box/view/settings/widgets/s_tile.dart';
 import 'package:open_box/view/settings/widgets/s_title.dart';
@@ -42,18 +43,25 @@ class SettingsScreen extends StatelessWidget {
                         arguments: ProfileArg(user: userData));
                   },
                 ),
-                const SettingsTileWidget(
+                SettingsTileWidget(
                   icon: Icons.settings_outlined,
                   title: 'Preferences',
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (ctx) => const SPreferences()));
+                  },
                 ),
-                   SettingsTileWidget(
+                SettingsTileWidget(
                   icon: Icons.settings_outlined,
                   title: 'Log Out',
-                  function: ()async{
-                     await SharedService.logout(context).whenComplete(() {
-                        Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-                        log('User Logged Out !!!');
-                      });
+                  function: () async {
+                    await SharedService.logout(context).whenComplete(() {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', (route) => false);
+                      log('User Logged Out !!!');
+                    });
                   },
                 ),
                 // SettingsTileWidget(),

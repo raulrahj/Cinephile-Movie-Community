@@ -151,12 +151,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                     final isLogged = await SharedService.isLoggedIn();
                     if (isLogged) {
                       // ignore: use_build_context_synchronously
-                      Navigator.pushNamedAndRemoveUntil(
+                   await   Navigator.pushNamedAndRemoveUntil(
                           context, '/main', (route) => false);
                     }
                   });
-                  print(data.username);
-                  print(data.password);
+               
                 } else {}
               },
             ),

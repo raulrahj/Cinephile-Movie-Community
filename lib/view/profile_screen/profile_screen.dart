@@ -3,12 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/widgets/common.dart';
 
 class ProfileArg {
-  final UserData? user;
-  ProfileArg({this.user});
+  final UserModel? user;
+  final ProfileModel? loginUser;
+  final bool isProfile;
+  ProfileArg({this.loginUser, required this.isProfile, this.user});
 }
 
 class ProfileScreen extends StatelessWidget {
@@ -55,21 +59,36 @@ class ProfileScreen extends StatelessWidget {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                arg.user!.user!.firstname ?? 'Username',
-                                style: GoogleFonts.oswald()
-                                    .copyWith(fontSize: 18, color: kWhite),
-                              ),
-                              const Text(
-                                'abc@gmail.com',
-                                style: TextStyle(color: kWhite),
-                              ),
+                              arg.isProfile
+                                  ? Text(
+                                      arg.loginUser!.user!.firstname ??
+                                          'Username',
+                                      style: GoogleFonts.oswald().copyWith(
+                                          fontSize: 18, color: kWhite))
+                                  : Text(
+                                      arg.user!.firstname ?? 'Username',
+                                      style: GoogleFonts.oswald().copyWith(
+                                          fontSize: 18, color: kWhite),
+                                    ),
+                              arg.isProfile
+                                  ? Text(
+                                      arg.loginUser!.user!.username ??
+                                          'abc@gmail.com',
+                                      style: TextStyle(color: kWhite),
+                                    )
+                                  : Text(
+                                      arg.user!.username ?? 'abc@gmail.com',
+                                      style: TextStyle(color: kWhite),
+                                    ),
                             ],
                           ),
                           // kHeight1,
                           ActionChip(
-                              label: const Text('edit profile'),
-                              onPressed: () {
+                              label: Text(
+                                  arg.isProfile ? 'edit profile' : 'follow'),
+                              onPressed: () async {
+                                final data = await UserFunc()
+                                    .updateUser(id: "62c148ce68f3b9763ad39e0a");
                                 Navigator.pushNamed(context, '/profile_edit');
                               }),
                         ],
@@ -84,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                       color: kWhite.withOpacity(0.8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Expanded(
                               child: PFCountWidget(
                             count: '0',
@@ -92,12 +111,22 @@ class ProfileScreen extends StatelessWidget {
                           )),
                           Expanded(
                               child: PFCountWidget(
-                            count: '23',
+                            count: arg.isProfile
+                                ? arg.loginUser!.user!.following!.length
+                                        .toString() ??
+                                    '23'
+                                : arg.user!.following!.length.toString() ??
+                                    '23',
                             title: 'following',
                           )),
                           Expanded(
                               child: PFCountWidget(
-                            count: '3',
+                            count: arg.isProfile
+                                ? arg.loginUser!.user!.followers!.length
+                                        .toString() ??
+                                    '23'
+                                : arg.user!.followers!.length.toString() ??
+                                    '23',
                             title: 'followers',
                           ))
                         ],

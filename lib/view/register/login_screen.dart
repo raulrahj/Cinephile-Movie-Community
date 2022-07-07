@@ -135,12 +135,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ),
               ),
               function: () async {
-              
                 final form = formKey.currentState;
                 if (form!.validate()) {
                   form.save();
-                  final data = LoginModel(
-                      username: userName!, password: password!);
+                  final data =
+                      LoginModel(username: userName!, password: password!);
                   // await Future.delayed(const Duration(seconds: 10));
                   Register reg = Register();
 
@@ -148,14 +147,18 @@ class _LoginWidgetState extends State<LoginWidget> {
                   final user = await reg
                       .loginUser(loginData: data)
                       .whenComplete(() async {
-                    final isLogged = await SharedService.isLoggedIn();
-                    if (isLogged) {
-                      // ignore: use_build_context_synchronously
-                   await   Navigator.pushNamedAndRemoveUntil(
-                          context, '/main', (route) => false);
-                    }
+                    final isLogged =
+                        await SharedService.isLoggedIn().whenComplete(() async {
+                      Future.delayed(Duration(seconds: 3));
+                      final isOk = await SharedService.isLoggedIn();
+                      print('Checking Login status');
+                      if (isOk) {
+                        // ignore: use_build_context_synchronously
+                        await Navigator.pushNamedAndRemoveUntil(
+                            context, '/main', (route) => false);
+                      }
+                    });
                   });
-               
                 } else {}
               },
             ),

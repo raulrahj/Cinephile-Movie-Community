@@ -29,10 +29,12 @@ class _HFeedWdgetState extends State<HFeedWdget> {
             onTap: () async {
               print('Request getUser!!!!!!');
               UserFunc user = UserFunc();
-              final userData =
-                  await user.getUser(id: '62be900600b1aef58e50695d');
-              Navigator.pushNamed(context, '/account',
-                  arguments: ProfileArg(user: userData));
+              final userData = await user
+                  .getUser(id: '62be900600b1aef58e50695d')
+                  .then((userData) async {
+                await Navigator.pushNamed(context, '/account',
+                    arguments: ProfileArg(user: userData ,isProfile: false));
+              });
             },
             leading: const CircleAvatar(
               backgroundImage: NetworkImage(profImg),

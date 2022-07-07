@@ -1,4 +1,4 @@
-import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'dart:convert';
 
 // class Post {

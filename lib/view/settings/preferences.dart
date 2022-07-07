@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 

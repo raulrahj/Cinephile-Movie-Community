@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -45,11 +47,14 @@ class _SplashScreenState extends State<SplashScreen>
         child: Center(
           child: FadeTransition(
               opacity: _animation,
-              child: const SizedBox(
+              child: SizedBox(
                 height: 100,
                 width: 100,
-                child: Image(
-                  image: NetworkImage(logo),
+                child: CachedNetworkImage(
+                  imageUrl: logo,
+                  // placeholder: (BuildContext context, String s) {
+                  //   return const ProgressCircle();
+                  // },
                 ),
               )),
         ),

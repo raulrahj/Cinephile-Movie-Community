@@ -7,6 +7,7 @@ import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/register/register_user.dart';
+import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/signup_screen.dart';
@@ -37,10 +38,15 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.account_circle,
                   title: 'Profile',
                   function: () async {
-                    final userData = await Register().getUserProfile();
+                    final cUser = await Register().getUserProfile();
+                    final userData =
+                        await UserFunc().getUser(id: cUser!.user!.id!);
+                    // await Register().getUserProfile();
+
                     // ignore: use_build_context_synchronously
-                    Navigator.pushNamed(context, '/account',
-                        arguments: ProfileArg(user: userData));
+                    await Navigator.pushNamed(context, '/account',
+                        arguments:
+                            ProfileArg(user: userData, isProfile: false));
                   },
                 ),
                 SettingsTileWidget(

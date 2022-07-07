@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';

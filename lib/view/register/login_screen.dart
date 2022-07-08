@@ -148,9 +148,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                       .loginUser(loginData: data)
                       .whenComplete(() async {
                     final isLogged =
-                        await SharedService.isLoggedIn().whenComplete(() async {
+                        await SharedService.isLoggedIn().then((isOk) async {
                       Future.delayed(Duration(seconds: 3));
-                      final isOk = await SharedService.isLoggedIn();
+                      // final isOk = await SharedService.isLoggedIn();
                       print('Checking Login status');
                       if (isOk) {
                         // ignore: use_build_context_synchronously

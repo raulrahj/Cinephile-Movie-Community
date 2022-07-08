@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 
 class HFeedWdget extends StatefulWidget {
-  const HFeedWdget({Key? key}) : super(key: key);
-
+  const HFeedWdget({Key? key, this.postdata}) : super(key: key);
+  final Post? postdata;
   @override
   State<HFeedWdget> createState() => _HFeedWdgetState();
 }
@@ -30,21 +32,25 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               print('Request getUser!!!!!!');
               UserFunc user = UserFunc();
               final userData = await user
-                  .getUser(id: '62be900600b1aef58e50695d')
+                  .getUser(id: widget.postdata!.userId)
                   .then((userData) async {
                 await Navigator.pushNamed(context, '/account',
-                    arguments: ProfileArg(user: userData ,isProfile: false));
+                    arguments: ProfileArg(user: userData, isProfile: false));
               });
             },
             leading: const CircleAvatar(
               backgroundImage: NetworkImage(profImg),
             ),
-            title: Text(
-              "Username",
-              style: GoogleFonts.dmSans().copyWith(fontWeight: FontWeight.bold),
+            title: Expanded(
+              child: Text(
+                widget.postdata!.userId ?? "Username",
+                style:
+                    GoogleFonts.dmSans().copyWith(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             subtitle: Text(
-              'justnow',
+              widget.postdata!.createdAt.toString() ?? 'justnow',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             trailing: const Icon(Icons.more_vert),
@@ -53,7 +59,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: LayoutBuilder(
               builder: (context, constraints) => Text(
-                lorem,
+                widget.postdata!.desc ?? lorem,
                 overflow: TextOverflow.ellipsis,
                 maxLines: isExpanded ? 10 : 2,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -62,24 +68,26 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               ),
             ),
           ),
-          GestureDetector(
-            child: const Text(
-              '  see more',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onTap: () {
-              setState(
-                () {
-                  isExpanded = !isExpanded;
-                },
-              );
-            },
-          ),
+          // GestureDetector(
+          //   child: const Text(
+          //     '  see more',
+          //     style: TextStyle(fontWeight: FontWeight.bold),
+          //   ),
+          //   onTap: () {
+          //     setState(
+          //       () {
+          //         isExpanded = !isExpanded;
+          //       },
+          //     );
+          //   },
+          // ),
           kHeight1,
           ClipRRect(
             borderRadius: BorderRadius.circular(kRadius),
-            child: const Image(
-              image: NetworkImage(urlImg1),
+            child: Image(
+              image: NetworkImage(
+                  "http://192.168.100.174:5000/images/${widget.postdata!.image}" ??
+                      urlImg1),
             ),
           ),
           AspectRatio(
@@ -94,10 +102,12 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                       // SupportButtonW(),
                       TextButton.icon(
                         label: Text(
-                          '456',
+                          widget.postdata!.likes!.length.toString() ?? '456',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          // final data = await PostFunc().allPost();
+                        },
                         icon: const Icon(Icons.whatshot_outlined),
                       ),
                       // const Text(

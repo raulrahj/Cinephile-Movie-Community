@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
 import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,10 +23,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    context.read<TrendingBloc>().add(const TrendingEvent.getTrending());
-    context.read<NewReleasesBloc>().add(const NewReleasesEvent.getNewReleased());
+      context.read<TrendingBloc>().add(const TrendingEvent.getTrending());
+      context
+          .read<NewReleasesBloc>()
+          .add(const NewReleasesEvent.getNewReleased());
 
-    // BlocProvider.of<TrendingBloc>(context).add(const TrendingEvent.getTrending());
+      // BlocProvider.of<TrendingBloc>(context).add(const TrendingEvent.getTrending());
     });
     return Scaffold(
       backgroundColor: kWhite,
@@ -56,12 +63,24 @@ class _HomeScreenState extends State<HomeScreen> {
               title: 'New post',
               color: Colors.black54,
             ),
-            ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return const HFeedWdget();
+            FutureBuilder(
+                future:
+                    PostFunc().getTimeLinePost(id: '62be900600b1aef58e50695d'),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          final Post data = snapshot.data[index];
+                          return HFeedWdget(
+                            postdata: data,
+                          );
+                        });
+                  } else {
+                    return ProgressCircle();
+                  }
                 })
           ],
         ),

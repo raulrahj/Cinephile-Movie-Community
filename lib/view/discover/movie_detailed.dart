@@ -4,14 +4,35 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/new_releases/new_releases.dart';
+import 'package:open_box/data/models/trending/m_trending.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/widgets/common.dart';
 
-class NewReleaseDetailed extends StatelessWidget {
-  const NewReleaseDetailed({Key? key}) : super(key: key);
+class MovieArg {
+  final Result? data;
+  final bool isTrending;
+  final NewReleaseResults? nData;
+  MovieArg({this.nData, this.data, required this.isTrending});
+}
+
+bool isTrendData = true;
+
+class MovieDetailed extends StatelessWidget {
+  const MovieDetailed({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final data = ModalRoute.of(context)?.settings.arguments as MovieArg;
+    final nData = ModalRoute.of(context)!.settings.arguments as MovieArg;
+    if (data != null) {
+      isTrendData = true;
+    } else if (nData != null) {
+      isTrendData = false;
+    }
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -32,7 +53,8 @@ class NewReleaseDetailed extends StatelessWidget {
               expandedTitleScale: 1.4,
               title: RichText(
                 text: TextSpan(
-                    text: 'Into the Wild',
+                    text:
+                        data.data!.originalTitle.toString() ?? 'Into the Wild',
                     style: GoogleFonts.oswald().copyWith(fontSize: 22),
                     children: [
                       const TextSpan(text: '  '),
@@ -42,9 +64,9 @@ class NewReleaseDetailed extends StatelessWidget {
                               .copyWith(fontSize: 17, color: kWhite))
                     ]),
               ),
-              background: const Image(
+              background: Image(
                 image: NetworkImage(
-                  urlImg1,
+                  "$kImgHost/${data.data!.backdropPath}" ?? urlImg1,
                 ),
                 fit: BoxFit.fill,
               ),
@@ -111,10 +133,10 @@ class NewReleaseDetailed extends StatelessWidget {
                     title: 'Overview',
                     color: kBlack,
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      lorem,
+                      data.data!.overview ?? lorem,
                       style: TextStyle(height: 1.4),
                     ),
                   ),

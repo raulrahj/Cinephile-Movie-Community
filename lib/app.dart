@@ -13,7 +13,7 @@ import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/notification_screen/notification_screen.dart';
-import 'package:open_box/view/discover/new_releases/new_release_detailed.dart';
+import 'package:open_box/view/discover/movie_detailed.dart';
 import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/widgets/bottom_nav.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           '/main': (context) => const NavController(),
           '/personal_chat': (context) => const PChatScreen(),
           '/group_chat': (context) => const GChatScreen(),
-          '/new_release_detailed': (context) => const NewReleaseDetailed(),
+          '/movie_detailed': (context) => const MovieDetailed(),
           '/comments': (context) => const CommentsScreen(),
           '/notifications': (context) => const NotificationsScreen(),
           '/account': (context) => const ProfileScreen(),

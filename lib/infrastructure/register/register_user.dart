@@ -66,8 +66,8 @@ class Register {
   static const authBaseUrl = 'http://192.168.43.244:5000/auth';
   static const loginUrl = 'http://127.0.0.1:5000/auth/login';
   static const loginUrl2 = 'http/://localhost:5000/auth/login';
-  static const loginUrl1 = 'http://192.168.43.244:5000/auth/login';
-
+  static const loginUrl1 = 'http://192.168.100.174:5000/auth/login';
+//192.168.43.244
   Future<ProfileModel?> loginUser({required LoginModel loginData}) async {
     ProfileModel? retrievedUser;
     final data = loginData.toJson();

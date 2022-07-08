@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';
-import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/widgets/common.dart';
 
 class ProfileArg {
   final UserModel? user;
-  final ProfileModel? loginUser;
+  // final ProfileModel? loginUser;
   final bool isProfile;
-  ProfileArg({this.loginUser, required this.isProfile, this.user});
+  ProfileArg({required this.isProfile, this.user});
 }
 
 class ProfileScreen extends StatelessWidget {
@@ -33,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
           children: [
             // kHeight2,
             AspectRatio(
-              aspectRatio: 3 / 2.1,
+              aspectRatio: 3 / 2,
               child: Stack(
                 children: [
                   SizedBox.expand(
@@ -45,53 +42,48 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      height: dHeight(context) * .20,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const CircleAvatar(
-                            backgroundImage: NetworkImage(profImg),
-                            radius: 44,
-                          ),
-                          // kHeight2,
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              arg.isProfile
-                                  ? Text(
-                                      arg.loginUser!.user!.firstname ??
-                                          'Username',
-                                      style: GoogleFonts.oswald().copyWith(
-                                          fontSize: 18, color: kWhite))
-                                  : Text(
-                                      arg.user!.firstname ?? 'Username',
-                                      style: GoogleFonts.oswald().copyWith(
-                                          fontSize: 18, color: kWhite),
-                                    ),
-                              arg.isProfile
-                                  ? Text(
-                                      arg.loginUser!.user!.username ??
-                                          'abc@gmail.com',
-                                      style: TextStyle(color: kWhite),
-                                    )
-                                  : Text(
-                                      arg.user!.username ?? 'abc@gmail.com',
-                                      style: TextStyle(color: kWhite),
-                                    ),
-                            ],
-                          ),
-                          // kHeight1,
-                          ActionChip(
-                              label: Text(
-                                  arg.isProfile ? 'edit profile' : 'follow'),
-                              onPressed: () async {
-                                final data = await UserFunc()
-                                    .updateUser(id: "62c148ce68f3b9763ad39e0a");
-                                Navigator.pushNamed(context, '/profile_edit');
-                              }),
-                        ],
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 18.0),
+                      child: SizedBox(
+                        height: dHeight(context) * .20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const CircleAvatar(
+                              backgroundImage: NetworkImage(profImg),
+                              radius: 44,
+                            ),
+                            // kHeight2,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  arg.user!.firstname ?? 'Username',
+                                  style: GoogleFonts.oswald()
+                                      .copyWith(fontSize: 18, color: kWhite),
+                                ),
+                                Text(
+                                  arg.user!.username ?? 'abc@gmail.com',
+                                  style: const TextStyle(color: kWhite),
+                                ),
+                              ],
+                            ),
+                            // kHeight1,
+                            arg.isProfile
+                                ? ActionChip(
+                                    label: const Text('edit profile'),
+                                    onPressed: () async {
+                                      // final data = await UserFunc()
+                                      //     .updateUser(id: "62c148ce68f3b9763ad39e0a");
+                                      Navigator.pushNamed(
+                                          context, '/profile_edit');
+                                    })
+                                : ActionChip(
+                                    label: const Text('follow'),
+                                    onPressed: () {})
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -104,31 +96,26 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          const Expanded(
+                            child: PFCountWidget(
+                              count: '0',
+                              title: 'Reviewed',
+                            ),
+                          ),
                           Expanded(
-                              child: PFCountWidget(
-                            count: '0',
-                            title: 'Reviewed',
-                          )),
+                            child: PFCountWidget(
+                              count: arg.user!.following!.length.toString() ??
+                                  '23',
+                              title: 'following',
+                            ),
+                          ),
                           Expanded(
-                              child: PFCountWidget(
-                            count: arg.isProfile
-                                ? arg.loginUser!.user!.following!.length
-                                        .toString() ??
-                                    '23'
-                                : arg.user!.following!.length.toString() ??
-                                    '23',
-                            title: 'following',
-                          )),
-                          Expanded(
-                              child: PFCountWidget(
-                            count: arg.isProfile
-                                ? arg.loginUser!.user!.followers!.length
-                                        .toString() ??
-                                    '23'
-                                : arg.user!.followers!.length.toString() ??
-                                    '23',
-                            title: 'followers',
-                          ))
+                            child: PFCountWidget(
+                              count: arg.user!.followers!.length.toString() ??
+                                  '23',
+                              title: 'followers',
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -136,10 +123,6 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // ListView(
-            //   shrinkWrap: true,
-            //   children: [HCardWidget()],
-            // )
             ListView.builder(
               shrinkWrap: true,
               // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -149,38 +132,52 @@ class ProfileScreen extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   child: Container(
+                    height: dHeight(context) * .10,
                     margin:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    height: 100,
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+
+                    // height: 100,
                     width: dWidth(context),
                     child: Row(
                       children: [
-                        const Expanded(
-                          flex: 2,
-                          // color: kBlack,
+                        const SizedBox(
+                          width: 60,
+                          height: 60,
                           child: Image(
                             image: NetworkImage(urlImg1),
                             fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        const Expanded(
-                            flex: 4,
-                            child: Text(
-                              lorem,
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            )),
+                        kWidth1,
                         Expanded(
-                            flex: 1,
-                            child: Row(
-                              children: const [
-                                Icon(Icons.whatshot),
-                                Text('234')
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  lorem,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(
+                                  '3-2-2020',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: Colors.grey),
+                                )
                               ],
-                            ))
+                            )),
+                        // Expanded(
+                        //     flex: 1,
+                        //     child: Row(
+                        //       children: const [
+                        //         Icon(Icons.whatshot),
+                        //         Text('234')
+                        //       ],
+                        //     ))
                       ],
                     ),
                   ),

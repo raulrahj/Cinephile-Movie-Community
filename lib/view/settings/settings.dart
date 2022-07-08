@@ -2,15 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:open_box/config/constants.dart';
-import 'package:open_box/config/core.dart';
+
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
-import 'package:open_box/view/register/otp_verification.dart';
-import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/settings/preferences.dart';
 import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
 import 'package:open_box/view/settings/widgets/s_tile.dart';
@@ -45,8 +41,7 @@ class SettingsScreen extends StatelessWidget {
 
                     // ignore: use_build_context_synchronously
                     await Navigator.pushNamed(context, '/account',
-                        arguments:
-                            ProfileArg(user: userData, isProfile: false));
+                        arguments: ProfileArg(user: userData, isProfile: true));
                   },
                 ),
                 SettingsTileWidget(

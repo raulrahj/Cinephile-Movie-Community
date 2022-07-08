@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/view/widgets/common.dart';
 
 class SPreferences extends StatelessWidget {
   const SPreferences({Key? key}) : super(key: key);
@@ -12,6 +13,11 @@ class SPreferences extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Preferences'),
+        leading: pop(context),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: SafeArea(
           child: Column(
         children: [

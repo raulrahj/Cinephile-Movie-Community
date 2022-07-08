@@ -8,8 +8,8 @@ import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 
 class UserFunc {
-  static const userBaseUrl = 'http://192.168.43.244:5000/user';
-
+  static const userBaseUrl = 'http://192.168.100.174:5000/user';
+//192.168.43.244
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
   Future<UserModel?> getUser({required String id}) async {
     UserModel? retrievedUser;
@@ -38,7 +38,7 @@ class UserFunc {
       print(e);
     } catch (e) {
       log(e.toString());
-    }
+    } 
     return retrievedUser;
   }
 

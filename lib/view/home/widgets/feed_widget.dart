@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 
 class HFeedWdget extends StatefulWidget {
-  const HFeedWdget({Key? key, this.postdata}) : super(key: key);
+  const HFeedWdget({Key? key, this.postdata, this.username}) : super(key: key);
   final Post? postdata;
+  final String? username;
   @override
   State<HFeedWdget> createState() => _HFeedWdgetState();
 }
@@ -27,34 +29,39 @@ class _HFeedWdgetState extends State<HFeedWdget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            onTap: () async {
-              print('Request getUser!!!!!!');
-              UserFunc user = UserFunc();
-              final userData = await user
-                  .getUser(id: widget.postdata!.userId)
-                  .then((userData) async {
-                await Navigator.pushNamed(context, '/account',
-                    arguments: ProfileArg(user: userData, isProfile: false));
-              });
-            },
-            leading: const CircleAvatar(
-              backgroundImage: NetworkImage(profImg),
-            ),
-            title: Expanded(
-              child: Text(
-                widget.postdata!.userId ?? "Username",
-                style:
-                    GoogleFonts.dmSans().copyWith(fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            subtitle: Text(
-              widget.postdata!.createdAt.toString() ?? 'justnow',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            trailing: const Icon(Icons.more_vert),
-          ),
+          FutureBuilder(
+              future: UserFunc().getUser(id: widget.postdata!.userId),
+              builder: (context, AsyncSnapshot snapshot) {
+                return ListTile(
+                  onTap: () async {
+                    print('Request getUser!!!!!!');
+                    UserFunc user = UserFunc();
+                    final userData = await user
+                        .getUser(id: widget.postdata!.userId)
+                        .then((userData) async {
+                      await Navigator.pushNamed(context, '/account',
+                          arguments:
+                              ProfileArg(user: userData, isProfile: false));
+                    });
+                  },
+                  leading: const CircleAvatar(
+                    backgroundImage: NetworkImage(profImg),
+                  ),
+                  title: Expanded(
+                    child: Text(
+                      snapshot.data.firstname ?? "Username",
+                      style: GoogleFonts.dmSans()
+                          .copyWith(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  subtitle: Text(
+                    widget.postdata!.createdAt.toString() ?? 'justnow',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  trailing: const Icon(Icons.more_vert),
+                );
+              }),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: LayoutBuilder(
@@ -86,8 +93,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
             borderRadius: BorderRadius.circular(kRadius),
             child: Image(
               image: NetworkImage(
-                  "http://192.168.100.174:5000/images/${widget.postdata!.image}" ??
-                      urlImg1),
+                  "$kApiImgUrl/${widget.postdata!.image}" ?? urlImg1),
             ),
           ),
           AspectRatio(

@@ -3,12 +3,15 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/user/m_login.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 
 class Register {
+  static const authBaseUrl = ApiEndPoints.userAuth;
+
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'))
     ..interceptors.add(Signup());
 
@@ -23,7 +26,6 @@ class Register {
 
     try {
       Response response = await dio.post(
-   
         '$authBaseUrl/register',
         data: jsonEncode(data),
         onSendProgress: (int r, int l) async {
@@ -63,24 +65,24 @@ class Register {
     return retrievedUser;
   }
 
-  static const authBaseUrl = 'http://192.168.43.244:5000/auth';
-  static const loginUrl = 'http://127.0.0.1:5000/auth/login';
-  static const loginUrl2 = 'http/://localhost:5000/auth/login';
-  static const loginUrl1 = 'http://192.168.100.174:5000/auth/login';
-//192.168.43.244
   Future<ProfileModel?> loginUser({required LoginModel loginData}) async {
     ProfileModel? retrievedUser;
     final data = loginData.toJson();
     try {
       Response response = await dio.post(
-        loginUrl1,
+        '$authBaseUrl/login',
         data: jsonEncode(data),
         onSendProgress: (int r, int l) async {
           log('Request Login !!!');
         },
-        options: Options(headers: {
-          HttpHeaders.contentTypeHeader: "application/json",
-        }),
+        options: Options(
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+            headers: {
+              HttpHeaders.contentTypeHeader: "application/json",
+            }),
       ).whenComplete(() => log('Login Request Completed'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final retriev = jsonEncode(response.data);
@@ -101,8 +103,14 @@ class Register {
         print(response.statusMessage);
       }
     } on DioError catch (e) {
+      if (e.response!.statusCode == 404) {
+        print(e.response!.statusCode);
+      } else {
+        print(e.message);
+        print(e.error);
+      }
       log(e.message);
-      throw e.error;
+      // throw e.error;
     } catch (e) {
       log(e.toString());
     }

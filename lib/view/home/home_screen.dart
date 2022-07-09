@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
+import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
 import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
@@ -74,12 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           final Post data = snapshot.data[index];
+                          // final user = getUsername(data.id);
                           return HFeedWdget(
                             postdata: data,
                           );
                         });
                   } else {
-                    return ProgressCircle();
+                    return const ProgressCircle();
                   }
                 })
           ],

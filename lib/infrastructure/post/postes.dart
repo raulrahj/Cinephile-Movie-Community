@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 
 class PostFunc {
-  static const postUrl = "http://192.168.43.244:5000/post";
-  static const postUrl1 = "http://192.168.100.174:5000/post";
+  static const postUrl = ApiEndPoints.post;
+
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
   Map<String, String> requestHeaders = {
     'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ class PostFunc {
     List<Post>? res;
 
     try {
-      final response = await dio.get('$postUrl1/$id/timeline',
+      final response = await dio.get('$postUrl/$id/timeline',
           options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonEncode(response.data);

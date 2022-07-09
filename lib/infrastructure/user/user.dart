@@ -3,12 +3,13 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 
 class UserFunc {
-  static const userBaseUrl = 'http://192.168.100.174:5000/user';
+  static const userBaseUrl = ApiEndPoints.user;
 //192.168.43.244
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
   Future<UserModel?> getUser({required String id}) async {
@@ -38,46 +39,55 @@ class UserFunc {
       print(e);
     } catch (e) {
       log(e.toString());
-    } 
+    }
     return retrievedUser;
   }
 
-  Future<ProfileModel?> updateUser({required String id}) async {
-    final token = await SharedService.getUserProfile();
+  Future<ProfileModel?> updateUser(
+      {required String id, required UserResp userData}) async {
+    final profileData = await SharedService.getUserProfile();
     ProfileModel? retrievedUser;
     Map<String, dynamic> requestHeaders = {
       'Content-Type': 'application/json',
-      'authorization': "Bearer ${token!.token}"
+      'authorization': "Bearer ${profileData!.token}"
     };
-    final Map<String, dynamic> data = {
+    final Map<String, dynamic> data = await {
       "auth": true,
-      "_id": "62c148ce68f3b9763ad39e0a",
-      "username": "raul",
-      "password": token.user!.password!,
-      "firstname": "raulrahj",
-      "lastname": "ul",
+      "_id": userData.id,
+      "username": userData.username ?? profileData.user!.username.toString(),
+      // "password": "123456",
+      "firstname": userData.firstname.toString() ??
+          profileData.user!.firstname.toString(),
+      // "firstname": userData.firstname ?? profileData.user!.firstname,
+      "lastname":
+          userData.lastname.toString() ?? profileData.user!.lastname.toString(),
       "isAdmin": false,
       "followers": ["62be900600b1aef58e50695d"],
       "following": ["62be900600b1aef58e50695d"],
       "createdAt": "2022-07-03T07:44:14.968Z",
       "updatedAt": "2022-07-06T20:02:29.898Z",
+      "about": userData.about.toString() ?? profileData.user!.about.toString(),
       "__v": 0
     };
-
+    print(data.keys.contains("firstname"));
     // final da = profileModelFromJson(jsonEncode(data));
+    // final dData = jsonDecode(data);
     try {
       Response response = await dio.put('$userBaseUrl/$id',
           options: Options(headers: requestHeaders),
           data: jsonEncode(data), onSendProgress: (int r, int l) async {
+        print(jsonEncode(data));
         log("Request Update User");
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data);
+        print("Updated Successfully !!!");
+        // log(jsonDecode(response.data));
         // retrievedUser = ProfileModel.fromJson(response.data);
         final retriev = jsonEncode(response.data);
         retrievedUser = profileModelFromJson(retriev);
-        SharedService.setLoginDetails(retrievedUser);
+        await SharedService.setLoginDetails(retrievedUser);
+        print('Added data in Local !!!');
       } else if (response.statusCode == 500) {
         print('Internal Server Error !!!');
       } else if (response.statusCode == 403) {

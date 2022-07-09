@@ -27,6 +27,7 @@ dependencies:
   google_fonts: ^3.0.1
   google_maps_flutter: ^2.1.7
   http: ^0.13.4
+  image_picker: ^0.8.5+3
   injectable: ^1.5.3
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0

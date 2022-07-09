@@ -37,6 +37,13 @@ class UserModel {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.about,
+    this.country,
+    this.coverPicture,
+    this.livesin,
+    this.profilePicture,
+    this.relationship,
+    this.worksAt,
     this.auth,
   });
 
@@ -50,6 +57,13 @@ class UserModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int? v;
+  final String? profilePicture;
+  final String? coverPicture;
+  final String? about;
+  final String? livesin;
+  final String? worksAt;
+  final String? country;
+  final String? relationship;
   final bool? auth;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -63,6 +77,13 @@ class UserModel {
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         v: json["__v"],
+        profilePicture: json["profilePicture"],
+        coverPicture: json["coverPicture"],
+        about: json["about"],
+        livesin: json["livesin"],
+        worksAt: json["worksAt"],
+        country: json["country"],
+        relationship: json["relationship"],
         auth: json["auth"],
       );
 
@@ -81,6 +102,13 @@ class UserModel {
         "createdAt": createdAt!.toIso8601String(),
         "updatedAt": updatedAt!.toIso8601String(),
         "__v": v,
+        "profilePicture": profilePicture,
+        "coverPicture": coverPicture,
+        "about": about,
+        "livesin": livesin,
+        "worksAt": worksAt,
+        "country": country,
+        "relationship": relationship,
         "auth": auth,
       };
 }

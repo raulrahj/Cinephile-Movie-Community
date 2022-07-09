@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/widgets/common.dart';
 
 class ProfileArg {
@@ -57,6 +59,7 @@ class ProfileScreen extends StatelessWidget {
                             // kHeight2,
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   arg.user!.firstname ?? 'Username',
@@ -65,8 +68,18 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   arg.user!.username ?? 'abc@gmail.com',
-                                  style: const TextStyle(color: kWhite),
+                                  style:
+                                      TextStyle(color: kWhite.withOpacity(0.9)),
                                 ),
+                                kHeight1,
+                                Text(
+                                  arg.user!.about ?? "bio :)",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: kWhite),
+                                )
+                                // Text(arg.)
                               ],
                             ),
                             // kHeight1,
@@ -74,10 +87,15 @@ class ProfileScreen extends StatelessWidget {
                                 ? ActionChip(
                                     label: const Text('edit profile'),
                                     onPressed: () async {
+                                      final data =
+                                          await SharedService.getUserProfile()
+                                              .then((data) {
+                                        Navigator.pushNamed(
+                                            context, '/profile_edit',
+                                            arguments: ProfileEditArg(data!));
+                                      });
                                       // final data = await UserFunc()
                                       //     .updateUser(id: "62c148ce68f3b9763ad39e0a");
-                                      Navigator.pushNamed(
-                                          context, '/profile_edit');
                                     })
                                 : ActionChip(
                                     label: const Text('follow'),

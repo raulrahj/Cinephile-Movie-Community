@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
@@ -207,8 +208,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ],
                           ),
                           background: Theme.of(context).primaryColorLight,
-                          function: () {
-                            Navigator.pushNamed(context, '/home');
+                          function: () async {
+                            GoogleSignIn googleSignIn = GoogleSignIn(
+                              scopes: [
+                                'email',
+                                'https://www.googleapis.com/auth/contacts.readonly',
+                              ],
+                            );
+                            try {
+                              await googleSignIn.signIn();
+                            } catch (error) {
+                              print(error);
+                            }
                           },
                         ),
                       ],

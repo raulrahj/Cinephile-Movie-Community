@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/data/core/di/injectable.dart';
 import 'package:open_box/view/home/comment_screen.dart';
@@ -10,11 +11,9 @@ import 'package:open_box/view/map_view_screen/map_view.dart';
 import 'package:open_box/view/chat_screen/g_chat_screen.dart';
 import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/profile_screen/profile_edit.dart';
-import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/notification_screen/notification_screen.dart';
 import 'package:open_box/view/discover/movie_detailed.dart';
-import 'package:open_box/logic/bloc/trending/new_releases/new_releases_bloc.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/widgets/bottom_nav.dart';
 
@@ -25,8 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<TrendingBloc>(create: (context) => getIt<TrendingBloc>()),
-        BlocProvider(create: (context) => getIt<NewReleasesBloc>())
+        BlocProvider<MovieInfoBloc>(create: (context) => getIt<MovieInfoBloc>()),
+        // BlocProvider(create: (context) => getIt<NewReleasesBloc>())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

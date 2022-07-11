@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_login.dart';
@@ -182,6 +183,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ],
               ),
               background: Theme.of(context).primaryColorLight,
+              function: ()async{
+
+              },
             ),
             kHeight3,
             RichText(

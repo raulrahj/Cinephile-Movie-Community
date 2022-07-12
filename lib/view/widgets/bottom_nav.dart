@@ -1,20 +1,12 @@
 import 'dart:developer';
-
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_box/logic/bloc/trending/trending_bloc.dart';
-// import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-// import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/view/discover/discover.dart';
 import 'package:open_box/view/discover/trending/trending_screen.dart';
 import 'package:open_box/view/home/home_screen.dart';
-// import 'package:open_box/view/profile_screen/profile_edit.dart';
-// import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/search_screen/search_screen.dart';
 import 'package:open_box/view/settings/settings.dart';
 
@@ -23,7 +15,6 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     return BottomNavigationBar(
         backgroundColor: Colors.black.withOpacity(0.1),
         items: const [
@@ -51,8 +42,8 @@ class _NavControllerState extends State<NavController> {
 
   @override
   Widget build(BuildContext context) {
-      log('nav bar rebuild :(');
-    
+    log('nav bar rebuild :(');
+
     return Scaffold(
       bottomNavigationBar: isFull
           ? none

@@ -10,11 +10,13 @@ environment:
 dependencies:
   api_cache_manager: ^1.0.2
   cached_network_image: ^3.2.1
+  connectivity_plus: ^2.3.5
   cupertino_icons: ^1.0.2
   # flutter_staggered_grid_view: ^0.6.1
   custom_navigation_bar: ^0.8.2
   dartz: ^0.10.1
   dio: ^4.0.6
+  equatable: ^2.0.3
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
@@ -24,7 +26,9 @@ dependencies:
   get_it: ^7.2.0
   google_fonts: ^3.0.1
   google_maps_flutter: ^2.1.7
+  google_sign_in: ^5.4.0
   http: ^0.13.4
+  image_picker: ^0.8.5+3
   injectable: ^1.5.3
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0

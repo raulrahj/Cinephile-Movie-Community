@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 
 class PostFunc {
-  static const postUrl = "http://localhost:5000/post";
+  static const postUrl = ApiEndPoints.post;
+
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
   Map<String, String> requestHeaders = {
     'Content-Type': 'application/json',
@@ -70,16 +72,16 @@ class PostFunc {
     }
   }
 
-  Future<List<Post?>> getTimeLinePost(String id) async {
+  Future<List<Post?>> getTimeLinePost({required String id}) async {
     List<Post>? res;
 
     try {
-      final response = await dio.get(
-          '$postUrl/62ac12c033cde9b7e78bb802/getTimeLinePosts',
+      final response = await dio.get('$postUrl/$id/timeline',
           options: Options(headers: requestHeaders));
-      res = jsonDecode(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return res!;
+        final data = jsonEncode(response.data);
+        res = postFromJson(data);
+        return res;
       } else {}
     } catch (e) {
       log(e.toString());
@@ -91,13 +93,32 @@ class PostFunc {
     List<Post>? res;
 
     try {
-      final response = await dio.get(
-          '$postUrl/$id',
+      final response = await dio.get('$postUrl/$id',
           options: Options(headers: requestHeaders));
       res = jsonDecode(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return res!;
       } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return res!;
+  }
+
+  Future<List<Post>>? allPost() async {
+    List<Post>? res;
+
+    try {
+      final response =
+          await dio.get(postUrl, options: Options(headers: requestHeaders));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        res = response.data;
+
+        log(response.data.toString());
+        return res!;
+      } else {
+        log(response.statusMessage!);
+      }
     } catch (e) {
       log(e.toString());
     }

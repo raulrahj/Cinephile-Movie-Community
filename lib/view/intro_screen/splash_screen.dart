@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,6 +34,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MovieInfoBloc>().add(const MovieInfoEvent.getTrending());
+      context.read<MovieInfoBloc>().add(const MovieInfoEvent.getNewReleased());
+    });
     _navigation(context);
     return Scaffold(
       body: Container(

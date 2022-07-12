@@ -3,9 +3,7 @@ import 'package:open_box/data/models/new_releases/new_releases.dart';
 import 'package:open_box/data/models/trending/m_trending.dart';
 import 'package:dartz/dartz.dart';
 
-abstract class TrendingRepo{
-  Future<Either<MainFailure,List<Trending>>> getTrending();
-}
-abstract class NewReleasesRepo{
-  Future<Either<MainFailure,NewReleases>> getNewReleases();
+abstract class MovieInfoRepo {
+  Future<Either<MainFailure, Trending>> getTrending();
+  Future<Either<MainFailure, NewReleases>> getNewReleases();
 }

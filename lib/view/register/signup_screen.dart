@@ -1,18 +1,21 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
-import 'package:open_box/infrastructure/register/register_user.dart';
+import 'package:open_box/infrastructure/auth/authenticaton.dart';
+import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
 import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/widgets/or_divider.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 
 TextEditingController _nameController = TextEditingController();
 TextEditingController _lastnameController = TextEditingController();
@@ -32,6 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? firstName;
   String? lastName;
   String? password;
+  String? confirmPass;
   final formKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -79,6 +83,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Column(
                       children: [
                         DefaultTextField(
+                          label: 'E-mail',
+                          prefix: const Icon(Icons.email),
+                          controller: _emailController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "* Required";
+                            }
+                            if (!value.contains("@") ||
+                                !value.contains(".com")) {
+                              return "Enter a valid E-mail";
+                            }
+                            return null;
+                          },
+                          onSaved: (onsave) => {userName = onsave},
+                        ),
+                        kHeight1,
+                        DefaultTextField(
                           label: 'First Name',
                           prefix: const Icon(Icons.person_pin),
                           controller: _nameController,
@@ -97,15 +118,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         kHeight1,
                         DefaultTextField(
-                          label: 'E-mail',
-                          prefix: const Icon(Icons.email),
-                          controller: _emailController,
-                          validator: (value) =>
-                              value!.isEmpty ? "* Required" : null,
-                          onSaved: (onsave) => {userName = onsave},
-                        ),
-                        kHeight1,
-                        DefaultTextField(
                           label: 'Password',
                           obscureText: true,
                           prefix: const Icon(Icons.key),
@@ -121,69 +133,99 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         //   prefix: const Icon(Icons.key),
                         //   controller: _confirmpasswordController,
                         //   validator: (value) {
-                        //     if (value != _passwordController.text) {
+                        //     if (value != password) {
+                        //       print(value);mera
+                        //       // confirmPass = '';
                         //       return "Password not matching";
-                        //     }else if(value == _passwordController.text){
+                        //     }
+                        //     if (value == password) {
                         //       return null;
                         //     }
-                        //      else if (value!.isEmpty) {
+                        //     if (value!.isEmpty) {
                         //       return "* Required";
-                        //     } else {
+                        //     } else if (password == confirmPass) {
                         //       return null;
                         //     }
+                        //     // return null;
+                        //     // }
+                        //   },
+                        //   onSaved: (onSaved) {
+                        //     confirmPass = onSaved;
                         //   },
                         // ),
                         kHeight3,
-                        DefaultButton(
-                          text: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          function: () async {
-                            final reg = Register();
-                            final form = formKey.currentState;
-                            if (form!.validate()) {
-                              form.save();
-                              final data = UserResp(
-                                  firstname: firstName!,
-                                  password: password,
-                                  username: userName!,
-                                  lastname: lastName!);
-                              final user = await reg
-                                  .signUp(signUpData: data)
-                                  .whenComplete(() {
-                                log('New user Registered');
-                              }).then((response) {
-                                if (response != null) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return AlertDialog(
-                                          title: const Text(
-                                            'Signup Success !!!',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator
-                                                    .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        '/login',
-                                                        (route) => false);
-                                              },
-                                              child: const Text('OK'),
-                                            )
-                                          ],
-                                        );
-                                      });
-                                }
-                              });
-                            } else {}
+                        BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                          builder: (context, state) {
+                            return DefaultButton(
+                              text: const Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              function: () async {
+                                final reg = Authentication();
+                                final form = formKey.currentState;
+                                if (form!.validate()) {
+                                  form.save();
+                                  final data = UserResp(
+                                      firstname: firstName!,
+                                      password: password,
+                                      username: userName!,
+                                      lastname: lastName!);
+                                  final user =
+                                      // await reg.signUp(signUpData: data);
+                                      await context
+                                          .read<AuthenticationCubit>()
+                                          .signUp(signUpData: data);
+                                  if (state.isLoading) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (ctx) {
+                                          return const SimpleDialog(
+                                            children: [
+                                              Center(
+                                                  child:
+                                                      ProgressCircle()) // await reg.signUp(signUpData: data);
+                                            ],
+                                          );
+                                        });
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (ctx) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                              'Signup Success !!!',
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator
+                                                      .pushNamedAndRemoveUntil(
+                                                          context,
+                                                          '/login',
+                                                          (route) => false);
+                                                },
+                                                child: const Text('OK'),
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  //     .whenComplete(() {
+                                  //   log('New user Registered');
+                                  // }).then((response) {
+                                  //   if (response != null) {
 
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => const VerifyScreen()));
+                                }
+                                // });
+                                // } else {}
+
+                                // Navigator.of(context).push(MaterialPageRoute(
+                                //     builder: (context) => const VerifyScreen()));
+                              },
+                            );
                           },
                         ),
                         const OrDivider(),
@@ -207,8 +249,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ],
                           ),
                           background: Theme.of(context).primaryColorLight,
-                          function: () {
-                            Navigator.pushNamed(context, '/home');
+                          function: () async {
+                            GoogleSignIn googleSignIn = GoogleSignIn(
+                              scopes: [
+                                'email',
+                                'https://www.googleapis.com/auth/contacts.readonly',
+                              ],
+                            );
+                            try {
+                              await googleSignIn.signIn();
+                            } catch (error) {
+                              print(error);
+                            }
                           },
                         ),
                       ],

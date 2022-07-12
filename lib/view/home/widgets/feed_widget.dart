@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 
 class HFeedWdget extends StatefulWidget {
-  const HFeedWdget({Key? key}) : super(key: key);
-
+  const HFeedWdget({Key? key, this.postdata, this.username}) : super(key: key);
+  final Post? postdata;
+  final String? username;
   @override
   State<HFeedWdget> createState() => _HFeedWdgetState();
 }
@@ -25,35 +29,44 @@ class _HFeedWdgetState extends State<HFeedWdget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            onTap: () async {
-              print('Request getUser!!!!!!');
-              UserFunc user = UserFunc();
-              final userData = await user
-                  .getUser(id: '62be900600b1aef58e50695d')
-                  .then((userData) async {
-                await Navigator.pushNamed(context, '/account',
-                    arguments: ProfileArg(user: userData ,isProfile: false));
-              });
-            },
-            leading: const CircleAvatar(
-              backgroundImage: NetworkImage(profImg),
-            ),
-            title: Text(
-              "Username",
-              style: GoogleFonts.dmSans().copyWith(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              'justnow',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            trailing: const Icon(Icons.more_vert),
-          ),
+          FutureBuilder(
+              future: UserFunc().getUser(id: widget.postdata!.userId),
+              builder: (context, AsyncSnapshot snapshot) {
+                return ListTile(
+                  onTap: () async {
+                    print('Request getUser!!!!!!');
+                    UserFunc user = UserFunc();
+                    final userData = await user
+                        .getUser(id: widget.postdata!.userId)
+                        .then((userData) async {
+                      await Navigator.pushNamed(context, '/account',
+                          arguments:
+                              ProfileArg(user: userData, isProfile: false));
+                    });
+                  },
+                  leading: const CircleAvatar(
+                    backgroundImage: NetworkImage(profImg),
+                  ),
+                  title: Expanded(
+                    child: Text(
+                      snapshot.data.firstname ?? "Username",
+                      style: GoogleFonts.dmSans()
+                          .copyWith(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  subtitle: Text(
+                    widget.postdata!.createdAt.toString() ?? 'justnow',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  trailing: const Icon(Icons.more_vert),
+                );
+              }),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: LayoutBuilder(
               builder: (context, constraints) => Text(
-                lorem,
+                widget.postdata!.desc ?? lorem,
                 overflow: TextOverflow.ellipsis,
                 maxLines: isExpanded ? 10 : 2,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -62,24 +75,25 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               ),
             ),
           ),
-          GestureDetector(
-            child: const Text(
-              '  see more',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onTap: () {
-              setState(
-                () {
-                  isExpanded = !isExpanded;
-                },
-              );
-            },
-          ),
+          // GestureDetector(
+          //   child: const Text(
+          //     '  see more',
+          //     style: TextStyle(fontWeight: FontWeight.bold),
+          //   ),
+          //   onTap: () {
+          //     setState(
+          //       () {
+          //         isExpanded = !isExpanded;
+          //       },
+          //     );
+          //   },
+          // ),
           kHeight1,
           ClipRRect(
             borderRadius: BorderRadius.circular(kRadius),
-            child: const Image(
-              image: NetworkImage(urlImg1),
+            child: Image(
+              image: NetworkImage(
+                  "$kApiImgUrl/${widget.postdata!.image}" ?? urlImg1),
             ),
           ),
           AspectRatio(
@@ -94,10 +108,12 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                       // SupportButtonW(),
                       TextButton.icon(
                         label: Text(
-                          '456',
+                          widget.postdata!.likes!.length.toString() ?? '456',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          // final data = await PostFunc().allPost();
+                        },
                         icon: const Icon(Icons.whatshot_outlined),
                       ),
                       // const Text(

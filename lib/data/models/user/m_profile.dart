@@ -139,7 +139,8 @@
 
 import 'dart:convert';
 
-ProfileModel profileModelFromJson(String str) => ProfileModel.fromJson(json.decode(str));
+ProfileModel profileModelFromJson(String str) =>
+    ProfileModel.fromJson(json.decode(str));
 
 String profileModelDataToJson(ProfileModel data) => json.encode(data.toJson());
 
@@ -164,19 +165,25 @@ class ProfileModel {
 }
 
 class UserResp {
-  UserResp({
-    this.id,
-    required this.username,
-    this.password,
-    required this.firstname,
-    required this.lastname,
-    this.isAdmin,
-    this.followers=const[],
-    this.following=const[],
-    this.createdAt,
-    this.updatedAt,
-    this.v,
-  });
+  UserResp(
+      {this.id,
+      required this.username,
+      this.password,
+      required this.firstname,
+      required this.lastname,
+      this.isAdmin,
+      this.followers = const [],
+      this.following = const [],
+      this.createdAt,
+      this.updatedAt,
+      this.v,
+      this.about,
+      this.country,
+      this.coverPicture,
+      this.livesin,
+      this.profilePicture,
+      this.relationship,
+      this.worksAt});
 
   String? id;
   String username;
@@ -189,6 +196,13 @@ class UserResp {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  String? profilePicture;
+  String? coverPicture;
+  String? about;
+  String? livesin;
+  String? worksAt;
+  String? country;
+  String? relationship;
 
   factory UserResp.fromJson(Map<String, dynamic> json) => UserResp(
         id: json["_id"],
@@ -201,6 +215,13 @@ class UserResp {
         following: List<dynamic>.from(json["following"].map((x) => x)),
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
+        profilePicture: json["profilePicture"],
+        coverPicture: json["coverPicture"],
+        about: json["about"],
+        livesin: json["livesin"],
+        worksAt: json["worksAt"],
+        country: json["country"],
+        relationship: json["relationship"],
         v: json["__v"],
       );
 
@@ -219,6 +240,13 @@ class UserResp {
             : List<dynamic>.from(following!.map((x) => x)),
         "createdAt": createdAt == null ? '' : createdAt!.toIso8601String(),
         "updatedAt": updatedAt == null ? '' : updatedAt!.toIso8601String(),
+        "profilePicture": profilePicture,
+        "coverPicture": coverPicture,
+        "about": about,
+        "livesin": livesin,
+        "worksAt": worksAt,
+        "country": country,
+        "relationship": relationship,
         "__v": v,
       };
 }

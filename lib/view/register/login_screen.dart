@@ -1,17 +1,20 @@
-import 'dart:ui';
+import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_login.dart';
+import 'package:open_box/infrastructure/auth/authenticaton.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
-import 'package:open_box/infrastructure/register/register_user.dart';
+import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -51,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       title: 'Continue to your account',
                       color: Theme.of(context).primaryColorLight,
                     ),
-                    // Form()
                   ],
                 ),
               ),
@@ -107,7 +109,15 @@ class _LoginWidgetState extends State<LoginWidget> {
               label: 'E-mail',
               hint: 'abc@gmail.com',
               keyType: TextInputType.emailAddress,
-              validator: (value) => value!.isEmpty ? "* Required" : null,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "* Required";
+                }
+                if (!value.contains("@") || !value.contains(".com")) {
+                  return "Enter a valid E-mail";
+                }
+                return null;
+              },
               onSaved: (onSaved) => {userName = onSaved},
             ),
             kHeight2,
@@ -121,45 +131,73 @@ class _LoginWidgetState extends State<LoginWidget> {
                 Icons.key,
                 color: Theme.of(context).primaryColor,
               ),
-              validator: (value) => value!.isEmpty ? "* Required" : null,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Enter the password";
+                }
+                if (value.length < 6) {
+                  return "Password must be at least 6 charcter's";
+                }
+                return null;
+              },
               onSaved: (onsaved) => {password = onsaved},
 
               // suffix: const Icon(Icons.remove_red_eye),
             ),
             kHeight4,
-            DefaultButton(
-              text: const Text(
-                'Login',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              function: () async {
-                final form = formKey.currentState;
-                if (form!.validate()) {
-                  form.save();
-                  final data =
-                      LoginModel(username: userName!, password: password!);
-                  // await Future.delayed(const Duration(seconds: 10));
-                  Register reg = Register();
+            BlocBuilder<AuthenticationCubit, AuthenticationState>(
+              builder: (context, state) {
+                return DefaultButton(
+                  text: const Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  function: () async {
+                    final form = formKey.currentState;
+                    if (form!.validate()) {
+                      form.save();
+                      FocusScope.of(context).unfocus();
 
-                  // final data = LoginModel(username: 'raul', password: '123456');
-                  final user = await reg
-                      .loginUser(loginData: data)
-                      .whenComplete(() async {
-                    final isLogged =
-                        await SharedService.isLoggedIn().whenComplete(() async {
-                      Future.delayed(Duration(seconds: 3));
-                      final isOk = await SharedService.isLoggedIn();
-                      print('Checking Login status');
-                      if (isOk) {
+                      final data =
+                          LoginModel(username: userName!, password: password!);
+                      // await Future.delayed(const Duration(seconds: 10));
+                      Authentication reg = Authentication();
+                      final user = await context
+                          .read<AuthenticationCubit>()
+                          .login(loginData: data);
+
+                      // final data = LoginModel(username: 'raul', password: '123456');
+                      // final user = await reg
+                      //     .loginUser(loginData: data)
+                      //   .whenComplete(() async {
+                      // final isLogged =
+                      //     await SharedService.isLoggedIn().then((isOk) async {
+                      //   Future.delayed(const Duration(seconds: 3));
+                      //   // final isOk = await SharedService.isLoggedIn();
+                      //   print('Checking Login status');
+                      //   if (isOk) {
+                      // ignore: use_build_context_synchronously
+                      if (state.isLoading) {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return const SimpleDialog(
+                                children: [Center(child: ProgressCircle())],
+                              );
+                            });
+                      } else {
                         // ignore: use_build_context_synchronously
                         await Navigator.pushNamedAndRemoveUntil(
                             context, '/main', (route) => false);
                       }
-                    });
-                  });
-                } else {}
+                      //   }
+                      // });
+                      // });
+                    } else {}
+                  },
+                );
               },
             ),
             kHeight1,
@@ -182,6 +220,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 ],
               ),
               background: Theme.of(context).primaryColorLight,
+              function: () async {},
             ),
             kHeight3,
             RichText(

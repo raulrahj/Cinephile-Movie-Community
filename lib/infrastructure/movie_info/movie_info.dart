@@ -11,7 +11,7 @@ import 'package:open_box/data/models/trending/m_trending.dart';
 import 'package:open_box/data/core/failures/main_failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:open_box/data/models/trending/m_trending.dart';
-import 'package:open_box/data/repo/trending_repo.dart';
+import 'package:open_box/data/repo/movie_info_repo.dart';
 
 @LazySingleton(as: MovieInfoRepo)
 class MovieInfoRepository implements MovieInfoRepo {
@@ -23,8 +23,7 @@ class MovieInfoRepository implements MovieInfoRepo {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonEncode(response.data);
         final list = trendingFromJson(data);
-    
-        
+
         return Right(list);
       } else {
         return const Left(MainFailure.serverFailure());
@@ -33,16 +32,15 @@ class MovieInfoRepository implements MovieInfoRepo {
       return const Left(MainFailure.clientFailure());
     }
   }
-    @override
+
+  @override
   Future<Either<MainFailure, NewReleases>> getNewReleases() async {
     try {
       final Response response =
           await Dio(BaseOptions()).get(ApiEndPoints.newReleases);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final newReleasesList = NewReleases.fromJson(response.data);
-        // final  newReleasesList = (response.data['page=1']['results'] as List).map((e) {
-        //  return NewReleases.fromJson(e);
-        // }).toList();
+
         return Right(newReleasesList);
       } else {
         return const Left(MainFailure.serverFailure());

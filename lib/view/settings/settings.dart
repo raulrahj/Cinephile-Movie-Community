@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:open_box/infrastructure/auth/authenticaton.dart';
 
 import 'package:open_box/infrastructure/helper/shared_service.dart';
-import 'package:open_box/infrastructure/register/register_user.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/settings/preferences.dart';
@@ -34,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.account_circle,
                   title: 'Profile',
                   function: () async {
-                    final cUser = await Register().getUserProfile();
+                    final cUser = await Authentication().getUserProfile();
                     final userData =
                         await UserFunc().getUser(id: cUser!.user!.id!);
                     // await Register().getUserProfile();

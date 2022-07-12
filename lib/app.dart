@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_box/infrastructure/auth/authenticaton.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
+import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/data/core/di/injectable.dart';
 import 'package:open_box/view/home/comment_screen.dart';
@@ -24,7 +26,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MovieInfoBloc>(create: (context) => getIt<MovieInfoBloc>()),
+        BlocProvider<MovieInfoBloc>(
+            create: (context) => getIt<MovieInfoBloc>()),
+        BlocProvider<AuthenticationCubit>(
+            create: (context) => getIt<AuthenticationCubit>())
         // BlocProvider(create: (context) => getIt<NewReleasesBloc>())
       ],
       child: MaterialApp(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/constants.dart';
-import 'package:open_box/data/repo/trending_repo.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/view/discover/trending/trending_card.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';

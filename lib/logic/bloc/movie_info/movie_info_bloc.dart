@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:open_box/data/core/failures/main_failure.dart';
 import 'package:open_box/data/models/new_releases/new_releases.dart';
 import 'package:open_box/data/models/trending/m_trending.dart';
-import 'package:open_box/data/repo/trending_repo.dart';
+import 'package:open_box/data/repo/movie_info_repo.dart';
 part 'movie_info_event.dart';
 part 'movie_info_state.dart';
 // part 'trending_bloc.freezed.dart';

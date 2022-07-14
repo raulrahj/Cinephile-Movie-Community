@@ -158,6 +158,8 @@ class ProfileModel {
         token: json["token"],
       );
 
+  get userData => null;
+
   Map<String, dynamic> toJson() => {
         "user": user!.toJson(),
         "token": token,

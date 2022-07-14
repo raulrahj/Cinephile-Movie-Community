@@ -22,7 +22,6 @@ class TrendingCardW extends StatelessWidget {
             // data.isLoading?const Center(child:  CircularProgressIndicator()):
             Stack(
           children: [
-           
             Container(
               margin: const EdgeInsets.all(3),
               width: dWidth(context) / 3.8,
@@ -30,9 +29,9 @@ class TrendingCardW extends StatelessWidget {
               // height: dHeight(context) / 3.4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(kRadius),
-                image: DecorationImage(image: NetworkImage(
-                 
-                    "$kImgHost${data.posterPath}"), fit: BoxFit.cover),
+                image: DecorationImage(
+                    image: NetworkImage("$kImgHost${data.posterPath}"),
+                    fit: BoxFit.cover),
               ),
             ),
             //   },
@@ -52,16 +51,14 @@ class TrendingCardW extends StatelessWidget {
                 height: 25,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Expanded(
-                    child: Center(
-                      child: Text(
-                        data.title ?? 'Inceptions',
-                        style: GoogleFonts.oswald().copyWith(
-                            fontWeight: FontWeight.w300,
-                            color: kBlack,
-                            fontSize: 12),
-                        overflow: TextOverflow.fade,
-                      ),
+                  child: Center(
+                    child: Text(
+                      data.title ?? 'Inceptions',
+                      style: GoogleFonts.oswald().copyWith(
+                          fontWeight: FontWeight.w300,
+                          color: kBlack,
+                          fontSize: 12),
+                      overflow: TextOverflow.fade,
                     ),
                   ),
                 ),

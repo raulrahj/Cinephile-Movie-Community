@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_box/infrastructure/auth/authenticaton.dart';
+import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
+import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/data/core/di/injectable.dart';
@@ -17,6 +18,7 @@ import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/notification_screen/notification_screen.dart';
 import 'package:open_box/view/discover/movie_detailed.dart';
 import 'package:open_box/view/register/signup_screen.dart';
+import 'package:open_box/view/user_screen/user_screen.dart';
 import 'package:open_box/view/widgets/bottom_nav.dart';
 
 class MyApp extends StatelessWidget {
@@ -27,10 +29,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<MovieInfoBloc>(
-            create: (context) => getIt<MovieInfoBloc>()),
+          create: (context) => getIt<MovieInfoBloc>(),
+        ),
         BlocProvider<AuthenticationCubit>(
-            create: (context) => getIt<AuthenticationCubit>())
-        // BlocProvider(create: (context) => getIt<NewReleasesBloc>())
+          create: (context) => getIt<AuthenticationCubit>(),
+        ),
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(UserRepo()),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -62,6 +68,7 @@ class MyApp extends StatelessWidget {
           '/new_post': (context) => const NewPost(),
           '/login': (context) => const LoginScreen(),
           '/sign_up': (context) => const SignUpScreen(),
+          '/user_screen': (context) => const UserScreen(),
         },
       ),
     );

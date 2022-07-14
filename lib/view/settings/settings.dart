@@ -2,10 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_box/config/constants.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/infrastructure/auth/authenticaton.dart';
 
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/settings/preferences.dart';
 import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
@@ -19,14 +23,61 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            const LargeHeadlineWidget(title: 'Settings'),
-            const SettingsTitleWidget(
-              title: 'Account',
+            AspectRatio(
+              aspectRatio: 2 / 1,
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    color: Theme.of(context).primaryColor,
+                    height: dHeight(context) * .13,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      Container(color: kWhite, height: dHeight(context) * .13),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircleAvatar(
+                        backgroundImage: NetworkImage(profImg),
+                        radius: 54,
+                      ),
+                      Text(
+                        "qwerty",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      )
+                    ],
+                  ),
+                )
+              ]),
             ),
+            // const LargeHeadlineWidget(title: ),
+            const SettingsTitleWidget(
+              title: 'Profile',
+            ),
+        //     Card(
+        //   elevation: 5,
+        //   child: ListTile(
+        //     leading: Icon(Icons.person),
+        //     title: Text('Account'),
+        //     // subtitle: Text('Icream is good for health'),
+        //     trailing: Icon(Icons.arrow_forward),
+        //   ),
+        // ),
             ExpWidget(
               title: 'Login and Security',
               children: [
@@ -34,14 +85,16 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.account_circle,
                   title: 'Profile',
                   function: () async {
-                    final cUser = await Authentication().getUserProfile();
-                    final userData =
-                        await UserFunc().getUser(id: cUser!.user!.id!);
+                    // final cUser = await Authentication().getUserProfile();
+                    // ignore: use_build_context_synchronously
+                    context.read<UserBloc>().add(LoadCurrentUser());
+                    // final userData =
+                    //     await UserRepo().getUser(id: cUser!.user!.id!);
                     // await Register().getUserProfile();
 
                     // ignore: use_build_context_synchronously
                     await Navigator.pushNamed(context, '/account',
-                        arguments: ProfileArg(user: userData, isProfile: true));
+                        arguments: ProfileArg(isProfile: true));
                   },
                 ),
                 SettingsTileWidget(
@@ -158,7 +211,7 @@ class SettingsScreen extends StatelessWidget {
             const ExpWidget(
               title: 'Developer',
               children: [
-                const SettingsTileWidget(
+                SettingsTileWidget(
                   icon: Icons.account_circle,
                   title: 'Profile',
                 ),

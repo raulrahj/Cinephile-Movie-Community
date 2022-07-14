@@ -8,7 +8,7 @@ import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 
-class UserFunc {
+class UserRepo {
   static const userBaseUrl = ApiEndPoints.user;
 //192.168.43.244
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
@@ -66,6 +66,9 @@ class UserFunc {
       "following": ["62be900600b1aef58e50695d"],
       "createdAt": "2022-07-03T07:44:14.968Z",
       "updatedAt": "2022-07-06T20:02:29.898Z",
+      "profilePicture": userData.profilePicture ??
+          "20220714170501282918image_cropper_1657798489308.jpg",
+      "coverPicture": "20220714171547285772image_cropper_1657799084143.jpg",
       "about": userData.about.toString() ?? profileData.user!.about.toString(),
       "__v": 0
     };

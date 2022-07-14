@@ -7,3 +7,4 @@ Future<void> main() async {
   await configureInjection();
   runApp(const MyApp());
 }
+  

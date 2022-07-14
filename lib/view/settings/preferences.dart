@@ -30,8 +30,8 @@ class SPreferences extends StatelessWidget {
               // final data = jsonEncode(userData);
               // final usr = userDataFromJson(data);
               if (userData != null) {
-                final userFunc = UserFunc();
-                final deleteResponse = await userFunc
+                final userRepo = UserRepo();
+                final deleteResponse = await userRepo
                     .deleteUser(id: userData.user!.id!, context: context)
                     .then((response) {
                   if (response != null) {

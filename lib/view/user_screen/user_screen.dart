@@ -3,26 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/data/models/user/m_user.dart';
-import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/config/strings.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
-import 'package:open_box/view/profile_screen/profile_edit.dart';
+import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/widgets/common.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 
-class ProfileArg {
-  final UserModel? user;
-  // final ProfileModel? loginUser;
-  final bool isProfile;
-  ProfileArg({required this.isProfile, this.user});
-}
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class UserScreen extends StatelessWidget {
+  const UserScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final arg = ModalRoute.of(context)?.settings.arguments as ProfileArg;
+    // final arg = ModalRoute.of(context)?.settings.arguments as ProfileArg;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
-          if (state is CurrentUserState ) {
+          if (state is UserLoadedState) {
             return SafeArea(
                 child: ListView(
               shrinkWrap: true,
@@ -58,8 +50,9 @@ class ProfileScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                const CircleAvatar(
-                                  backgroundImage: NetworkImage(profImg),
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage("$kImgHost/${state.userData!.profilePicture}"),
+                                
                                   radius: 44,
                                 ),
                                 // kHeight2,
@@ -68,18 +61,18 @@ class ProfileScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      state.profileData!.user!.firstname,
+                                      state.userData!.firstname,
                                       style: GoogleFonts.oswald().copyWith(
                                           fontSize: 18, color: kWhite),
                                     ),
                                     Text(
-                                      state.profileData!.user!.username,
+                                      state.userData!.username,
                                       style: TextStyle(
                                           color: kWhite.withOpacity(0.9)),
                                     ),
                                     kHeight1,
                                     Text(
-                                     state.profileData!.user!.about ?? "bio :)",
+                                      state.userData!.about ?? "bio :)",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -89,24 +82,13 @@ class ProfileScreen extends StatelessWidget {
                                   ],
                                 ),
                                 // kHeight1,
-                                arg.isProfile
-                                    ? ActionChip(
-                                        label: const Text('edit profile'),
-                                        onPressed: () async {
-                                          final data = await SharedService
-                                                  .getUserProfile()
-                                              .then((data) {
-                                            Navigator.pushNamed(
-                                                context, '/profile_edit',
-                                                arguments:
-                                                    ProfileEditArg(data!));
-                                          });
-                                          // final data = await UserFunc()
-                                          //     .updateUser(id: "62c148ce68f3b9763ad39e0a");
-                                        })
-                                    : ActionChip(
-                                        label: const Text('follow'),
-                                        onPressed: () {})
+
+                                // final data = await UserFunc()
+                                //     .updateUser(id: "62c148ce68f3b9763ad39e0a");
+                                // })
+                                ActionChip(
+                                    label: const Text('follow'),
+                                    onPressed: () {})
                               ],
                             ),
                           ),
@@ -129,14 +111,14 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 child: PFCountWidget(
-                                  count: state.profileData!.user!.following!.length
+                                  count: state.userData!.following!.length
                                       .toString(),
                                   title: 'following',
                                 ),
                               ),
                               Expanded(
                                 child: PFCountWidget(
-                                  count: state.profileData!.user!.followers!.length
+                                  count: state.userData!.followers!.length
                                       .toString(),
                                   title: 'followers',
                                 ),
@@ -218,33 +200,6 @@ class ProfileScreen extends StatelessWidget {
           }
         },
       ),
-    );
-  }
-}
-
-class PFCountWidget extends StatelessWidget {
-  const PFCountWidget({
-    Key? key,
-    required this.count,
-    required this.title,
-  }) : super(key: key);
-  final String count;
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: dWidth(context) / 2.2,
-      height: dHeight(context) * .09,
-      // color: Colors.accents[5],
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Text(title),
-        // kHeight1,
-        Text(
-          count,
-          style: Theme.of(context).textTheme.headline6,
-        )
-      ]),
     );
   }
 }

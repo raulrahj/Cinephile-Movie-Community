@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
-import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 
 class HFeedWdget extends StatefulWidget {
@@ -30,18 +31,33 @@ class _HFeedWdgetState extends State<HFeedWdget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FutureBuilder(
-              future: UserFunc().getUser(id: widget.postdata!.userId),
+              future: UserRepo().getUser(id: widget.postdata!.userId),
               builder: (context, AsyncSnapshot snapshot) {
                 return ListTile(
                   onTap: () async {
                     print('Request getUser!!!!!!');
-                    UserFunc user = UserFunc();
+                    context
+                        .read<UserBloc>()
+                        .add(LoadUserEvent(userId: widget.postdata!.userId));
+                    print('pressed');
+                    UserRepo user = UserRepo();
+                    // BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+                    //   if (state is UserLoadedState) {
+                    //     print('!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!');
+
+                    //   } else {
+                    //     print('MMMMMMMMMMMMMMNNNNNNNNNNNNNMN');
+                    //   }
+
+                    // });
+
                     final userData = await user
                         .getUser(id: widget.postdata!.userId)
                         .then((userData) async {
-                      await Navigator.pushNamed(context, '/account',
-                          arguments:
-                              ProfileArg(user: userData, isProfile: false));
+                      await Navigator.pushNamed(
+                        context,
+                        '/user_screen',
+                      );
                     });
                   },
                   leading: const CircleAvatar(
@@ -56,7 +72,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                     ),
                   ),
                   subtitle: Text(
-                    widget.postdata!.createdAt.toString() ?? 'justnow',
+                    widget.postdata!.createdAt.toString() ?? "justnow",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.more_vert),

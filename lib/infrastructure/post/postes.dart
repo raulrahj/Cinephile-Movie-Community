@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
 
 class PostRepo {
   static const postUrl = ApiEndPoints.post;
@@ -70,11 +71,18 @@ class PostRepo {
     }
   }
 
-  Future likePost({required String id}) async {
+  Future likePost({
+    required String id,
+  }) async {
+    final userData = await SharedService.getUserProfile();
     try {
-      Response response = await dio.post('$postUrl/$id',
+      print(" REQUEST REACHED !!!!");
+      Response response = await dio.put('$postUrl/$id/like',
+          data: jsonEncode({"userId": userData!.user!.id}),
           options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.statusMessage!);
+        print('POST LIKED');
         final retrievedPost = jsonEncode(response.data);
         return retrievedPost;
       }
@@ -100,8 +108,34 @@ class PostRepo {
     return res!;
   }
 
-  Future<List<Post?>> getPost({required String id}) async {
+  Future<List<Post?>> getUserPostes() async {
     List<Post>? res;
+    List<Post> userPostes = [];
+    print('userPost');
+    try {
+      final response =
+          await dio.get('$postUrl/', options: Options(headers: requestHeaders));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('all post');
+        final data = jsonEncode(response.data);
+        res = postFromJson(data);
+        await Future.forEach(res, (Post element) async {
+          if (element.userId == '62cd0d25a06157de0a2496c1') {
+            print('user matched');
+            userPostes!.add(element);
+          }
+        });
+
+        return userPostes!;
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+    return userPostes!;
+  }
+
+  Future<Post>? getPost({required String id}) async {
+    Post? res;
 
     try {
       final response = await dio.get('$postUrl/$id',

@@ -45,40 +45,46 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          // shrinkWrap: true,
-          // physics: const ClampingScrollPhysics(),
-          children: [
-            const HeadlineWidget(
-              title: 'Trending Cinema\'s',
-              color: Colors.black54,
-            ),
-            const HhorizontalWidget(),
-            const HeadlineWidget(
-              title: 'Reviewed',
-              color: Colors.black54,
-            ),
-            FutureBuilder(
-                future: PostRepo().allPost(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          final Post data = snapshot.data[index];
-                          print(" length print ${snapshot.data.length}");
-                          // final user = getUsername(data.id);
-                          return HFeedWdget(
-                            postdata: data,
-                          );
-                        });
-                  } else {
-                    return const ProgressCircle();
-                  }
-                })
-          ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<PostBloc>().add(GetAllPost());
+          },
+          // context.read<PostBloc>().add(GetAllPost()),
+          child: ListView(
+            // shrinkWrap: true,
+            // physics: const ClampingScrollPhysics(),
+            children: [
+              const HeadlineWidget(
+                title: 'Trending Cinema\'s',
+                color: Colors.black54,
+              ),
+              const HhorizontalWidget(),
+              const HeadlineWidget(
+                title: 'Reviewed',
+                color: Colors.black54,
+              ),
+              BlocBuilder<PostBloc, PostState>(
+                  // future: PostRepo().allPost(),
+                  builder: (context, state) {
+                if (state is AllPostState) {
+                  return ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: state.listPost!.length,
+                      itemBuilder: (context, index) {
+                        final Post data = state.listPost![index]!;
+                        print(" length print ${state.listPost!.length}");
+                        // final user = getUsername(data.id);
+                        return HFeedWdget(
+                          postdata: data,
+                        );
+                      });
+                } else {
+                  return const ProgressCircle();
+                }
+              })
+            ],
+          ),
         ),
       ),
     );

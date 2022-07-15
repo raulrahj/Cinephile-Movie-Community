@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/widgets/common.dart';
@@ -31,10 +34,12 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
-          if (state is CurrentUserState ) {
+          if (state is CurrentUserState) {
             return SafeArea(
                 child: ListView(
               shrinkWrap: true,
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               children: [
                 // kHeight2,
                 AspectRatio(
@@ -58,8 +63,10 @@ class ProfileScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                const CircleAvatar(
-                                  backgroundImage: NetworkImage(profImg),
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "$kApiImgUrl/${state.profileData!.user!.profilePicture}" ??
+                                          profImg),
                                   radius: 44,
                                 ),
                                 // kHeight2,
@@ -79,7 +86,8 @@ class ProfileScreen extends StatelessWidget {
                                     ),
                                     kHeight1,
                                     Text(
-                                     state.profileData!.user!.about ?? "bio :)",
+                                      state.profileData!.user!.about ??
+                                          "bio :)",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
@@ -129,14 +137,16 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 child: PFCountWidget(
-                                  count: state.profileData!.user!.following!.length
+                                  count: state
+                                      .profileData!.user!.following!.length
                                       .toString(),
                                   title: 'following',
                                 ),
                               ),
                               Expanded(
                                 child: PFCountWidget(
-                                  count: state.profileData!.user!.followers!.length
+                                  count: state
+                                      .profileData!.user!.followers!.length
                                       .toString(),
                                   title: 'followers',
                                 ),
@@ -148,69 +158,88 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  // crossAxisCount: 2,
-                  // ),
-                  itemCount: 4,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      child: Container(
-                        height: dHeight(context) * .10,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
+                FutureBuilder(
+                    future: PostRepo().getUserPostes(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          // crossAxisCount: 2,
+                          // ),
 
-                        // height: 100,
-                        width: dWidth(context),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: Image(
-                                image: NetworkImage(urlImg1),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            kWidth1,
-                            Expanded(
-                                flex: 4,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final Post data = snapshot.data[index];
+
+                            return GestureDetector(
+                              child: Container(
+                                height: dHeight(context) * .10,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+
+                                // height: 100,
+                                width: dWidth(context),
+                                child: Row(
                                   children: [
-                                    Text(
-                                      lorem,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
+                                    SizedBox(
+                                      width: 60,
+                                      height: 60,
+                                      child: Image(
+                                        image: NetworkImage(
+                                            "$kApiImgUrl/${data.image}" ??
+                                                urlImg1),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                    Text(
-                                      '3-2-2020',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(color: Colors.grey),
-                                    )
+                                    kWidth1,
+                                    Expanded(
+                                        flex: 4,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              data.desc ?? lorem,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge,
+                                            ),
+                                            Text(
+                                              dateFormat(data.createdAt) ??
+                                                  '3-2-2020',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .copyWith(color: Colors.grey),
+                                            )
+                                          ],
+                                        )),
+                                    // Expanded(
+                                    //     flex: 1,
+                                    //     child: Row(
+                                    //       children: const [
+                                    //         Icon(Icons.whatshot),
+                                    //         Text('234')
+                                    //       ],
+                                    //     ))
                                   ],
-                                )),
-                            // Expanded(
-                            //     flex: 1,
-                            //     child: Row(
-                            //       children: const [
-                            //         Icon(Icons.whatshot),
-                            //         Text('234')
-                            //       ],
-                            //     ))
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                )
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const AspectRatio(
+                            aspectRatio: 3 / 2, child: ProgressCircle());
+                      }
+                    })
               ],
             ));
           } else {

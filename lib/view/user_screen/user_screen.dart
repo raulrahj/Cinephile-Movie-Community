@@ -50,9 +50,11 @@ class UserScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage("$kImgHost/${state.userData!.profilePicture}"),
-                                
+                                const CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      // "$kApiImgUrl/${state.userData!.profilePicture}"
+                                      "$kApiImgUrl/20220714193609452477image_cropper_1657807561088.jpg",
+                                      ),
                                   radius: 44,
                                 ),
                                 // kHeight2,
@@ -86,9 +88,25 @@ class UserScreen extends StatelessWidget {
                                 // final data = await UserFunc()
                                 //     .updateUser(id: "62c148ce68f3b9763ad39e0a");
                                 // })
-                                ActionChip(
-                                    label: const Text('follow'),
-                                    onPressed: () {})
+                                SizedBox(
+                                    child: state.isFollowing!
+                                        ? ActionChip(
+                                            // ignore: unnecessary_type_check
+                                            label: state is UserLoadedState
+                                                ? const Text('unfollow')
+                                                : const ProgressCircle(),
+                                            onPressed: () {
+                                              context.read<UserBloc>().add(
+                                                  UnFollowUser(
+                                                      id: state.userData!.id));
+                                            })
+                                        : ActionChip(
+                                            label: const Text('follow'),
+                                            onPressed: () {
+                                              context.read<UserBloc>().add(
+                                                  FollowUser(
+                                                      id: state.userData!.id));
+                                            }))
                               ],
                             ),
                           ),

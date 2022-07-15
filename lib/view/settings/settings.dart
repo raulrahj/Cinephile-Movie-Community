@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
 import 'package:open_box/infrastructure/auth/authenticaton.dart';
 
 import 'package:open_box/infrastructure/helper/shared_service.dart';
@@ -49,18 +50,18 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        backgroundImage: NetworkImage(profImg),
-                        radius: 54,
-                      ),
-                      Text(
-                        "qwerty",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      )
-                    ],
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      if (state is CurrentUserState) {
+                        return ProfiileDisplay(
+                          image:
+                              "$kApiImgUrl/${state.profileData!.user!.profilePicture!}",
+                          name: state.profileData!.user!.firstname,
+                        );
+                      } else {
+                        return const ProfiileDisplay();
+                      }
+                    },
                   ),
                 )
               ]),
@@ -69,17 +70,17 @@ class SettingsScreen extends StatelessWidget {
             const SettingsTitleWidget(
               title: 'Profile',
             ),
-        //     Card(
-        //   elevation: 5,
-        //   child: ListTile(
-        //     leading: Icon(Icons.person),
-        //     title: Text('Account'),
-        //     // subtitle: Text('Icream is good for health'),
-        //     trailing: Icon(Icons.arrow_forward),
-        //   ),
-        // ),
+            //     Card(
+            //   elevation: 5,
+            //   child: ListTile(
+            //     leading: Icon(Icons.person),
+            //     title: Text('Account'),
+            //     // subtitle: Text('Icream is good for health'),
+            //     trailing: Icon(Icons.arrow_forward),
+            //   ),
+            // ),
             ExpWidget(
-              title: 'Login and Security',
+              title: 'Account Details',
               children: [
                 SettingsTileWidget(
                   icon: Icons.account_circle,
@@ -225,6 +226,36 @@ class SettingsScreen extends StatelessWidget {
           ],
         ),
       )),
+    );
+  }
+}
+
+class ProfiileDisplay extends StatelessWidget {
+  const ProfiileDisplay({
+    Key? key,
+    this.image,
+    this.name,
+  }) : super(key: key);
+  final String? image;
+  final String? name;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          kHeight1,
+          CircleAvatar(
+            backgroundImage: NetworkImage(image ?? profImg),
+            radius: 54,
+          ),
+          Text(
+            name ?? "User name",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          TextButton(onPressed: () {}, child: const Text('edit'))
+        ],
+      ),
     );
   }
 }

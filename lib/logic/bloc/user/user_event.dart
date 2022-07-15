@@ -12,12 +12,22 @@ class LoadUserEvent extends UserEvent {
   const LoadUserEvent({required this.userId});
 }
 
-class LoadCurrentUser extends UserEvent {
-  
-}
+class LoadCurrentUser extends UserEvent {}
 
 class UpdateUserEvent extends UserEvent {
   final String id;
   final UserResp userData;
   const UpdateUserEvent({required this.id, required this.userData});
+}
+
+class FollowUser extends UserEvent {
+  final String id;
+
+  const FollowUser({required this.id});
+}
+
+class UnFollowUser extends UserEvent {
+  final String id;
+
+  const UnFollowUser({required this.id});
 }

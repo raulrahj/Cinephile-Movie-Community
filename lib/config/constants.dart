@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:open_box/data/models/messegemodel.dart';
 
 const kRadius = 10.0;
@@ -37,3 +38,4 @@ List<Messege> chats = [
   Messege('Mac', '12:5', 'How was the days', true),
   Messege('Me', '12:6', 'It\'s totaly greate :)', false),
 ];
+String dateFormat(datetime) => DateFormat.MMMMEEEEd().format(datetime);

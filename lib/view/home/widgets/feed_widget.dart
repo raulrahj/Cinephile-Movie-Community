@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
@@ -31,14 +34,14 @@ class _HFeedWdgetState extends State<HFeedWdget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FutureBuilder(
-              future: UserRepo().getUser(id: widget.postdata!.userId),
+              future: UserRepo().getUser(id: widget.postdata!.userId!),
               builder: (context, AsyncSnapshot snapshot) {
                 return ListTile(
                   onTap: () async {
                     print('Request getUser!!!!!!');
                     context
                         .read<UserBloc>()
-                        .add(LoadUserEvent(userId: widget.postdata!.userId));
+                        .add(LoadUserEvent(userId: widget.postdata!.userId!));
                     print('pressed');
                     UserRepo user = UserRepo();
                     // BlocBuilder<UserBloc, UserState>(builder: (context, state) {
@@ -52,7 +55,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                     // });
 
                     final userData = await user
-                        .getUser(id: widget.postdata!.userId)
+                        .getUser(id: widget.postdata!.userId!)
                         .then((userData) async {
                       await Navigator.pushNamed(
                         context,
@@ -65,14 +68,17 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                   ),
                   title: Expanded(
                     child: Text(
-                      snapshot.data.firstname ?? "Username",
+                      widget.postdata!.userId == "Admin"
+                          ? "Cinephile Community"
+                          : snapshot.data.firstname,
+                      // : "Username",
                       style: GoogleFonts.dmSans()
                           .copyWith(fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   subtitle: Text(
-                    widget.postdata!.createdAt.toString() ?? "justnow",
+                    dateFormat(widget.postdata!.createdAt) ?? "justnow",
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.more_vert),
@@ -91,19 +97,19 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               ),
             ),
           ),
-          // GestureDetector(
-          //   child: const Text(
-          //     '  see more',
-          //     style: TextStyle(fontWeight: FontWeight.bold),
-          //   ),
-          //   onTap: () {
-          //     setState(
-          //       () {
-          //         isExpanded = !isExpanded;
-          //       },
-          //     );
-          //   },
-          // ),
+        widget.postdata!.desc!.length >20 ?  GestureDetector(
+            child: const Text(
+              '  see more',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onTap: () {
+              setState(
+                () {
+                  isExpanded = !isExpanded;
+                },
+              );
+            },
+          ):none,
           kHeight1,
           ClipRRect(
             borderRadius: BorderRadius.circular(kRadius),
@@ -128,7 +134,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         onPressed: () async {
-                          // final data = await PostFunc().allPost();
+                          // final data = await PostRepo().allPost();
                         },
                         icon: const Icon(Icons.whatshot_outlined),
                       ),
@@ -195,6 +201,8 @@ class _HFeedWdgetState extends State<HFeedWdget> {
       ),
     );
   }
+
+  String dateFormat(datetime) => DateFormat.MMMMEEEEd().format(datetime);
 }
 
 class SupportButtonW extends StatefulWidget {

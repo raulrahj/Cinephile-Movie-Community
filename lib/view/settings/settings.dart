@@ -57,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                         radius: 54,
                       ),
                       Text(
-                        "qwerty",
+                        "User name",
                         style: Theme.of(context).textTheme.titleLarge,
                       )
                     ],
@@ -79,7 +79,7 @@ class SettingsScreen extends StatelessWidget {
         //   ),
         // ),
             ExpWidget(
-              title: 'Login and Security',
+              title: 'Account Details',
               children: [
                 SettingsTileWidget(
                   icon: Icons.account_circle,

@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:open_box/config/core.dart';
 import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 
-class PostFunc {
+class PostRepo {
   static const postUrl = ApiEndPoints.post;
 
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
@@ -15,12 +16,22 @@ class PostFunc {
   };
 
   Future createPost({required Post postData, required String id}) async {
+    final Map<String, dynamic> postData = {
+      "desc": lorem,
+      "userId": '62cd0d25a06157de0a2496c1',
+      "image": '20220714170501282918image_cropper_1657798489308.jpg',
+      "comments": [],
+      "likes": []
+    };
     final data = postData;
 
     try {
-      Response response = await dio.post('$postUrl/$id',
-          data: jsonEncode(data), options: Options(headers: requestHeaders));
+      Response response = await dio.post('$postUrl/', data: jsonEncode(data),
+          onSendProgress: (int r, int l) async {
+        log('Request New Post !!!');
+      }, options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
+        log(response.statusMessage!);
         final retrievedPost = jsonEncode(response.data);
         return retrievedPost;
       }
@@ -112,9 +123,11 @@ class PostFunc {
       final response =
           await dio.get(postUrl, options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        res = response.data;
+        // res = response.data;
 
         log(response.data.toString());
+        final retriev = jsonEncode(response.data);
+        res = postFromJson(retriev);
         return res!;
       } else {
         log(response.statusMessage!);

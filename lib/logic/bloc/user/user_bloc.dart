@@ -20,7 +20,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         if (data == null) {
           emit(UserErrorState());
         } else {
-          emit(UserLoadedState(userData: data, isProfile: false));
+          emit(UserLoadedState(
+              userData: data, isProfile: false, isFollowing: false));
         }
       }
     });
@@ -44,6 +45,28 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserErrorState());
       } else {
         emit(CurrentUserState(profileData: data, isProfile: true));
+      }
+    });
+    on<FollowUser>((event, emit) async {
+      emit(UserActionState());
+      final data = await SharedService.getUserProfile();
+      if (data != null) {
+        final response = await _userRepo.followUser(id: event.id);
+        if (response != null) {
+          emit(UserLoadedState(
+              isProfile: false, userData: response, isFollowing: true));
+        }
+      }
+    });
+    on<UnFollowUser>((event, emit) async {
+      emit(UserActionState());
+      final data = await SharedService.getUserProfile();
+      if (data != null) {
+        final response = await _userRepo.unFollowUser(id: event.id);
+        if (response != null) {
+          emit(UserLoadedState(
+              isProfile: false, userData: response, isFollowing: false));
+        }
       }
     });
   }

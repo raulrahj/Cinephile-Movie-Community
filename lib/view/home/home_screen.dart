@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
+import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';
@@ -23,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: const Icon(Icons.add_comment_outlined),
           onPressed: () {
+            context.read<UserBloc>().add(LoadCurrentUser());
             Navigator.pushNamed(context, '/new_post');
           },
         ),
@@ -52,8 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black54,
             ),
             FutureBuilder(
-                future:
-                    PostFunc().getTimeLinePost(id: '62be900600b1aef58e50695d'),
+                future: PostRepo().allPost(),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
@@ -62,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           final Post data = snapshot.data[index];
+                          print(" length print ${snapshot.data.length}");
                           // final user = getUsername(data.id);
                           return HFeedWdget(
                             postdata: data,

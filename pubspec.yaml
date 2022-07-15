@@ -31,6 +31,7 @@ dependencies:
   image_cropper: ^2.0.3
   image_picker: ^0.8.5+3
   injectable: ^1.5.3
+  intl: ^0.17.0
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0
 

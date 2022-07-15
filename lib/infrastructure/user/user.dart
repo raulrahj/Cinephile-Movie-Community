@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:open_box/data/core/api_end_points.dart';
@@ -162,43 +163,58 @@ class UserRepo {
     }
   }
 
-  Future<ProfileModel?> followUser({required String id}) async {
-    ProfileModel? retrievedUser;
+  Future<UserModel?> followUser({required String id}) async {
+    UserModel? retrievedUser;
     final currentUser = await SharedService.getUserProfile();
-    try {
-      Response response = await dio
-          .put('$userBaseUrl/$id/follow', data: {"_id": currentUser!.user!.id});
+    if (currentUser != null) {
+      Map<String, dynamic> requestHeaders = {
+        "Content-Type": "application/json",
+        "authorization": "Bearer ${currentUser.token}"
+      };
+      Map<String, dynamic> body = {"_Id": id};
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        retrievedUser = ProfileModel.fromJson(response.data);
-      }
-    } on DioError catch (e) {
-      print(e);
-    } catch (e) {
-      log(e.toString());
-    }
-    return retrievedUser;
-  }
+      try {
+        Response response = await dio.put('$userBaseUrl/$id/follow',
+            data: {"_id": currentUser!.user!.id});
 
-  Future<ProfileModel?> unFollowUser({required String id}) async {
-    ProfileModel? retrievedUser;
-    final currentUser = await SharedService.getUserProfile();
-    try {
-      Response response = await dio.put('$userBaseUrl/$id/unfollow',
-          data: {"_id": currentUser!.user!.id});
-      log(response.statusMessage!);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        retrievedUser = ProfileModel.fromJson(response.data);
-      } else if (response.statusCode == 403) {
-        print('Not following !!!');
-      } else if (response.statusCode == 500) {
-        print('Internal Server error !!!');
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          retrievedUser = UserModel.fromJson(response.data);
+        }
+      } on DioError catch (e) {
+        print(e);
+      } catch (e) {
+        log(e.toString());
       }
-    } on DioError catch (e) {
-      print(e);
-    } catch (e) {
-      log(e.toString());
+      return retrievedUser;
     }
-    return retrievedUser;
   }
+    Future<UserModel?> unFollowUser({required String id}) async {
+      UserModel? retrievedUser;
+      final currentUser = await SharedService.getUserProfile();
+      if (currentUser != null) {
+        Map<String, dynamic> requestHeaders = {
+          "Content-Type": "application/json",
+          "authorization": "Bearer ${currentUser.token}"
+        };
+        try {
+          Response response = await dio.put('$userBaseUrl/$id/unfollow',
+              data: {"_id": currentUser.user!.id},
+              options: Options(headers: requestHeaders));
+          log(response.statusMessage!);
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            retrievedUser = UserModel.fromJson(response.data);
+          } else if (response.statusCode == 403) {
+            print('Not following !!!');
+          } else if (response.statusCode == 500) {
+            print('Internal Server error !!!');
+          }
+        } on DioError catch (e) {
+          print(e);
+        } catch (e) {
+          log(e.toString());
+        }
+        return retrievedUser;
+      }
+    }
+  
 }

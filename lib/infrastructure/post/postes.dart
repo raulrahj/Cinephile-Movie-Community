@@ -15,11 +15,11 @@ class PostRepo {
     'Authorization': ''
   };
 
-  Future createPost({required Post postData, required String id}) async {
+  Future createPost({required Post postDat, required String id}) async {
     final Map<String, dynamic> postData = {
-      "desc": lorem,
+      "desc": postDat.desc,
       "userId": '62cd0d25a06157de0a2496c1',
-      "image": '20220714170501282918image_cropper_1657798489308.jpg',
+      "image": postDat.image,
       "comments": [],
       "likes": []
     };
@@ -128,7 +128,7 @@ class PostRepo {
         log(response.data.toString());
         final retriev = jsonEncode(response.data);
         res = postFromJson(retriev);
-        return res!;
+        return res;
       } else {
         log(response.statusMessage!);
       }

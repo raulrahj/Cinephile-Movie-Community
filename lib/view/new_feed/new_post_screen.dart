@@ -23,7 +23,8 @@ class NewPost extends StatefulWidget {
 
 class _NewPostState extends State<NewPost> {
   File? postImg;
-
+  String? postImgName;
+  final TextEditingController postDiscripControllr = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,35 +65,47 @@ class _NewPostState extends State<NewPost> {
           ),
           Expanded(
               child: TextFormField(
+            maxLines: 10,
             decoration: const InputDecoration.collapsed(
               hintText: 'what is on your mind?',
             ),
           )),
           Container(
             width: dWidth(context),
-            height: 44,
-            color: kBlack,
+            // height: 44,
+            constraints: const BoxConstraints(maxHeight: 150, minHeight: 100),
+            // color: kBlack,
+            decoration: postImg != null
+                ? BoxDecoration(
+                    image: DecorationImage(image: FileImage(postImg!)))
+                : const BoxDecoration(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
                   onPressed: () async {
-                    UtilRepo.pickImage(context);
+                    postImg =
+                        await UtilRepo.pickImage(context).whenComplete(() {
+                      setState(() {});
+                    });
+                    if (postImg == null) return;
                   },
                   icon: const Icon(Icons.photo)),
               TextButton(
                   onPressed: () async {
+                    if (postImg != null) {
+                      postImgName = await UtilRepo.uploadImage(postImg!);
+                    }
                     final userData = await SharedService.getUserProfile();
                     final postData = Post(
-                        desc: lorem,
+                        desc: postDiscripControllr.text ?? lorem,
                         userId: userData!.user!.id,
-                        image:
-                            '20220714193220876806image_cropper_1657807310550.jpg',
+                        image: postImgName,
                         comments: [],
                         likes: []);
                     PostRepo()
-                        .createPost(postData: postData, id: userData.user!.id!);
+                        .createPost(postDat: postData, id: userData.user!.id!);
                   },
                   child: const Text('Share'))
             ],

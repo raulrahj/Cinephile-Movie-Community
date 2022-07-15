@@ -9,6 +9,8 @@ import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 
+import '../../logic/bloc/bloc/post_bloc.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -19,6 +21,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    // context.read<PostBloc>().add();
+    PostRepo().allPost();
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(

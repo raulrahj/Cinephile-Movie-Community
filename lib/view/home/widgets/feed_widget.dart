@@ -11,7 +11,9 @@ import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/bloc/post_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
+import 'package:open_box/view/home/comment_screen.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class HFeedWdget extends StatefulWidget {
   const HFeedWdget({Key? key, this.postdata, this.username}) : super(key: key);
@@ -26,6 +28,13 @@ class _HFeedWdgetState extends State<HFeedWdget> {
   bool isLiked = false;
   @override
   Widget build(BuildContext context) {
+    // context.read<PostBloc>().add(GetPostEvent(id: widget.postdata!.id!));
+    isLiked = widget.postdata!.likes!.contains("62cd0d25a06157de0a2496c1")
+        ? true
+        : false;
+    // return BlocBuilder<PostBloc, PostState>(
+    //   builder: (context, state) {
+    //     if (state is AllPostState) {
     return Container(
       margin: const EdgeInsets.all(4),
       width: double.infinity,
@@ -142,17 +151,19 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         onPressed: () async {
+                          await PostRepo().likePost(id: widget.postdata!.id!);
                           setState(() {
                             isLiked = !isLiked;
                           });
-                          if (isLiked) {
-                            PostRepo().likePost(id: widget.postdata!.id!);
-                            // context
-                            //     .read<PostBloc>()
-                            //     .add(LikePostEvent(id: widget.postdata!.id!, ));
-                          } else {
-                            // context.read<PostBloc>().add(UnlikePostEvent());
-                          }
+                          // if (!isLiked) {
+                          print(isLiked);
+                          // PostRepo().likePost(id: widget.postdata!.id!);
+                          // context
+                          //     .read<PostBloc>()
+                          //     .add(LikePostEvent(id: widget.postdata!.id!, ));
+                          // } else {
+                          // context.read<PostBloc>().add(UnlikePostEvent());
+                          // }
                           // final data = await PostRepo().allPost();
                         },
                         icon: const Icon(Icons.whatshot_outlined),
@@ -161,8 +172,11 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                       //   '456',
                       // ),
                       IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/comments');
+                        onPressed: () async {
+                          //  await   PostRepo().addComment(Comment());
+                          Navigator.pushNamed(context, '/comments',
+                              arguments: CommentArg(
+                                  comments: widget.postdata!.comments!));
                         },
                         icon: const Icon(
                           Icons.mode_comment_outlined,
@@ -219,6 +233,11 @@ class _HFeedWdgetState extends State<HFeedWdget> {
         ],
       ),
     );
+    //     } else {
+    //       return const AspectRatio(aspectRatio: 3 / 2, child: ProgressCircle());
+    //     }
+    //   },
+    // );
   }
 }
 

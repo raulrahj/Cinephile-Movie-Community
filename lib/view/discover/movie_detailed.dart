@@ -54,7 +54,7 @@ class MovieDetailed extends StatelessWidget {
               title: RichText(
                 text: TextSpan(
                     text:
-                        data.data!.originalTitle.toString() ?? 'Into the Wild',
+                        data.data!.originalTitle.toString(),
                     style: GoogleFonts.oswald().copyWith(fontSize: 22),
                     children: [
                       const TextSpan(text: '  '),
@@ -66,7 +66,7 @@ class MovieDetailed extends StatelessWidget {
               ),
               background: Image(
                 image: NetworkImage(
-                  "$kImgHost/${data.data!.backdropPath}" ?? urlImg1,
+                  "$kImgHost/${data.data!.backdropPath}",
                 ),
                 fit: BoxFit.fill,
               ),

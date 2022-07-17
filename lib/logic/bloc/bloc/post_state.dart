@@ -23,6 +23,7 @@ class TimeLinePostState extends PostState {}
 
 class OnPostState extends PostState {
   final Post? postData;
+  final bool? isLiked;
 
-  const OnPostState({this.postData});
+  const OnPostState({this.postData, this.isLiked});
 }

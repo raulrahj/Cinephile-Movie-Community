@@ -3,12 +3,21 @@ import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/post/m_post.dart';
+
+class CommentArg {
+  final List<Comment> comments;
+  CommentArg({required this.comments});
+}
 
 class CommentsScreen extends StatelessWidget {
   const CommentsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)?.settings.arguments as CommentArg;
+
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
@@ -21,8 +30,9 @@ class CommentsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView.builder(
-          itemCount: 10,
+          itemCount: arg.comments.length,
           itemBuilder: (context, index) {
+            final data = arg.comments[index];
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
@@ -32,12 +42,14 @@ class CommentsScreen extends StatelessWidget {
                     Row(
                       children: [
                         const CircleAvatar(
-                          backgroundImage: NetworkImage(profImg),
+                          backgroundImage: NetworkImage(
+                              // "$kApiImgUrl/${data.commentedUserData.}"
+                              profImg),
                           radius: 15,
                         ),
                         kWidth2,
                         Text(
-                          'Username',
+                          data.commentedUserData!.firstname ?? 'Username',
                           style: GoogleFonts.oswald(),
                         )
                       ],
@@ -50,7 +62,7 @@ class CommentsScreen extends StatelessWidget {
                         //   return
                         Expanded(
                           child: Text(
-                            lorem,
+                            data.text ?? lorem,
                             maxLines: 5,
                             style: GoogleFonts.dmSans()
                                 .copyWith(overflow: TextOverflow.ellipsis),

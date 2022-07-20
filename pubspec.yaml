@@ -34,6 +34,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0
+  socket_io_client: ^2.0.0
 
 dev_dependencies:
 

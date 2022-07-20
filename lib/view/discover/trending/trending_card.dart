@@ -19,7 +19,7 @@ class TrendingCardW extends StatelessWidget {
           arguments: MovieArg(data: data, isTrending: true)),
       child: SizedBox(
         child:
-            // data.isLoading?const Center(child:  CircularProgressIndicator()):
+            // data.isLoading?const Center(child:  CircularProglsressIndicator()):
             Stack(
           children: [
             Container(

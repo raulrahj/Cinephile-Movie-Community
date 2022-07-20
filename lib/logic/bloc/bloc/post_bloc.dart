@@ -65,5 +65,14 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         print("null");
       }
     });
+        on<UpdatePostEvent>((event, emit) async {
+      final response = await _postRepo.updatePost(postId: event.postId,postData: event.postData);
+      if (response != null) {
+        emit(const AllPostState());
+      } else {
+        print("null");
+      }
+    });
+    
   }
 }

@@ -24,7 +24,11 @@ class CreatePostEvent extends PostEvent {
   const CreatePostEvent({required this.id, required this.postData});
 }
 
-class UpdatePostEvent extends PostEvent {}
+class UpdatePostEvent extends PostEvent {
+  final String postId;
+  final Post postData;
+  const UpdatePostEvent({required this.postData, required this.postId});
+}
 
 class LikePostEvent extends PostEvent {
   final String id;

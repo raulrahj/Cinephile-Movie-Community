@@ -9,6 +9,7 @@ import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
+import 'package:open_box/view/profile_screen/post_view.dart';
 import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/widgets/common.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
@@ -65,8 +66,7 @@ class ProfileScreen extends StatelessWidget {
                               children: [
                                 CircleAvatar(
                                   backgroundImage: NetworkImage(
-                                      "$kApiImgUrl/${state.profileData!.user!.profilePicture}" ??
-                                          profImg),
+                                      "$kApiImgUrl/${state.profileData!.user!.profilePicture}"),
                                   radius: 44,
                                 ),
                                 // kHeight2,
@@ -175,6 +175,15 @@ class ProfileScreen extends StatelessWidget {
                             final Post data = snapshot.data[index];
 
                             return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PostView(
+                                              data: data,
+                                            )));
+                                print(data.id.toString());
+                              },
                               child: Container(
                                 height: dHeight(context) * .10,
                                 margin: const EdgeInsets.symmetric(
@@ -189,8 +198,7 @@ class ProfileScreen extends StatelessWidget {
                                       height: 60,
                                       child: Image(
                                         image: NetworkImage(
-                                            "$kApiImgUrl/${data.image}" ??
-                                                urlImg1),
+                                            "$kApiImgUrl/${data.image}"),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -212,8 +220,7 @@ class ProfileScreen extends StatelessWidget {
                                                   .bodyLarge,
                                             ),
                                             Text(
-                                              dateFormat(data.createdAt) ??
-                                                  '3-2-2020',
+                                              dateFormat(data.createdAt),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium!

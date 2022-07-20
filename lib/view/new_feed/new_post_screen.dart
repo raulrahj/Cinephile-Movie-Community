@@ -52,7 +52,8 @@ class _NewPostState extends State<NewPost> {
                       ),
                       kWidth1,
                       Text(
-                        state.profileData!.user!.firstname ?? 'Username',
+                        state.profileData!.user!.
+                          firstname,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ],
@@ -99,7 +100,7 @@ class _NewPostState extends State<NewPost> {
                     }
                     final userData = await SharedService.getUserProfile();
                     final postData = Post(
-                        desc: postDiscripControllr.text ?? lorem,
+                        desc: postDiscripControllr.text,
                         userId: userData!.user!.id,
                         image: postImgName,
                         comments: [],

@@ -46,6 +46,9 @@ class _HFeedWdgetState extends State<HFeedWdget> {
           FutureBuilder(
               future: UserRepo().getUser(id: widget.postdata!.userId!),
               builder: (context, AsyncSnapshot snapshot) {
+                final img = snapshot.data.profilePicture != null
+                    ? "$kApiImgUrl/${snapshot.data.profilePicture}"
+                    : profImg;
                 return ListTile(
                   onTap: () async {
                     print('Request getUser!!!!!!');
@@ -74,9 +77,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                     });
                   },
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "$kApiImgUrl/${snapshot.data.profilePicture}" ??
-                            profImg),
+                    backgroundImage: NetworkImage(img),
                   ),
                   title: Expanded(
                     child: Text(
@@ -90,7 +91,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                     ),
                   ),
                   subtitle: Text(
-                    dateFormat(widget.postdata!.createdAt) ?? "justnow",
+                    dateFormat(widget.postdata!.createdAt),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.more_vert),
@@ -129,7 +130,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
             borderRadius: BorderRadius.circular(kRadius),
             child: Image(
               image: NetworkImage(
-                  "$kApiImgUrl/${widget.postdata!.image}" ?? urlImg1),
+                  "$kApiImgUrl/${widget.postdata!.image}"),
             ),
           ),
           AspectRatio(
@@ -147,7 +148,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                             foregroundColor: MaterialStateProperty.all(
                                 isLiked ? kSecondary : kBlack)),
                         label: Text(
-                          widget.postdata!.likes!.length.toString() ?? '456',
+                          widget.postdata!.likes!.length.toString(),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         onPressed: () async {
@@ -176,7 +177,8 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                           //  await   PostRepo().addComment(Comment());
                           Navigator.pushNamed(context, '/comments',
                               arguments: CommentArg(
-                                  comments: widget.postdata!.comments!));
+                                  comments: widget.postdata!.comments!,
+                                  postData: widget.postdata!));
                         },
                         icon: const Icon(
                           Icons.mode_comment_outlined,

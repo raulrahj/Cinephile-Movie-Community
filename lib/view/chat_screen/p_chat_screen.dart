@@ -1,22 +1,74 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/data/models/messegemodel.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PChatArg {
   final List<Messege>? chatdata;
   PChatArg({this.chatdata});
 }
 
-class PChatScreen extends StatelessWidget {
+class PChatScreen extends StatefulWidget {
   const PChatScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PChatScreen> createState() => _PChatScreenState();
+}
+
+class _PChatScreenState extends State<PChatScreen> {
+  IO.Socket? socket;
+  void initSocket() {
+    socket = IO.io("http://192.168.1.200:8800", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    }
+        // IO.OptionBuilder()
+        // .setTransports(['websocket']) // for Flutter or Dart VM
+        // .disableAutoConnect()  // disable auto-connection
+        // .setExtraHeaders({'foo': 'bar'}) // optional
+        // .build()
+        );
+    socket!.connect();
+    // socket!.onconnect(() {
+    //   // ignore: avoid_print;
+    //   print("Connected");
+    // });
+    socket!.on("connect", (data) {
+      print(data);
+    });
+    socket!.on("send-message", (data) {
+      print(data);
+    });
+    socket!.on("new-user-add", (id) {
+      print(id);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initSocket();
+  }
+
+  void sendMessage() {
+    socket!.emit("send-message" "message");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    socket!.disconnect();
+  }
 
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)?.settings.arguments as PChatArg;
     const currentUser = 'Mac';
-    _chatBubble(Messege messege,bool isMe) {
+    _chatBubble(Messege messege, bool isMe) {
       if (isMe) {
         return Column(
           children: [
@@ -47,9 +99,9 @@ class PChatScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                 Text(
+                Text(
                   messege.time,
-                  style:const TextStyle(color: Colors.black54),
+                  style: const TextStyle(color: Colors.black54),
                 ),
                 kWidth1,
                 Container(
@@ -99,12 +151,11 @@ class PChatScreen extends StatelessWidget {
                       ]),
                   child: const CircleAvatar(
                     backgroundImage: NetworkImage(profImg),
-
                     radius: 10,
                   ),
                 ),
                 kWidth1,
-                 Text(
+                Text(
                   messege.time,
                   style: const TextStyle(color: Colors.black54),
                 )
@@ -142,10 +193,13 @@ class PChatScreen extends StatelessWidget {
               // reverse: true,
               itemBuilder: (context, index) {
                 final Messege messege = arg.chatdata![index];
-                final bool isMe = messege.sender==currentUser;
+                final bool isMe = messege.sender == currentUser;
                 // final bool issameUser =prevUsr==messege.sender;
                 //  prevUsr = messege.sender;
-                return _chatBubble(messege,isMe,);
+                return _chatBubble(
+                  messege,
+                  isMe,
+                );
               }),
         ),
         Row(
@@ -158,11 +212,12 @@ class PChatScreen extends StatelessWidget {
                 )),
             Expanded(
                 child: TextFormField(
-              decoration: const InputDecoration.collapsed(
-                  hintText: 'messages here...'),
+              decoration:
+                  const InputDecoration.collapsed(hintText: 'messages here...'),
             )),
             IconButton(
                 onPressed: () {
+                  sendMessage();
                 },
                 icon: Icon(
                   Icons.send,

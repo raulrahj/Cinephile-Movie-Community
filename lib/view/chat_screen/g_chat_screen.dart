@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class GChatScreen extends StatefulWidget {
   const GChatScreen({Key? key}) : super(key: key);
@@ -10,7 +11,36 @@ class GChatScreen extends StatefulWidget {
   State<GChatScreen> createState() => _GChatScreenState();
 }
 
+void initSocket() {
+  IO.Socket socket = IO.io("http://192.168.1.200:8800", <String, dynamic>{
+    "transports": ["websocket"],
+    "autoConnect": false,
+  });
+  socket.connect();
+  socket.onconnect((id) {
+    print("Connected");
+  });
+  socket.on("send-message", (data) {
+    print(data);
+  });
+  socket.on("new-user-add", (id) {
+    print(id);
+  });
+}
+
 class _GChatScreenState extends State<GChatScreen> {
+  @override
+  void initState() {
+    super.initState();
+    initSocket();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // socket.disconnect();
+  }
+
   @override
   Widget build(BuildContext context) {
     _chatBubble(bool isMe) {
@@ -57,7 +87,6 @@ class _GChatScreenState extends State<GChatScreen> {
                       ]),
                   child: const CircleAvatar(
                     backgroundImage: NetworkImage(profImg1),
-
                     radius: 19,
                   ),
                 ),
@@ -150,12 +179,13 @@ class _GChatScreenState extends State<GChatScreen> {
                   color: Theme.of(context).primaryColor,
                 )),
             Expanded(
-                child: TextFormField(
-              decoration: const InputDecoration.collapsed(
-                  hintText: 'sent messeages here...'),
-            )),
+              child: TextFormField(
+                decoration: const InputDecoration.collapsed(
+                    hintText: 'sent messeages here...'),
+              ),
+            ),
             IconButton(
-                onPressed: () {},
+                onPressed: () async {},
                 icon: Icon(
                   Icons.send,
                   color: Theme.of(context).primaryColor,

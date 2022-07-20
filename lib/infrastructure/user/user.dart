@@ -55,13 +55,12 @@ class UserRepo {
     final Map<String, dynamic> data = await {
       "auth": true,
       "_id": userData.id,
-      "username": userData.username ?? profileData.user!.username.toString(),
+      "username": userData.username,
       // "password": "123456",
-      "firstname": userData.firstname.toString() ??
-          profileData.user!.firstname.toString(),
+      "firstname": userData.firstname.toString(),
       // "firstname": userData.firstname ?? profileData.user!.firstname,
       "lastname":
-          userData.lastname.toString() ?? profileData.user!.lastname.toString(),
+          userData.lastname.toString(),
       "isAdmin": false,
       "followers": ["62be900600b1aef58e50695d"],
       "following": ["62be900600b1aef58e50695d"],
@@ -70,7 +69,7 @@ class UserRepo {
       "profilePicture": userData.profilePicture ??
           "20220714170501282918image_cropper_1657798489308.jpg",
       "coverPicture": "20220714171547285772image_cropper_1657799084143.jpg",
-      "about": userData.about.toString() ?? profileData.user!.about.toString(),
+      "about": userData.about.toString(),
       "__v": 0
     };
     print(data.keys.contains("firstname"));
@@ -175,7 +174,7 @@ class UserRepo {
 
       try {
         Response response = await dio.put('$userBaseUrl/$id/follow',
-            data: {"_id": currentUser!.user!.id});
+            data: {"_id": currentUser.user!.id});
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           retrievedUser = UserModel.fromJson(response.data);

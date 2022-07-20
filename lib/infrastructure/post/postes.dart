@@ -41,11 +41,11 @@ class PostRepo {
     }
   }
 
-  Future updatePost({required Post postData, required String id}) async {
-    final data = postData;
+  Future updatePost({required Post postData, required String postId}) async {
+    final data = postData.toJson();
 
     try {
-      Response response = await dio.post('$postUrl/$id',
+      Response response = await dio.put('$postUrl/$postId',
           data: jsonEncode(data), options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final retrievedPost = jsonEncode(response.data);
@@ -159,7 +159,7 @@ class PostRepo {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // res = response.data;
 
-        log(response.data.toString());
+        // log(response.data.toString());
         final retriev = jsonEncode(response.data);
         res = postFromJson(retriev);
         return res;
@@ -192,9 +192,9 @@ class PostRepo {
     };
 
     Map<String, dynamic> data = {
-      "postId": "62d11ad9696f0caf1cbd1090",
-      "commentText": "Amazinggggg :)",
-      "postedBy": "62cd0d25a06157de0a2496c1",
+      "postId": comment.postId,
+      "commentText": comment.text,
+      "postedBy": comment.postedBy,
       "userData": jsonEncode(commentedUser)
     };
 

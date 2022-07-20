@@ -94,8 +94,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                           .withOpacity(1.0),
                                       colorBlendMode: BlendMode.softLight,
                                       image: NetworkImage(
-                                          "$kApiImgUrl/${state.profileData!.user!.coverPicture}" ??
-                                              urlImg1),
+                                          "$kApiImgUrl/${state.profileData!.user!.coverPicture}"),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

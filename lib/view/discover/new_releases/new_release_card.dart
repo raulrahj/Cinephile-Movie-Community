@@ -7,6 +7,7 @@ import 'package:open_box/data/models/new_releases/new_releases.dart';
 import 'package:open_box/view/discover/movie_detailed.dart';
 // import 'package:open_box/view/discover/new_releases/movie_detailed.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewReleaseCardW extends StatelessWidget {
   const NewReleaseCardW({
@@ -18,9 +19,17 @@ class NewReleaseCardW extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/movie_detailed',
-            arguments: MovieArg(isTrending: false,nData: data)
-            );
+        Navigator.pushNamed(
+          context,
+          '/movie_detailed',
+          arguments: MovieArg(
+            image: data.backdropPath,
+            title: data.originalTitle ?? data.title,
+            overview: data.overview,
+            genreList: data.genreIds,
+            id: data.id,
+          ),
+        );
       },
       child: Stack(
         children: [
@@ -29,22 +38,26 @@ class NewReleaseCardW extends StatelessWidget {
             width: double.infinity,
             height: dHeight(context) / 3,
             decoration: BoxDecoration(
-                // color: Colors.accents[index].withOpacity(0.2),
-                image: DecorationImage(
-                    image: NetworkImage(
-                        "$kImgHost/${data.backdropPath}"),
-                    fit: BoxFit.fill),
-                borderRadius: BorderRadius.circular(kRadius)),
+              // color: Colors.accents[index].withOpacity(0.2),
+              image: DecorationImage(
+                  image: NetworkImage("$kImgHost/${data.backdropPath}"),
+                  fit: BoxFit.fill),
+              borderRadius: BorderRadius.circular(kRadius),
+            ),
           ),
           Positioned(
             right: 19,
             top: 15,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                await _launchUrl(data.originalTitle ?? data.title);
+              },
               style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).iconTheme.color,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(kRadius))),
+                primary: Theme.of(context).iconTheme.color,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kRadius),
+                ),
+              ),
               child: const Text('Book Now'),
             ),
           ),
@@ -61,5 +74,13 @@ class NewReleaseCardW extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _launchUrl(movie) async {
+    String _url = "https://in.bookmyshow.com/kochi/movies/$movie";
+    final uri = Uri.parse(_url);
+    if (!await launchUrl(uri)) {
+      throw 'Could not launch $_url';
+    }
   }
 }

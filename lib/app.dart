@@ -6,6 +6,7 @@ import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
+import 'package:open_box/logic/cubit/search/search_cubit.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/data/core/di/injectable.dart';
 import 'package:open_box/view/home/comment_screen.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
           create: (context) => UserBloc(UserRepo()),
         ),
         BlocProvider<PostBloc>(create: (context) => PostBloc(PostRepo())),
+        BlocProvider<SearchCubit>(create: (context) => SearchCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

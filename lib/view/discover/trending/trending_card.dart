@@ -16,7 +16,12 @@ class TrendingCardW extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, '/movie_detailed',
-          arguments: MovieArg(data: data, isTrending: true)),
+          arguments: MovieArg(
+              image: data.backdropPath,
+              title: data.originalName ?? data.originalTitle,
+              overview: data.overview,
+              genreList: data.genreIds,
+              id: data.id)),
       child: SizedBox(
         child:
             // data.isLoading?const Center(child:  CircularProglsressIndicator()):
@@ -52,13 +57,15 @@ class TrendingCardW extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Center(
-                    child: Text(
-                      data.title ?? 'Inceptions',
-                      style: GoogleFonts.oswald().copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: kBlack,
-                          fontSize: 12),
-                      overflow: TextOverflow.fade,
+                    child: FittedBox(
+                      child: Text(
+                        data.title ?? 'Unknown',
+                        style: GoogleFonts.oswald().copyWith(
+                            fontWeight: FontWeight.w100,
+                            color: kBlack,
+                            fontSize: 12),
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
                   ),
                 ),

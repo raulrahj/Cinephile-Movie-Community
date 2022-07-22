@@ -53,10 +53,13 @@ class UserScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  "$kApiImgUrl/${state.userData!.profilePicture}",
-                                  // "$kApiImgUrl/20220714193609452477image_cropper_1657807561088.jpg",
-                                ),
+                                backgroundImage:
+                                    state.userData!.profilePicture != null
+                                        ? NetworkImage(
+                                            "$kApiImgUrl/${state.userData!.profilePicture}",
+                                            // "$kApiImgUrl/20220714193609452477image_cropper_1657807561088.jpg",
+                                          )
+                                        : NetworkImage(profImg),
                                 radius: 44,
                               ),
                               // kHeight2,

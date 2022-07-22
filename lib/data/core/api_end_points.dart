@@ -6,6 +6,8 @@ class ApiEndPoints {
   static const newReleases =
       "$kHostUrl/movie/now_playing?api_key=$apiKey&language=en-US&page=1";
   // static const apiBaseUrl = 'http://192.168.43.244:5000';
+      static const movieSearch =   "$kHostUrl/search/movie?api_key=$apiKey&language=en-US&query=";
+  
   static const apiBaseUrl = kApiUrl;
 
   static const userAuth = '$apiBaseUrl/auth';

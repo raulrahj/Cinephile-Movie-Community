@@ -20,6 +20,11 @@ class UpdateUserEvent extends UserEvent {
   const UpdateUserEvent({required this.id, required this.userData});
 }
 
+class GetTimelinePostes extends UserEvent {
+  final String id;
+  const GetTimelinePostes({required this.id});
+}
+
 class FollowUser extends UserEvent {
   final String id;
 

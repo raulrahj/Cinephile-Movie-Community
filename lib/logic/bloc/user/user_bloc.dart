@@ -1,9 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/data/util/dio_client.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
@@ -27,8 +31,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     on<LoadCurrentUser>((event, emit) async {
+      on<GetTimelinePostes>((event, emit) async {
+        // final data =
+            // await DioClient().get("$kApiUrl/post/$event.id/", 'timeline');
+        // printz/\(data);
+      });
       emit(UserLoadingState());
       final data = await SharedService.getUserProfile();
+      print(data.toString());
       if (data == null) {
         emit(UserErrorState());
       } else {

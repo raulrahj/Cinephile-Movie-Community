@@ -16,7 +16,10 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       if (data == null) {
         emit(PostErrorState());
       } else {
-        emit(AllPostState(listPost: data));
+        emit(
+          AllPostState(listPost: data),
+        );
+        // emit(const OnPostState());
       }
     });
     on<GetPostEvent>((event, emit) async {
@@ -38,9 +41,38 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(OnPostState(postData: data));
       }
     });
-    // on<LikePostEvent>((event, emit) async {
-    //   final response = await _postRepo.likePost(id: event.id);
-    //   emit(PostStateInitial());
-    // });
+    on<LikePostEvent>((event, emit) async {
+      final response = await _postRepo.likePost(id: event.id);
+      if (response!.statusCode == 200 || response.statusCode == 201) {
+        emit(const OnPostState(isLiked: true));
+      } else {
+        emit(PostErrorState());
+      }
+    });
+    on<CommentPostEvent>((event, emit) async {
+      emit(PostLoading());
+      final response = await _postRepo.addComment(event.commentData);
+      if (response != null) {
+        emit(const OnPostState());
+      }
+    });
+
+    on<DeletePostEvent>((event, emit) async {
+      final response = await _postRepo.deletePost(id: event.postId);
+      if (response != null) {
+        emit(const AllPostState());
+      } else {
+        print("null");
+      }
+    });
+        on<UpdatePostEvent>((event, emit) async {
+      final response = await _postRepo.updatePost(postId: event.postId,postData: event.postData);
+      if (response != null) {
+        emit(const AllPostState());
+      } else {
+        print("null");
+      }
+    });
+    
   }
 }

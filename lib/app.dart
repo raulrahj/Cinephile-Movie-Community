@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
-import 'package:open_box/logic/bloc/bloc/post_bloc.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';

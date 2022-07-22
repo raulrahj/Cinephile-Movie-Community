@@ -14,10 +14,9 @@ class UserLoadingState extends UserState {}
 class UserLoadedState extends UserState {
   final UserModel? userData;
   final bool? isProfile;
-   bool? isFollowing=false;
+  bool? isFollowing = false;
 
-   UserLoadedState(
-      {this.isProfile, this.userData, this.isFollowing});
+  UserLoadedState({this.isProfile, this.userData, this.isFollowing});
 }
 
 class UserErrorState extends UserState {}
@@ -25,8 +24,10 @@ class UserErrorState extends UserState {}
 class CurrentUserState extends UserState {
   final ProfileModel? profileData;
   final bool? isProfile;
+  final List<Post>? timeLinePosts;
 
-  const CurrentUserState({this.isProfile, this.profileData});
+  const CurrentUserState(
+      {this.isProfile, this.profileData, this.timeLinePosts});
 }
 
 class UserActionState extends UserState {}

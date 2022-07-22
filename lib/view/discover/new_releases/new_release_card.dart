@@ -32,7 +32,7 @@ class NewReleaseCardW extends StatelessWidget {
                 // color: Colors.accents[index].withOpacity(0.2),
                 image: DecorationImage(
                     image: NetworkImage(
-                        "$kImgHost/${data.backdropPath}" ?? urlImg1),
+                        "$kImgHost/${data.backdropPath}"),
                     fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(kRadius)),
           ),

@@ -14,7 +14,7 @@ class GetAllPost extends PostEvent {}
 class GetPostEvent extends PostEvent {
   final String id;
 
-  const GetPostEvent(this.id);
+  const GetPostEvent({required this.id});
 }
 
 class CreatePostEvent extends PostEvent {
@@ -24,7 +24,11 @@ class CreatePostEvent extends PostEvent {
   const CreatePostEvent({required this.id, required this.postData});
 }
 
-class UpdatePostEvent extends PostEvent {}
+class UpdatePostEvent extends PostEvent {
+  final String postId;
+  final Post postData;
+  const UpdatePostEvent({required this.postData, required this.postId});
+}
 
 class LikePostEvent extends PostEvent {
   final String id;
@@ -32,8 +36,15 @@ class LikePostEvent extends PostEvent {
   const LikePostEvent({required this.id});
 }
 
-class UnlikePostEvent extends PostEvent {}
+// class UnlikePostEvent extends PostEvent {}
 
-class DeletePostEvent extends PostEvent {}
+class DeletePostEvent extends PostEvent {
+  final String postId;
 
-class CommentPostEvent extends PostEvent {}
+  const DeletePostEvent({required this.postId});
+}
+
+class CommentPostEvent extends PostEvent {
+  final Comment commentData;
+  const CommentPostEvent({required this.commentData});
+}

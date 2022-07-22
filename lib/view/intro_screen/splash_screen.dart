@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
+
+const String logo =
+    'https://as1.ftcdn.net/v2/jpg/00/81/64/90/1000_F_81649086_py4My4KShiyaNNiyJWwP9l1mRolqC1Or.jpg';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,8 +19,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  static const String logo =
-      'https://as1.ftcdn.net/v2/jpg/00/81/64/90/1000_F_81649086_py4My4KShiyaNNiyJWwP9l1mRolqC1Or.jpg';
   late final AnimationController _controller =
       AnimationController(duration: const Duration(seconds: 2), vsync: this)
         ..forward();
@@ -37,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MovieInfoBloc>().add(const MovieInfoEvent.getTrending());
       context.read<MovieInfoBloc>().add(const MovieInfoEvent.getNewReleased());
+      context.read<PostBloc>().add(GetAllPost());
     });
     _navigation(context);
     return Scaffold(

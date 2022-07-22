@@ -9,9 +9,11 @@ import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
-import 'package:open_box/logic/bloc/bloc/post_bloc.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
+import 'package:open_box/view/home/comment_screen.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
+import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class HFeedWdget extends StatefulWidget {
   const HFeedWdget({Key? key, this.postdata, this.username}) : super(key: key);
@@ -24,8 +26,16 @@ class HFeedWdget extends StatefulWidget {
 class _HFeedWdgetState extends State<HFeedWdget> {
   bool isExpanded = false;
   bool isLiked = false;
+  String img = profImg;
   @override
   Widget build(BuildContext context) {
+    // context.read<PostBloc>().add(GetPostEvent(id: widget.postdata!.id!));
+    isLiked = widget.postdata!.likes!.contains("62cd0d25a06157de0a2496c1")
+        ? true
+        : false;
+    // return BlocBuilder<PostBloc, PostState>(
+    //   builder: (context, state) {
+    //     if (state is AllPostState) {
     return Container(
       margin: const EdgeInsets.all(4),
       width: double.infinity,
@@ -37,24 +47,21 @@ class _HFeedWdgetState extends State<HFeedWdget> {
           FutureBuilder(
               future: UserRepo().getUser(id: widget.postdata!.userId!),
               builder: (context, AsyncSnapshot snapshot) {
+                // final UserModel data = snapshot.data;
+                // if (data.profilePicture != null &&
+                //     data != null &&
+                //     data.profilePicture!.isNotEmpty) {
+                //   img = data.profilePicture!;
+                // }
+                // final img = snapshot.data.profilePicture != null
+                // ? "$kApiImgUrl/${snapshot.data.profilePicture}"
+                // : profImg;
                 return ListTile(
                   onTap: () async {
-                    print('Request getUser!!!!!!');
                     context
                         .read<UserBloc>()
                         .add(LoadUserEvent(userId: widget.postdata!.userId!));
-                    print('pressed');
                     UserRepo user = UserRepo();
-                    // BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                    //   if (state is UserLoadedState) {
-                    //     print('!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!');
-
-                    //   } else {
-
-                    //   }
-
-                    // });
-
                     final userData = await user
                         .getUser(id: widget.postdata!.userId!)
                         .then((userData) async {
@@ -65,9 +72,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                     });
                   },
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "$kApiImgUrl/${snapshot.data.profilePicture}" ??
-                            profImg),
+                    backgroundImage: NetworkImage(img),
                   ),
                   title: Expanded(
                     child: Text(
@@ -81,7 +86,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                     ),
                   ),
                   subtitle: Text(
-                    dateFormat(widget.postdata!.createdAt) ?? "justnow",
+                    dateFormat(widget.postdata!.createdAt),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.more_vert),
@@ -104,7 +109,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               ? GestureDetector(
                   child: const Text(
                     '  see more',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey),
                   ),
                   onTap: () {
                     setState(
@@ -117,12 +122,13 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               : none,
           kHeight1,
           ClipRRect(
-            borderRadius: BorderRadius.circular(kRadius),
-            child: Image(
-              image: NetworkImage(
-                  "$kApiImgUrl/${widget.postdata!.image}" ?? urlImg1),
-            ),
-          ),
+              borderRadius: BorderRadius.circular(kRadius),
+              child: widget.postdata!.image != null
+                  ? Image(
+                      image:
+                          NetworkImage("$kApiImgUrl/${widget.postdata!.image}"),
+                    )
+                  : null),
           AspectRatio(
             aspectRatio: 3 / .5,
             child: SizedBox(
@@ -138,21 +144,23 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                             foregroundColor: MaterialStateProperty.all(
                                 isLiked ? kSecondary : kBlack)),
                         label: Text(
-                          widget.postdata!.likes!.length.toString() ?? '456',
+                          widget.postdata!.likes!.length.toString(),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         onPressed: () async {
+                          await PostRepo().likePost(id: widget.postdata!.id!);
                           setState(() {
                             isLiked = !isLiked;
                           });
-                          if (isLiked) {
-                            PostRepo().likePost(id: widget.postdata!.id!);
-                            // context
-                            //     .read<PostBloc>()
-                            //     .add(LikePostEvent(id: widget.postdata!.id!, ));
-                          } else {
-                            // context.read<PostBloc>().add(UnlikePostEvent());
-                          }
+                          // if (!isLiked) {
+                          print(isLiked);
+                          // PostRepo().likePost(id: widget.postdata!.id!);
+                          // context
+                          //     .read<PostBloc>()
+                          //     .add(LikePostEvent(id: widget.postdata!.id!, ));
+                          // } else {
+                          // context.read<PostBloc>().add(UnlikePostEvent());
+                          // }
                           // final data = await PostRepo().allPost();
                         },
                         icon: const Icon(Icons.whatshot_outlined),
@@ -161,8 +169,12 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                       //   '456',
                       // ),
                       IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/comments');
+                        onPressed: () async {
+                          //  await   PostRepo().addComment(Comment());
+                          Navigator.pushNamed(context, '/comments',
+                              arguments: CommentArg(
+                                  comments: widget.postdata!.comments!,
+                                  postData: widget.postdata!));
                         },
                         icon: const Icon(
                           Icons.mode_comment_outlined,
@@ -219,6 +231,11 @@ class _HFeedWdgetState extends State<HFeedWdget> {
         ],
       ),
     );
+    //     } else {
+    //       return const AspectRatio(aspectRatio: 3 / 2, child: ProgressCircle());
+    //     }
+    //   },
+    // );
   }
 }
 

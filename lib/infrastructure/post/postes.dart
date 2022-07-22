@@ -41,11 +41,11 @@ class PostRepo {
     }
   }
 
-  Future updatePost({required Post postData, required String id}) async {
-    final data = postData;
+  Future updatePost({required Post postData, required String postId}) async {
+    final data = postData.toJson();
 
     try {
-      Response response = await dio.post('$postUrl/$id',
+      Response response = await dio.put('$postUrl/$postId',
           data: jsonEncode(data), options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final retrievedPost = jsonEncode(response.data);
@@ -60,7 +60,7 @@ class PostRepo {
     // final data = postData;
 
     try {
-      Response response = await dio.post('$postUrl/$id',
+      Response response = await dio.delete('$postUrl/$id',
           options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final retrievedPost = jsonEncode(response.data);
@@ -71,7 +71,7 @@ class PostRepo {
     }
   }
 
-  Future likePost({
+  Future<Response?> likePost({
     required String id,
   }) async {
     final userData = await SharedService.getUserProfile();
@@ -81,14 +81,14 @@ class PostRepo {
           data: jsonEncode({"userId": userData!.user!.id}),
           options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.statusMessage!);
-        print('POST LIKED');
-        final retrievedPost = jsonEncode(response.data);
+        log(response.data);
+        final retrievedPost = response;
         return retrievedPost;
       }
     } catch (e) {
       log(e.toString());
     }
+    return null;
   }
 
   Future<List<Post?>> getTimeLinePost({required String id}) async {
@@ -108,7 +108,7 @@ class PostRepo {
     return res!;
   }
 
-  Future<List<Post?>> getUserPostes() async {
+  Future<List<Post?>> getUserPostes({required String userId}) async {
     List<Post>? res;
     List<Post> userPostes = [];
     print('userPost');
@@ -120,18 +120,18 @@ class PostRepo {
         final data = jsonEncode(response.data);
         res = postFromJson(data);
         await Future.forEach(res, (Post element) async {
-          if (element.userId == '62cd0d25a06157de0a2496c1') {
+          if (element.userId == userId) {
             print('user matched');
-            userPostes!.add(element);
+            userPostes.add(element);
           }
         });
 
-        return userPostes!;
+        return userPostes;
       } else {}
     } catch (e) {
       log(e.toString());
     }
-    return userPostes!;
+    return userPostes;
   }
 
   Future<Post>? getPost({required String id}) async {
@@ -159,7 +159,7 @@ class PostRepo {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // res = response.data;
 
-        log(response.data.toString());
+        // log(response.data.toString());
         final retriev = jsonEncode(response.data);
         res = postFromJson(retriev);
         return res;
@@ -170,5 +170,49 @@ class PostRepo {
       log(e.toString());
     }
     return res!;
+  }
+
+  Future<Comment?> addComment(Comment comment) async {
+    List<Comment>? res;
+    Map<String, dynamic> commentedUser = {
+      "commentedUserData": {
+        "_id": "62c4b7255c03f763422ce5ae",
+        "username": "krishnan@gmail.com",
+        // "password": """$2b$10$0L2FZBi49v2RQGBmxrWZx.Cd3XfjAElSjSZsHjimh0eFZTL9ibhIC""",
+        "firstname": "krishnan",
+        "lastname": "Das",
+        "isAdmin": false,
+        "auth": true,
+        "followers": [],
+        "following": [],
+        "createdAt": "2022-07-05T22:11:50.135Z",
+        "updatedAt": "2022-07-06T03:41:54.868Z",
+        "__v": 0
+      }
+    };
+
+    Map<String, dynamic> data = {
+      "postId": comment.postId,
+      "commentText": comment.text,
+      "postedBy": comment.postedBy,
+      "userData": jsonEncode(commentedUser)
+    };
+
+    try {
+      final response = await dio.post("$postUrl/comments/",
+          options: Options(headers: requestHeaders), data: jsonEncode(data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('TRUEEEEEEEEEEEEEE');
+        log(response.data.toString());
+        final retriev = jsonEncode(response.data);
+        // res = Comment()
+      }
+      return null;
+    } on DioError catch (e) {
+      print(e);
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
   }
 }

@@ -198,6 +198,28 @@ class Post {
       };
 }
 
+CommentList commentListFromJson(String str) =>
+    CommentList.fromJson(json.decode(str));
+
+String commentListToJson(CommentList data) => json.encode(data.toJson());
+
+class CommentList {
+  CommentList({
+    this.comments,
+  });
+
+  List<Comment>? comments;
+
+  factory CommentList.fromJson(Map<String, dynamic> json) => CommentList(
+        comments: List<Comment>.from(
+            json["comments"].map((x) => Comment.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "comments": List<dynamic>.from(comments!.map((x) => x.toJson())),
+      };
+}
+
 class Comment {
   Comment({
     this.postId,

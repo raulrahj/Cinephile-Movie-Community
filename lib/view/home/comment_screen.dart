@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/post/m_post.dart';
-import 'package:open_box/logic/bloc/bloc/post_bloc.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/view/widgets/common.dart';
 
 class CommentArg {

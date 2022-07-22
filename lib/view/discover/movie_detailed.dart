@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
@@ -41,9 +39,10 @@ class MovieDetailed extends StatelessWidget {
             leading: pop(context),
             actions: [
               IconButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, '/nearby_theatre'),
-                  icon: const Icon(Icons.location_on))
+                onPressed: () =>
+                    Navigator.pushNamed(context, '/nearby_theatre'),
+                icon: const Icon(Icons.location_on),
+              )
             ],
             floating: true,
             pinned: true,
@@ -53,16 +52,19 @@ class MovieDetailed extends StatelessWidget {
               expandedTitleScale: 1.4,
               title: RichText(
                 text: TextSpan(
-                    text:
-                        data.data!.originalTitle.toString(),
-                    style: GoogleFonts.oswald().copyWith(fontSize: 22),
-                    children: [
-                      const TextSpan(text: '  '),
-                      TextSpan(
-                          text: '(2002)',
-                          style: GoogleFonts.dmSans()
-                              .copyWith(fontSize: 17, color: kWhite))
-                    ]),
+                  text: data.data!.originalTitle.toString(),
+                  style: GoogleFonts.oswald().copyWith(fontSize: 22),
+                  children: [
+                    const TextSpan(text: '  '),
+                    TextSpan(
+                      text:
+                          // ParseDate.dFormatDate(data.data!.releaseDate) ??
+                          '(2002)',
+                      style: GoogleFonts.dmSans()
+                          .copyWith(fontSize: 17, color: kWhite),
+                    )
+                  ],
+                ),
               ),
               background: Image(
                 image: NetworkImage(

@@ -18,23 +18,31 @@ class SettingsTileWidget extends StatelessWidget {
     return GestureDetector(
       onTap: function,
       child: Container(
-        color: Theme.of(context).primaryColorLight,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: kBlack,
-              ),
-              kWidth1,
-              Text(
-                title,
-                style:
-                    GoogleFonts.dmSans().copyWith(fontSize: 18, color: kBlack),
-              )
-            ],
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(0, 2),
+              blurRadius: 4,
+              color: kBlack,
+            ),
+          ],
+        ),
+        child: ListTile(
+          leading: Icon(icon,size: 28,),
+          title: Text(
+            title,
+            style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w600),
           ),
+          trailing: const Icon(
+            Icons.arrow_forward_ios,
+            size: 12,
+            color: Colors.black,
+          ),
+          onTap: function,
         ),
       ),
     );

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_box/logic/bloc/bloc/post_bloc.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';

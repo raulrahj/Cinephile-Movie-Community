@@ -10,6 +10,7 @@ import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/post_view.dart';
+import 'package:open_box/view/profile_screen/post_view_widget.dart';
 import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/widgets/common.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
@@ -159,88 +160,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 FutureBuilder(
-                    future: PostRepo().getUserPostes(),
+                    future: PostRepo()
+                        .getUserPostes(userId: state.profileData!.user!.id!),
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics()),
-                          // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          // crossAxisCount: 2,
-                          // ),
-
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final Post data = snapshot.data[index];
-
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PostView(
-                                              data: data,
-                                            )));
-                                print(data.id.toString());
-                              },
-                              child: Container(
-                                height: dHeight(context) * .10,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8),
-
-                                // height: 100,
-                                width: dWidth(context),
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 60,
-                                      height: 60,
-                                      child: Image(
-                                        image: NetworkImage(
-                                            "$kApiImgUrl/${data.image}"),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    kWidth1,
-                                    Expanded(
-                                        flex: 4,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              data.desc ?? lorem,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge,
-                                            ),
-                                            Text(
-                                              dateFormat(data.createdAt),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .copyWith(color: Colors.grey),
-                                            )
-                                          ],
-                                        )),
-                                    // Expanded(
-                                    //     flex: 1,
-                                    //     child: Row(
-                                    //       children: const [
-                                    //         Icon(Icons.whatshot),
-                                    //         Text('234')
-                                    //       ],
-                                    //     ))
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
+                        return PostList(
+                          postData: snapshot.data,
                         );
                       } else {
                         return const AspectRatio(

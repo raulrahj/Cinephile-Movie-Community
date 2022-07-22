@@ -1,22 +1,17 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
-import 'package:open_box/infrastructure/auth/authenticaton.dart';
-
 import 'package:open_box/infrastructure/helper/shared_service.dart';
-import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/settings/preferences.dart';
-import 'package:open_box/view/settings/widgets/s_exp_tile.dart';
+import 'package:open_box/view/settings/widgets/profile_display.dart';
+import 'package:open_box/view/settings/widgets/s_container.dart';
 import 'package:open_box/view/settings/widgets/s_tile.dart';
 import 'package:open_box/view/settings/widgets/s_title.dart';
-import 'package:open_box/view/widgets/l_headline.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -66,25 +61,15 @@ class SettingsScreen extends StatelessWidget {
                 )
               ]),
             ),
-            // const LargeHeadlineWidget(title: ),
-            const SettingsTitleWidget(
-              title: 'Profile',
-            ),
-            //     Card(
-            //   elevation: 5,
-            //   child: ListTile(
-            //     leading: Icon(Icons.person),
-            //     title: Text('Account'),
-            //     // subtitle: Text('Icream is good for health'),
-            //     trailing: Icon(Icons.arrow_forward),
-            //   ),
-            // ),
-            ExpWidget(
-              title: 'Account Details',
+            kHeight1,
+            SettingsContainer(
               children: [
+                const SettingsTitleWidget(
+                  title: 'Profile',
+                ),
                 SettingsTileWidget(
                   icon: Icons.account_circle,
-                  title: 'Profile',
+                  title: 'Account',
                   function: () async {
                     // final cUser = await Authentication().getUserProfile();
                     // ignore: use_build_context_synchronously
@@ -99,7 +84,7 @@ class SettingsScreen extends StatelessWidget {
                   },
                 ),
                 SettingsTileWidget(
-                  icon: Icons.settings_outlined,
+                  icon: Icons.build_rounded,
                   title: 'Preferences',
                   function: () {
                     Navigator.push(
@@ -109,153 +94,64 @@ class SettingsScreen extends StatelessWidget {
                   },
                 ),
                 SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Log Out',
-                  function: () async {
-                    await SharedService.logout(context).whenComplete(() {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/login', (route) => false);
-                      log('User Logged Out !!!');
-                    });
+                  icon: Icons.privacy_tip_rounded,
+                  title: 'Privacy Policy',
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (ctx) => const SPreferences()));
                   },
                 ),
-                // SettingsTileWidget(),
+                SettingsTileWidget(
+                  icon: Icons.notifications_active,
+                  title: 'Notification',
+                  function: () {},
+                ),
               ],
             ),
-            const ExpWidget(
-              title: 'Privacy Policy',
-              children: [
-                // SettingsTileWidget(
-                //   icon: Icons.account_circle,
-                //   title: 'Profile',
-                // ),
-                // SettingsTileWidget(
-                //   icon: Icons.settings_outlined,
-                //   title: 'Preferences',
-                // ),
-                // // SettingsTileWidget(),
-              ],
-            ),
-            const ExpWidget(
-              title: 'Notification',
-              children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
-              ],
-            ),
-            const ExpWidget(
-              title: 'Content Preferences',
-              children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
-              ],
-            ),
-            const SettingsTitleWidget(
-              title: 'General',
-            ),
-            const ExpWidget(
-              title: 'Display and Sound',
-              children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
-              ],
-            ),
-            const ExpWidget(
-              title: ('Accesibility'),
-              children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
-              ],
-            ),
-            const ExpWidget(
-              title: 'About',
-              children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
-              ],
-            ),
-            const ExpWidget(
-              title: 'Developer',
-              children: [
-                SettingsTileWidget(
-                  icon: Icons.account_circle,
-                  title: 'Profile',
-                ),
-                SettingsTileWidget(
-                  icon: Icons.settings_outlined,
-                  title: 'Preferences',
-                ),
-                // SettingsTileWidget(),
-              ],
+
+            SettingsContainer(children: [
+              const SettingsTitleWidget(
+                title: 'General',
+              ),
+              SettingsTileWidget(
+                icon: Icons.settings_accessibility_rounded,
+                title: 'Accesibility',
+                function: () {},
+              ),
+              SettingsTileWidget(
+                icon: Icons.info,
+                title: 'About',
+                function: () {},
+              ),
+              SettingsTileWidget(
+                icon: Icons.coffee_outlined,
+                title: 'Developer',
+                function: () {},
+              ),
+            ]),
+
+            // SettingsTileWidget(),
+
+            // ),/
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: SettingsTileWidget(
+                icon: Icons.launch_outlined,
+                title: 'Log Out',
+                function: () async {
+                  await SharedService.logout(context).whenComplete(() {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false);
+                    log('User Logged Out !!!');
+                  });
+                },
+              ),
             ),
           ],
         ),
       )),
-    );
-  }
-}
-
-class ProfiileDisplay extends StatelessWidget {
-  const ProfiileDisplay({
-    Key? key,
-    this.image,
-    this.name,
-  }) : super(key: key);
-  final String? image;
-  final String? name;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          kHeight1,
-          CircleAvatar(
-            backgroundImage: NetworkImage(image ?? profImg),
-            radius: 54,
-          ),
-          Text(
-            name ?? "User name",
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          TextButton(onPressed: () {}, child: const Text('edit'))
-        ],
-      ),
     );
   }
 }

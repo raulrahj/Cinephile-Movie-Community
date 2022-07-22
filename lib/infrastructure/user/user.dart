@@ -52,7 +52,7 @@ class UserRepo {
       'Content-Type': 'application/json',
       'authorization': "Bearer ${profileData!.token}"
     };
-    final Map<String, dynamic> data = await {
+    final Map<String, dynamic> data =  {
       "auth": true,
       "_id": userData.id,
       "username": userData.username,

@@ -108,7 +108,7 @@ class PostRepo {
     return res!;
   }
 
-  Future<List<Post?>> getUserPostes() async {
+  Future<List<Post?>> getUserPostes({required String userId}) async {
     List<Post>? res;
     List<Post> userPostes = [];
     print('userPost');
@@ -120,7 +120,7 @@ class PostRepo {
         final data = jsonEncode(response.data);
         res = postFromJson(data);
         await Future.forEach(res, (Post element) async {
-          if (element.userId == '62cd0d25a06157de0a2496c1') {
+          if (element.userId == userId) {
             print('user matched');
             userPostes.add(element);
           }

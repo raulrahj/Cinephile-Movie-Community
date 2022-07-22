@@ -9,7 +9,7 @@ import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
-import 'package:open_box/logic/bloc/bloc/post_bloc.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/home/comment_screen.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
@@ -26,6 +26,7 @@ class HFeedWdget extends StatefulWidget {
 class _HFeedWdgetState extends State<HFeedWdget> {
   bool isExpanded = false;
   bool isLiked = false;
+  String img = profImg;
   @override
   Widget build(BuildContext context) {
     // context.read<PostBloc>().add(GetPostEvent(id: widget.postdata!.id!));
@@ -46,27 +47,21 @@ class _HFeedWdgetState extends State<HFeedWdget> {
           FutureBuilder(
               future: UserRepo().getUser(id: widget.postdata!.userId!),
               builder: (context, AsyncSnapshot snapshot) {
-                final img = snapshot.data.profilePicture != null
-                    ? "$kApiImgUrl/${snapshot.data.profilePicture}"
-                    : profImg;
+                // final UserModel data = snapshot.data;
+                // if (data.profilePicture != null &&
+                //     data != null &&
+                //     data.profilePicture!.isNotEmpty) {
+                //   img = data.profilePicture!;
+                // }
+                // final img = snapshot.data.profilePicture != null
+                // ? "$kApiImgUrl/${snapshot.data.profilePicture}"
+                // : profImg;
                 return ListTile(
                   onTap: () async {
-                    print('Request getUser!!!!!!');
                     context
                         .read<UserBloc>()
                         .add(LoadUserEvent(userId: widget.postdata!.userId!));
-                    print('pressed');
                     UserRepo user = UserRepo();
-                    // BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-                    //   if (state is UserLoadedState) {
-                    //     print('!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!');
-
-                    //   } else {
-
-                    //   }
-
-                    // });
-
                     final userData = await user
                         .getUser(id: widget.postdata!.userId!)
                         .then((userData) async {
@@ -114,7 +109,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               ? GestureDetector(
                   child: const Text(
                     '  see more',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey),
                   ),
                   onTap: () {
                     setState(
@@ -127,12 +122,13 @@ class _HFeedWdgetState extends State<HFeedWdget> {
               : none,
           kHeight1,
           ClipRRect(
-            borderRadius: BorderRadius.circular(kRadius),
-            child: Image(
-              image: NetworkImage(
-                  "$kApiImgUrl/${widget.postdata!.image}"),
-            ),
-          ),
+              borderRadius: BorderRadius.circular(kRadius),
+              child: widget.postdata!.image != null
+                  ? Image(
+                      image:
+                          NetworkImage("$kApiImgUrl/${widget.postdata!.image}"),
+                    )
+                  : null),
           AspectRatio(
             aspectRatio: 3 / .5,
             child: SizedBox(

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/util/util.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
@@ -24,7 +25,7 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   File? postImg;
   String? postImgName;
-  final TextEditingController postDiscripControllr = TextEditingController();
+  TextEditingController postDiscripControllr = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,8 +53,7 @@ class _NewPostState extends State<NewPost> {
                       ),
                       kWidth1,
                       Text(
-                        state.profileData!.user!.
-                          firstname,
+                        state.profileData!.user!.firstname,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ],
@@ -66,6 +66,7 @@ class _NewPostState extends State<NewPost> {
           ),
           Expanded(
               child: TextFormField(
+            controller: postDiscripControllr,
             maxLines: 10,
             decoration: const InputDecoration.collapsed(
               hintText: 'what is on your mind?',
@@ -105,8 +106,9 @@ class _NewPostState extends State<NewPost> {
                         image: postImgName,
                         comments: [],
                         likes: []);
-                    PostRepo()
+                    await PostRepo()
                         .createPost(postDat: postData, id: userData.user!.id!);
+                    Navigator.pop(context);
                   },
                   child: const Text('Share'))
             ],

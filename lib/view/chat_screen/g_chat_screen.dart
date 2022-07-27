@@ -32,7 +32,7 @@ class _GChatScreenState extends State<GChatScreen> {
   @override
   void initState() {
     super.initState();
-    initSocket();
+    // initSocket();
   }
 
   @override

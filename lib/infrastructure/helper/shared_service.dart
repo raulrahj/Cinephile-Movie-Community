@@ -15,10 +15,13 @@ class SharedService {
     );
 
     await APICacheManager().addCacheData(cacheModel);
+    print("LOGIN AND DATA ADDED SUCCESFULLY");
+    print(loginData.user!.username);
   }
 
   static Future<void> logout(BuildContext context) async {
     await APICacheManager().deleteCache(LOGIN_KEY);
+    print('LOG OUT AND DATA CLEARED !!!');
     // ignore: use_build_context_synchronously
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -37,7 +40,7 @@ class SharedService {
     final isLoggedIn = await APICacheManager().isAPICacheKeyExist(LOGIN_KEY);
     if (isLoggedIn) {
       final userData = await APICacheManager().getCacheData(LOGIN_KEY);
-      
+
       return profileModelFromJson(userData.syncData);
     } else {
       return null;

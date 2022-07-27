@@ -19,7 +19,6 @@ class SearchRepo {
         // log(response.data.toString());
         final res = jsonEncode(response.data);
         retrievedUser = userModelFromJson(res);
-        print(retrievedUser.toString());
         return retrievedUser;
       } else {}
     } catch (e) {

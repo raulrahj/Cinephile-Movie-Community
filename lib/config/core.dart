@@ -10,7 +10,7 @@ const String urlImg1 =
 const String profImg =
     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
 const String profImg1 =
-    'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
+    'https://2kimt23ivs9y4ed9t3vimd2h-wpengine.netdna-ssl.com/wp-content/uploads/2022/04/dummy-circle.png';
 final TextStyle fH1 =
     TextStyle(fontFamily: GoogleFonts.spaceGrotesk().fontFamily);
 final TextStyle fH2 = TextStyle(fontFamily: GoogleFonts.openSans().fontFamily);
@@ -18,3 +18,5 @@ const Color kBlack = Color(0xFF383838);
 const Color kWhite = Color(0xFFF2F2F2);
 const Color kRed = Color(0xFF990000);
 const Color kSecondary = Color(0xFFFFAD32);
+const Color kTextBlack = Color(0xFF333333);
+

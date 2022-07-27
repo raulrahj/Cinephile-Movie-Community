@@ -143,8 +143,8 @@ class UserScreen extends StatelessWidget {
                         isWhite: true,
                         text: "Message",
                         function: () {
-                          Navigator.pushNamed(context, '/personal_chat',
-                              arguments: PChatArg(chatdata: chats));
+                          // Navigator.pushNamed(context, '/personal_chat',
+                          //     arguments: PChatArg(chatdata: chats));
                         },
                       ),
                     ),

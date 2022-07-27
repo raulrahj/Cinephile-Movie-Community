@@ -19,7 +19,7 @@ import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/notification_screen/notification_screen.dart';
-import 'package:open_box/view/discover/movie_detailed.dart';
+import 'package:open_box/view/discover/widgets/movie_detailed.dart';
 import 'package:open_box/view/register/signup_screen.dart';
 import 'package:open_box/view/user_screen/user_screen.dart';
 import 'package:open_box/view/widgets/bottom_nav.dart';

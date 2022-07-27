@@ -4,7 +4,7 @@ import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/new_releases/new_releases.dart';
-import 'package:open_box/view/discover/movie_detailed.dart';
+import 'package:open_box/view/discover/widgets/movie_detailed.dart';
 // import 'package:open_box/view/discover/new_releases/movie_detailed.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
 import 'package:url_launcher/url_launcher.dart';

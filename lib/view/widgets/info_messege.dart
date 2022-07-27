@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 class InfoMessageView extends StatelessWidget {
+  
   const InfoMessageView({
     Key? key,
  

@@ -10,17 +10,23 @@ class SettingsContainer extends StatelessWidget {
     return Container(
       width: dWidth(context),
       // height: dHeight(context) * .3,
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(bottom: 10, left: 10,right: 10),
+      padding: const EdgeInsets.symmetric(vertical:8),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColorLight,
+        color: kWhite,
         borderRadius: BorderRadius.circular(kRadius),
         boxShadow: [
-          BoxShadow(
-            color: kBlack.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 1,
-          )
+            BoxShadow(
+        color: Colors.grey.withOpacity(0.2),
+        offset: const Offset(-6.0, -6.0),
+        blurRadius: 16.0,
+      ),
+      BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        offset: const Offset(6.0, 6.0),
+        blurRadius: 16.0,
+      ),
+          
         ],
       ),
       child: Column(children: children),

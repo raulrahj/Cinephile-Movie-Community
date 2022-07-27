@@ -7,6 +7,8 @@ import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';
+import 'package:open_box/view/widgets/info_messege.dart';
+import 'package:open_box/view/widgets/placeholders.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 
 import '../../logic/bloc/post/post_bloc.dart';
@@ -21,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-      context.read<PostBloc>().add(GetAllPost());
+    context.read<PostBloc>().add(GetTimeline());
 
     // context.read<PostBloc>().add();
     PostRepo().allPost();
@@ -49,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            context.read<PostBloc>().add(GetAllPost());
+            context.read<PostBloc>().add(GetTimeline());
           },
           // context.read<PostBloc>().add(GetAllPost()),
           child: ListView(
@@ -68,21 +70,26 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocBuilder<PostBloc, PostState>(
                   // future: PostRepo().allPost(),
                   builder: (context, state) {
-                if (state is AllPostState) {
+                if (state is TimeLinePostState) {
                   return ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: state.listPost!.length,
+                      itemCount: state.timelinePosts!.length,
                       itemBuilder: (context, index) {
-                        final Post data = state.listPost![index]!;
-                        print(" length print ${state.listPost!.length}");
-                        // final user = getUsername(data.id);
+                        final Post data = state.timelinePosts![index]!;
                         return HFeedWdget(
                           postdata: data,
                         );
                       });
+                } else if (state is PostErrorState) {
+                  return const InfoMessageView();
+                  // }
+                  //  else if (state is PostLoading) {
+                  //   return const PListed();
                 } else {
-                  return const ProgressCircle();
+                  return const AspectRatio(
+                      aspectRatio: 3 / 3, child: ProgressCircle(),
+                      );
                 }
               })
             ],

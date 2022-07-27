@@ -31,11 +31,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     on<LoadCurrentUser>((event, emit) async {
-      on<GetTimelinePostes>((event, emit) async {
-        // final data =
-            // await DioClient().get("$kApiUrl/post/$event.id/", 'timeline');
-        // printz/\(data);
-      });
+      // on<GetTimelinePostes>((event, emit) async {
+      //   // final data =
+      //       // await DioClient().get("$kApiUrl/post/$event.id/", 'timeline');
+      //   // printz/\(data);
+      // });
       emit(UserLoadingState());
       final data = await SharedService.getUserProfile();
       print(data.toString());

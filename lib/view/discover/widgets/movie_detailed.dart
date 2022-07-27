@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
-import 'package:open_box/data/models/new_releases/new_releases.dart';
-import 'package:open_box/data/models/trending/m_trending.dart';
 import 'package:open_box/logic/cubit/search/search_cubit.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/search_screen/movie_search/s_review.dart';
@@ -42,15 +40,9 @@ class MovieDetailed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(genreFind([23, 28]));
     final data = ModalRoute.of(context)?.settings.arguments as MovieArg;
-    // final nData = ModalRoute.of(context)?.settings.arguments as MovieArg;
     final genres = genreFind(data.genreList!);
-    // if (data != null) {
-    //   isTrendData = true;
-    // } else if (nData != null) {
-    //   isTrendData = false;
-    // }
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -79,7 +71,7 @@ class MovieDetailed extends StatelessWidget {
                     TextSpan(
                       text:
                           // ParseDate.dFormatDate(data.data!.releaseDate) ??
-                          '(2002)',
+                          '',
                       style: GoogleFonts.dmSans()
                           .copyWith(fontSize: 17, color: kWhite),
                     )
@@ -144,7 +136,7 @@ class MovieDetailed extends StatelessWidget {
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Text(
-                              genre ?? 'Action',
+                              genre,
                               style:
                                   GoogleFonts.dmSans().copyWith(color: kWhite),
                             ),

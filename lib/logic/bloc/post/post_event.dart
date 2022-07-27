@@ -11,6 +11,8 @@ class LoadPostEvent extends PostEvent {}
 
 class GetAllPost extends PostEvent {}
 
+class GetTimeline extends PostEvent {}
+
 class GetPostEvent extends PostEvent {
   final String id;
 

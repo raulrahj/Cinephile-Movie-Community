@@ -75,7 +75,6 @@ class PostRepo {
   }) async {
     final userData = await SharedService.getUserProfile();
     try {
-      print(" REQUEST REACHED !!!!");
       Response response = await dio.put('$postUrl/$id/like',
           data: jsonEncode({"userId": userData!.user!.id}),
           options: Options(headers: requestHeaders));
@@ -110,17 +109,14 @@ class PostRepo {
   Future<List<Post?>> getUserPostes({required String userId}) async {
     List<Post>? res;
     List<Post> userPostes = [];
-    print('userPost');
     try {
       final response =
           await dio.get('$postUrl/', options: Options(headers: requestHeaders));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('all post');
         final data = jsonEncode(response.data);
         res = postFromJson(data);
         await Future.forEach(res, (Post element) async {
           if (element.userId == userId) {
-            print('user matched');
             userPostes.add(element);
           }
         });
@@ -201,7 +197,6 @@ class PostRepo {
       final response = await dio.post("$postUrl/comments/",
           options: Options(headers: requestHeaders), data: jsonEncode(data));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('TRUEEEEEEEEEEEEEE');
         log(response.data.toString());
         final retriev = jsonEncode(response.data);
         // res = Comment()

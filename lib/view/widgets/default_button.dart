@@ -7,6 +7,41 @@ class DefaultButton extends StatelessWidget {
     Key? key,
     required this.text,
     this.background,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     this.function,
   }) : super(key: key);
   final Widget text;

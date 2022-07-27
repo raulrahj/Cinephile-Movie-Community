@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/infrastructure/search/search_repo.dart';
+import 'package:open_box/view/search_screen/c_appbar.dart';
 import 'package:open_box/view/search_screen/group_search/s_group_search.dart';
 import 'package:open_box/view/search_screen/user_search/s_user_result.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
@@ -22,8 +23,10 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Column(
+      // appBar: PreferredSize(
+      //     child: SearchAppBar(height: AppBar().preferredSize.height),
+      //     preferredSize: Size(double.infinity, 140)),
+      body: Column(
         // physics: const ScrollPhysics(),
         children: [
           Padding(
@@ -72,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
           //   child: ProgressCircle(),
           // )
         ],
-      )),
+      ),
     );
   }
 

@@ -12,7 +12,6 @@ import 'package:open_box/data/util/util.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
-import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/widgets/common.dart';
 
 class NewPost extends StatefulWidget {
@@ -28,6 +27,7 @@ class _NewPostState extends State<NewPost> {
   TextEditingController postDiscripControllr = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    //  final Use = GlobalState.of(context);
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -48,14 +48,20 @@ class _NewPostState extends State<NewPost> {
                   aspectRatio: 3 / 1,
                   child: Row(
                     children: [
-                      const CircleAvatar(
+                       CircleAvatar(
                         backgroundImage: NetworkImage(profImg),
+                        radius: dWidth(context)/14,
                       ),
                       kWidth1,
                       Text(
                         state.profileData!.user!.firstname,
-                        style: Theme.of(context).textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 18),
                       ),
+                      const Spacer(),
+                      Icon(
+                        Icons.public,
+                        color: Theme.of(context).primaryColor,
+                      )
                     ],
                   ),
                 );
@@ -67,7 +73,7 @@ class _NewPostState extends State<NewPost> {
           Expanded(
               child: TextFormField(
             controller: postDiscripControllr,
-            maxLines: 10,
+            maxLines: 100,
             decoration: const InputDecoration.collapsed(
               hintText: 'what is on your mind?',
             ),
@@ -79,7 +85,8 @@ class _NewPostState extends State<NewPost> {
             // color: kBlack,
             decoration: postImg != null
                 ? BoxDecoration(
-                    image: DecorationImage(image: FileImage(postImg!)))
+                    image: DecorationImage(image: FileImage(postImg!)),
+                  )
                 : const BoxDecoration(),
           ),
           Row(

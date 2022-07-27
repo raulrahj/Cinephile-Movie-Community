@@ -93,16 +93,12 @@ class Authentication implements AuthRepo {
         retrievedUser = profileModelFromJson(retriev);
         SharedService.setLoginDetails(retrievedUser);
         print('login success');
-        log(jsonEncode(response.data));
-        // log(retrievedUser.toString());
       } else if (response.statusCode == 400) {
-        print(response.statusMessage);
         log('Password Not Matching');
       } else if (response.statusCode == 401) {
         print(response.statusMessage);
       } else if (response.statusCode == 404) {
         log('User Not Found');
-        print(response.statusMessage);
       } else if (response.statusCode == 500) {
         print(response.statusMessage);
       }
@@ -111,10 +107,8 @@ class Authentication implements AuthRepo {
         print(e.response!.statusCode);
       } else {
         print(e.message);
-        print(e.error);
       }
       log(e.message);
-      // throw e.error;
     } catch (e) {
       log(e.toString());
     }

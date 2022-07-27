@@ -67,9 +67,8 @@ class UtilRepo {
                         // _uploadImage(File(photo.path));
                       }
                     }
-                    // print(photo);
                   } catch (e) {
-                    print(e);
+                    // debugPrint(e.toString());
                   }
                 },
               ),
@@ -84,13 +83,10 @@ class UtilRepo {
                       image = await _cropImage(File(photo.path));
                       if (image != null) {
                         selectedImg = image;
-                        // _uploadImage(image!);
                       } else {
                         selectedImg = File(photo.path);
-                        // _uploadImage(File(photo.path));
                       }
                     }
-                    // print(photo);
                   } catch (e) {
                     print(e);
                   }
@@ -107,7 +103,6 @@ class UtilRepo {
     String fileName =
         DateTime.now().toString().replaceAll(RegExp(r'[^0-9]+'), '') +
             image.path.split('/').last;
-    print(fileName);
     FormData formData = FormData.fromMap({
       "name": fileName,
       "file": await MultipartFile.fromFile(
@@ -124,14 +119,12 @@ class UtilRepo {
 //     var stream =
 // http.ByteStream(DelegatingStream.typed(image.openRead()));
     try {
-      // print(formData.fields[0]);
       log('Upload Image try block');
       final response = await dio.post("$kApiUrl/upload/",
           data: formData, options: Options(headers: requestHeaders));
       log('Response got');
       if (response.statusCode == 200 || response.statusCode == 201) {
         log(response.statusMessage!);
-        print(response.data);
         log('Image Uploaded !!!');
         return fileName;
       } else {
@@ -142,7 +135,6 @@ class UtilRepo {
       log(e.message);
       log('Status Code ${e.response}');
     } catch (e) {
-      // print()
       log(e.toString());
     }
     return fileName;
@@ -158,7 +150,8 @@ class Glass extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           ConstrainedBox(
-              constraints: const BoxConstraints.expand(), child: const FlutterLogo()),
+              constraints: const BoxConstraints.expand(),
+              child: const FlutterLogo()),
           Center(
             child: ClipRect(
               child: BackdropFilter(

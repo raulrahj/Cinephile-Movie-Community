@@ -79,7 +79,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       return BlocBuilder<UserBloc, UserState>(
                         builder: (context, state) {
                           if (state is CurrentUserState) {
-                            print('buidler callling');
                             return SizedBox(
                               child: AspectRatio(
                                 aspectRatio: 8 / 4,
@@ -259,7 +258,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 final String? profilePic;
                 if (profileImg != null) {
                   profilePic = await UtilRepo.uploadImage(profileImg!);
-                  print(profilePic);
                 } else {
                   profilePic = null;
                 }

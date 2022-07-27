@@ -20,7 +20,7 @@ class ProfiileDisplay extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-              border: Border.all(width: 3, color: kSecondary),
+              border: Border.all(width: 3, color: Theme.of(context).primaryColorLight),
               borderRadius: BorderRadius.circular(100),
               // color: kBlack
             ),

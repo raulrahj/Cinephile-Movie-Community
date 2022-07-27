@@ -19,20 +19,28 @@ class SettingsTileWidget extends StatelessWidget {
       onTap: function,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 3),
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              offset: Offset(0, 2),
-              blurRadius: 4,
-              color: kBlack,
+              color: Colors.white.withOpacity(0.8),
+              offset: Offset(-6.0, -6.0),
+              blurRadius: 16.0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(6.0, 6.0),
+              blurRadius: 16.0,
             ),
           ],
         ),
         child: ListTile(
-          leading: Icon(icon,size: 28,),
+          leading: Icon(
+            icon,
+            size: 28,
+          ),
           title: Text(
             title,
             style: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.w600),

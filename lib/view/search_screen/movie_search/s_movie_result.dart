@@ -6,7 +6,7 @@ import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/repo/movie_info_repo.dart';
 import 'package:open_box/logic/cubit/search/search_cubit.dart';
-import 'package:open_box/view/discover/movie_detailed.dart';
+import 'package:open_box/view/discover/widgets/movie_detailed.dart';
 import 'package:open_box/view/search_screen/movie_search/s_review.dart';
 
 class MovieSResult extends StatelessWidget {

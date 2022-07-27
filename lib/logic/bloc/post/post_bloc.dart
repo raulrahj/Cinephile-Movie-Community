@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
+import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 
 import '../../../data/models/post/m_post.dart';
@@ -11,7 +14,8 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepo _postRepo;
   PostBloc(this._postRepo) : super(PostStateInitial()) {
     on<GetAllPost>((event, emit) async {
-      emit(PostLoading());
+      final profile = await SharedService.getUserProfile();
+      emit(PostLoading(currentUser: profile!));
       final data = await _postRepo.allPost();
       if (data == null) {
         emit(PostErrorState());
@@ -22,8 +26,26 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         // emit(const OnPostState());
       }
     });
+    on<GetTimeline>((event, emit) async {
+      final profile = await SharedService.getUserProfile();
+
+      emit(PostLoading(currentUser: profile!));
+      final data = await _postRepo.getTimeLinePost(id: profile.user!.id!);
+      if (data.isEmpty) {
+        emit(PostErrorState());
+      } else {
+        emit(
+          TimeLinePostState(
+            timelinePosts: data,
+          ),
+        );
+        // emit(const OnPostState());
+      }
+    });
     on<GetPostEvent>((event, emit) async {
-      emit(PostLoading());
+      final profile = await SharedService.getUserProfile();
+
+      emit(PostLoading(currentUser: profile!));
       final data = await _postRepo.getPost(id: event.id);
       if (data == null) {
         emit(PostErrorState());
@@ -32,7 +54,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     });
     on<CreatePostEvent>((event, emit) async {
-      emit(PostLoading());
+      final profile = await SharedService.getUserProfile();
+
+      emit(PostLoading(currentUser: profile!));
       final data =
           await _postRepo.createPost(postDat: event.postData, id: event.id);
       if (data == null) {
@@ -50,10 +74,12 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     });
     on<CommentPostEvent>((event, emit) async {
-      emit(PostLoading());
+      final profile = await SharedService.getUserProfile();
+
+      emit(PostLoading(currentUser: profile!));
       final response = await _postRepo.addComment(event.commentData);
       if (response != null) {
-        emit(const OnPostState());
+        emit(const OnPostState().copyWith());
       }
     });
 
@@ -62,17 +88,17 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       if (response != null) {
         emit(const AllPostState());
       } else {
-        print("null");
+        emit(PostErrorState());
       }
     });
-        on<UpdatePostEvent>((event, emit) async {
-      final response = await _postRepo.updatePost(postId: event.postId,postData: event.postData);
+    on<UpdatePostEvent>((event, emit) async {
+      final response = await _postRepo.updatePost(
+          postId: event.postId, postData: event.postData);
       if (response != null) {
         emit(const AllPostState());
       } else {
-        print("null");
+        emit(PostErrorState());
       }
     });
-    
   }
 }

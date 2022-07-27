@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:open_box/view/discover/new_releases/new_releases.dart';
-import 'package:open_box/view/discover/trending/trending_screen.dart';
 import 'package:open_box/view/discover/upcoming/upcoming_screen.dart';
+
+ValueNotifier<bool> scrollNotifier = ValueNotifier(false);
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({Key? key}) : super(key: key);
@@ -16,16 +17,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: NotificationListener<UserScrollNotification>(
-        onNotification: (notification){
-          final scrollDirection =notification.direction;
-          if(scrollDirection ==ScrollDirection.forward){
-            setState(() {
-              isFull=false;
-            });
-          }else if (scrollDirection==ScrollDirection.reverse){
-            setState(() {
-              isFull =false;
-            });
+        onNotification: (notification) {
+          final scrollDirection = notification.direction;
+          if (scrollDirection == ScrollDirection.forward) {
+            scrollNotifier.value = false;
+          } else if (scrollDirection == ScrollDirection.reverse) {
+            scrollNotifier.value = true;
           }
           return true;
         },

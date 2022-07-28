@@ -11,9 +11,7 @@ import 'package:open_box/data/models/search/m_review.dart';
 import 'package:open_box/data/models/trending/m_trending.dart';
 import 'package:open_box/data/core/failures/main_failure.dart';
 import 'package:dartz/dartz.dart';
-import 'package:open_box/data/models/trending/m_trending.dart';
 import 'package:open_box/data/repo/movie_info_repo.dart';
-import 'package:open_box/data/util/dio_client.dart';
 
 @LazySingleton(as: MovieInfoRepo)
 class MovieInfoRepository implements MovieInfoRepo {

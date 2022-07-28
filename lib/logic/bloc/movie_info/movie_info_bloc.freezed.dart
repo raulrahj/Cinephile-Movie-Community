@@ -287,9 +287,9 @@ abstract class _GetNewReleased implements MovieInfoEvent {
 mixin _$MovieInfoState {
   bool get isLoading => throw _privateConstructorUsedError;
   Trending? get trendingData => throw _privateConstructorUsedError;
+  NewReleases? get newReleaseData => throw _privateConstructorUsedError;
   Option<Either<MainFailure, Trending>> get trendingFSOption =>
       throw _privateConstructorUsedError;
-  NewReleases? get newReleaseData => throw _privateConstructorUsedError;
   Option<Either<MainFailure, NewReleases>> get newReleaseOption =>
       throw _privateConstructorUsedError;
 
@@ -306,8 +306,8 @@ abstract class $MovieInfoStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       Trending? trendingData,
-      Option<Either<MainFailure, Trending>> trendingFSOption,
       NewReleases? newReleaseData,
+      Option<Either<MainFailure, Trending>> trendingFSOption,
       Option<Either<MainFailure, NewReleases>> newReleaseOption});
 }
 
@@ -324,8 +324,8 @@ class _$MovieInfoStateCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = freezed,
     Object? trendingData = freezed,
-    Object? trendingFSOption = freezed,
     Object? newReleaseData = freezed,
+    Object? trendingFSOption = freezed,
     Object? newReleaseOption = freezed,
   }) {
     return _then(_value.copyWith(
@@ -337,14 +337,14 @@ class _$MovieInfoStateCopyWithImpl<$Res>
           ? _value.trendingData
           : trendingData // ignore: cast_nullable_to_non_nullable
               as Trending?,
-      trendingFSOption: trendingFSOption == freezed
-          ? _value.trendingFSOption
-          : trendingFSOption // ignore: cast_nullable_to_non_nullable
-              as Option<Either<MainFailure, Trending>>,
       newReleaseData: newReleaseData == freezed
           ? _value.newReleaseData
           : newReleaseData // ignore: cast_nullable_to_non_nullable
               as NewReleases?,
+      trendingFSOption: trendingFSOption == freezed
+          ? _value.trendingFSOption
+          : trendingFSOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<MainFailure, Trending>>,
       newReleaseOption: newReleaseOption == freezed
           ? _value.newReleaseOption
           : newReleaseOption // ignore: cast_nullable_to_non_nullable
@@ -363,8 +363,8 @@ abstract class _$$_MovieInfoStateCopyWith<$Res>
   $Res call(
       {bool isLoading,
       Trending? trendingData,
-      Option<Either<MainFailure, Trending>> trendingFSOption,
       NewReleases? newReleaseData,
+      Option<Either<MainFailure, Trending>> trendingFSOption,
       Option<Either<MainFailure, NewReleases>> newReleaseOption});
 }
 
@@ -383,8 +383,8 @@ class __$$_MovieInfoStateCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = freezed,
     Object? trendingData = freezed,
-    Object? trendingFSOption = freezed,
     Object? newReleaseData = freezed,
+    Object? trendingFSOption = freezed,
     Object? newReleaseOption = freezed,
   }) {
     return _then(_$_MovieInfoState(
@@ -396,14 +396,14 @@ class __$$_MovieInfoStateCopyWithImpl<$Res>
           ? _value.trendingData
           : trendingData // ignore: cast_nullable_to_non_nullable
               as Trending?,
-      trendingFSOption: trendingFSOption == freezed
-          ? _value.trendingFSOption
-          : trendingFSOption // ignore: cast_nullable_to_non_nullable
-              as Option<Either<MainFailure, Trending>>,
       newReleaseData: newReleaseData == freezed
           ? _value.newReleaseData
           : newReleaseData // ignore: cast_nullable_to_non_nullable
               as NewReleases?,
+      trendingFSOption: trendingFSOption == freezed
+          ? _value.trendingFSOption
+          : trendingFSOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<MainFailure, Trending>>,
       newReleaseOption: newReleaseOption == freezed
           ? _value.newReleaseOption
           : newReleaseOption // ignore: cast_nullable_to_non_nullable
@@ -418,8 +418,8 @@ class _$_MovieInfoState implements _MovieInfoState {
   const _$_MovieInfoState(
       {required this.isLoading,
       this.trendingData,
-      required this.trendingFSOption,
       this.newReleaseData,
+      required this.trendingFSOption,
       required this.newReleaseOption});
 
   @override
@@ -427,15 +427,15 @@ class _$_MovieInfoState implements _MovieInfoState {
   @override
   final Trending? trendingData;
   @override
-  final Option<Either<MainFailure, Trending>> trendingFSOption;
-  @override
   final NewReleases? newReleaseData;
+  @override
+  final Option<Either<MainFailure, Trending>> trendingFSOption;
   @override
   final Option<Either<MainFailure, NewReleases>> newReleaseOption;
 
   @override
   String toString() {
-    return 'MovieInfoState(isLoading: $isLoading, trendingData: $trendingData, trendingFSOption: $trendingFSOption, newReleaseData: $newReleaseData, newReleaseOption: $newReleaseOption)';
+    return 'MovieInfoState(isLoading: $isLoading, trendingData: $trendingData, newReleaseData: $newReleaseData, trendingFSOption: $trendingFSOption, newReleaseOption: $newReleaseOption)';
   }
 
   @override
@@ -447,9 +447,9 @@ class _$_MovieInfoState implements _MovieInfoState {
             const DeepCollectionEquality()
                 .equals(other.trendingData, trendingData) &&
             const DeepCollectionEquality()
-                .equals(other.trendingFSOption, trendingFSOption) &&
-            const DeepCollectionEquality()
                 .equals(other.newReleaseData, newReleaseData) &&
+            const DeepCollectionEquality()
+                .equals(other.trendingFSOption, trendingFSOption) &&
             const DeepCollectionEquality()
                 .equals(other.newReleaseOption, newReleaseOption));
   }
@@ -459,8 +459,8 @@ class _$_MovieInfoState implements _MovieInfoState {
       runtimeType,
       const DeepCollectionEquality().hash(isLoading),
       const DeepCollectionEquality().hash(trendingData),
-      const DeepCollectionEquality().hash(trendingFSOption),
       const DeepCollectionEquality().hash(newReleaseData),
+      const DeepCollectionEquality().hash(trendingFSOption),
       const DeepCollectionEquality().hash(newReleaseOption));
 
   @JsonKey(ignore: true)
@@ -473,8 +473,8 @@ abstract class _MovieInfoState implements MovieInfoState {
   const factory _MovieInfoState(
       {required final bool isLoading,
       final Trending? trendingData,
-      required final Option<Either<MainFailure, Trending>> trendingFSOption,
       final NewReleases? newReleaseData,
+      required final Option<Either<MainFailure, Trending>> trendingFSOption,
       required final Option<Either<MainFailure, NewReleases>>
           newReleaseOption}) = _$_MovieInfoState;
 
@@ -483,10 +483,10 @@ abstract class _MovieInfoState implements MovieInfoState {
   @override
   Trending? get trendingData => throw _privateConstructorUsedError;
   @override
+  NewReleases? get newReleaseData => throw _privateConstructorUsedError;
+  @override
   Option<Either<MainFailure, Trending>> get trendingFSOption =>
       throw _privateConstructorUsedError;
-  @override
-  NewReleases? get newReleaseData => throw _privateConstructorUsedError;
   @override
   Option<Either<MainFailure, NewReleases>> get newReleaseOption =>
       throw _privateConstructorUsedError;

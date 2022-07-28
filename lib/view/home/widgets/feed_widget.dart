@@ -6,6 +6,8 @@ import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
+import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
@@ -13,9 +15,10 @@ import 'package:open_box/view/home/comment_screen.dart';
 import 'package:open_box/view/widgets/placeholders.dart';
 
 class HFeedWdget extends StatefulWidget {
-  const HFeedWdget({Key? key, this.postdata, this.username}) : super(key: key);
+  const HFeedWdget({Key? key, this.postdata, this.currentUser})
+      : super(key: key);
   final Post? postdata;
-  final String? username;
+  final ProfileModel? currentUser;
   @override
   State<HFeedWdget> createState() => _HFeedWdgetState();
 }
@@ -29,9 +32,12 @@ class _HFeedWdgetState extends State<HFeedWdget> {
   @override
   Widget build(BuildContext context) {
     // context.read<PostBloc>().add(GetPostEvent(id: widget.postdata!.id!));
-    isLiked = widget.postdata!.likes!.contains("62cd0d25a06157de0a2496c1")
-        ? true
-        : false;
+    likeNotifier.value =
+        widget.postdata!.likes!.contains("62e02021ea7fdf9f3e48b59c"
+                // widget.currentUser!.user!.id
+                )
+            ? true
+            : false;
     // return BlocBuilder<PostBloc, PostState>(
     //   builder: (context, state) {
     //     if (state is AllPostState) {
@@ -77,7 +83,7 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        dateFormat(widget.postdata!.createdAt),
+                        ParseDate.dFormatDate(widget.postdata!.createdAt),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       trailing: const Icon(Icons.more_vert),

@@ -21,7 +21,7 @@ class ChatRepo {
   }
 
   Future<ChatTypes> userChats({required String userId}) async {
-    ChatTypes types = ChatTypes([], []);
+    ChatTypes types = ChatTypes(groupChat: [], perSonalChat: []);
     try {
       var response = await DioClient().get(
         ApiEndPoints.chat,
@@ -30,12 +30,12 @@ class ChatRepo {
       // streamController.add(response.data);
       final data = jsonEncode(response);
       final res = chatsModelFromJson(data);
-      types = ChatTypes([], []);
+      types = ChatTypes(groupChat: [], perSonalChat: []);
       for (ChatsModel element in res) {
         if (element.members.length <= 2) {
-          types.perSonalChat.add(element);
+          types.perSonalChat!.add(element);
         } else {
-          types.groupChat.add(element);
+          types.groupChat!.add(element);
         }
       }
       // return types;
@@ -47,13 +47,19 @@ class ChatRepo {
     }
   }
 
-  Future findChat({required String userId, required String clientId}) async {
+  Future<List<MessageModel>> findChat(
+      {required String userId, required String clientId}) async {
+    List<MessageModel> list;
+
     try {
       Response response = await DioClient().get(
         ApiEndPoints.chat,
         "$userId,$clientId",
       );
-      log(response.data);
+      final res = jsonEncode(response);
+      list = messageModelFromJson(res);
+      // list = data;
+      return list;
     } catch (e) {
       rethrow;
     }
@@ -62,26 +68,22 @@ class ChatRepo {
   Future addMessage({required MessageModel message}) async {
     try {
       final body = message.toJson();
-      // var response =
       await DioClient().post(ApiEndPoints.message, '', (body));
-
-      // log(response.data);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<List<MessageModel>> getMessage({required String chatId}) async {
+  Future<List<MessageModel>> getMessages({required String chatId}) async {
     List<MessageModel> list;
     try {
       var response = await DioClient().get(
         "${ApiEndPoints.message}/",
         chatId,
       );
-      // log(response.data);
       final res = jsonEncode(response);
       final data = messageModelFromJson(res);
-      print("MESSAGE CONVERSION SUCCESSFULL");
+      debugPrint("MESSAGE CONVERSION SUCCESSFULL");
       list = data;
       return list;
     } catch (e) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:open_box/data/models/messegemodel.dart';
 
 const kRadius = 10.0;
 const kPadding = 15.0;
@@ -30,12 +29,4 @@ const div = Divider(
 final kBorderRadius = BorderRadius.circular(kRadius);
 dHeight(context) => MediaQuery.of(context).size.height;
 dWidth(context) => MediaQuery.of(context).size.width;
-
-List<Messege> chats = [
-  Messege('Mac', '12:3', 'Hei', false),
-  Messege('Me', '12:3', 'Hello', false),
-  Messege('Mac', '12:4', 'Fine !', true),
-  Messege('Mac', '12:5', 'How was the days', true),
-  Messege('Me', '12:6', 'It\'s totaly greate :)', false),
-];
-String dateFormat(datetime) => DateFormat.MMMMEEEEd().format(datetime);
+rmat(datetime) => DateFormat.MMMMEEEEd().format(datetime);

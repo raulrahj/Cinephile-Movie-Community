@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/view/widgets/common.dart';
 
@@ -49,12 +52,31 @@ class CommentsScreen extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                const CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      // "$kApiImgUrl/${data.commentedUserData.}" ??
-                                      profImg),
-                                  radius: 15,
-                                ),
+                                FutureBuilder(
+                                    future: UserRepo().getUser(
+                                        id: data.commentedUserData!.id!),
+                                    builder: (context, AsyncSnapshot snapshot) {
+                                      if (snapshot.hasData) {
+                                        final UserModel user = snapshot.data;
+                                        return CircleAvatar(
+                                          foregroundImage: NetworkImage(profImg1),
+                                          backgroundImage: NetworkImage(
+                                            // user
+                                              //     .profilePicture!.isEmpty
+                                              // ? profImg1
+                                              // : 
+                                              "$kApiImgUrl/${user.profilePicture}"),
+                                          radius: 15,
+                                        );
+                                      } else {
+                                        return const CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              // "$kApiImgUrl/${data.commentedUserData.}" ??
+                                              profImg),
+                                          radius: 15,
+                                        );
+                                      }
+                                    }),
                                 kWidth2,
                                 Text(
                                   data.commentedUserData!.firstname ??
@@ -70,7 +92,7 @@ class CommentsScreen extends StatelessWidget {
                                 // LayoutBuilder(builder: (context, constraints) {
                                 //   return
                                 Expanded(
-                                  child: Text(  
+                                  child: Text(
                                     data.text ?? lorem,
                                     // maxLines: 5,
                                     style: GoogleFonts.dmSans().copyWith(

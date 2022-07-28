@@ -7,10 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_login.dart';
-import 'package:open_box/infrastructure/auth/authenticaton.dart';
-import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/data/util/form_validation.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
 import 'package:open_box/view/register/otp_verification.dart';
+import 'package:open_box/view/register/widgets/bg.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
 import 'package:open_box/view/widgets/l_headline.dart';
@@ -41,31 +41,34 @@ class _LoginScreenState extends State<LoginScreen> {
       widget: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                flex: 4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    kHeight4,
-                    const LargeHeadlineWidget(title: "Welcome Back"),
-                    HeadlineWidget(
-                      title: 'Continue to your account',
-                      color: Theme.of(context).primaryColorLight,
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      kHeight4,
+                      const LargeHeadlineWidget(title: "Welcome Back"),
+                      HeadlineWidget(
+                        title: 'Continue to your account',
+                        color: Theme.of(context).primaryColorLight,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 6,
-                child: LoginWidget(
-                  controller1: userNameController,
-                  controller2: passwordController,
-                  // formKey: formKey,
-                ),
-              )
-            ],
+                Expanded(
+                  flex: 6,
+                  child: LoginWidget(
+                    controller1: userNameController,
+                    controller2: passwordController,
+                    // formKey: formKey,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -102,22 +105,11 @@ class _LoginWidgetState extends State<LoginWidget> {
           children: [
             DefaultTextField(
               // controller: controller1,
-              prefix: Icon(
-                Icons.email,
-                color: Theme.of(context).primaryColor,
-              ),
+              prefix: Icons.email,
               label: 'E-mail',
               hint: 'abc@gmail.com',
               keyType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "* Required";
-                }
-                if (!value.contains("@") || !value.contains(".com")) {
-                  return "Enter a valid E-mail";
-                }
-                return null;
-              },
+              validator: FormValidation().emailValidation,
               onSaved: (onSaved) => {userName = onSaved},
             ),
             kHeight2,
@@ -126,22 +118,9 @@ class _LoginWidgetState extends State<LoginWidget> {
               hint: 'password',
               label: 'Password',
               obscureText: true,
-
-              prefix: Icon(
-                Icons.key,
-                color: Theme.of(context).primaryColor,
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "Enter the password";
-                }
-                if (value.length < 6) {
-                  return "Password must be at least 6 charcter's";
-                }
-                return null;
-              },
+              prefix: Icons.key,
+              validator: FormValidation().passwordValidation,
               onSaved: (onsaved) => {password = onsaved},
-
               // suffix: const Icon(Icons.remove_red_eye),
             ),
             kHeight4,
@@ -162,39 +141,27 @@ class _LoginWidgetState extends State<LoginWidget> {
 
                       final data =
                           LoginModel(username: userName!, password: password!);
-                      // await Future.delayed(const Duration(seconds: 10));
-                      Authentication reg = Authentication();
-                      final user = await context
+                      await context
                           .read<AuthenticationCubit>()
                           .login(loginData: data);
-
-                      // final data = LoginModel(username: 'raul', password: '123456');
-                      // final user = await reg
-                      //     .loginUser(loginData: data)
-                      //   .whenComplete(() async {
-                      // final isLogged =
-                      //     await SharedService.isLoggedIn().then((isOk) async {
-                      //   Future.delayed(const Duration(seconds: 3));
-                      //   // final isOk = await SharedService.isLoggedIn();
-                      //   print('Checking Login status');
-                      //   if (isOk) {
-                      // ignore: use_build_context_synchronously
                       if (state.isLoading) {
                         showDialog(
                             context: context,
                             builder: (ctx) {
                               return const SimpleDialog(
+                                backgroundColor: Colors.transparent,
                                 children: [Center(child: ProgressCircle())],
                               );
                             });
-                      } else {
+                      } else if (!state.isError && !state.isLoading) {
                         // ignore: use_build_context_synchronously
                         await Navigator.pushNamedAndRemoveUntil(
                             context, '/main', (route) => false);
+                      } else if (state.isError) {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.errorText)));
                       }
-                      //   }
-                      // });
-                      // });
                     } else {}
                   },
                 );
@@ -244,64 +211,4 @@ class _LoginWidgetState extends State<LoginWidget> {
       ),
     );
   }
-}
-
-class BackgroundImg extends StatelessWidget {
-  const BackgroundImg({Key? key, required this.widget}) : super(key: key);
-  final Widget widget;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          backgroundBlendMode: BlendMode.color,
-          image: DecorationImage(
-            colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.7), BlendMode.darken),
-            fit: BoxFit.cover,
-            image: const NetworkImage(urlImg),
-          ),
-        ),
-        child: widget);
-  }
-// }
-
-// class Form extends StatelessWidget {
-//   const Form({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(horizontal: 0.0),
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(kRadius),
-//         child: BackdropFilter(
-//           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-//           child: Container(
-//             // height: dHeight(context) / 8,
-//             // width: dWidth(context) / 1.2,
-//             alignment: Alignment.center,
-//             padding: EdgeInsets.only(
-//               right: dWidth(context) / 30,
-//             ),
-//             decoration: BoxDecoration(
-//               color: Colors.white.withOpacity(.05),
-//               borderRadius: BorderRadius.circular(kRadius),
-//             ),
-//             child: TextFormField(
-//               decoration: InputDecoration(
-//                 labelText: 'Email',
-//                 enabledBorder: OutlineInputBorder(
-//                   borderSide: BorderSide(
-//                       width: 2, color: Theme.of(context).primaryColorLight),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
 }

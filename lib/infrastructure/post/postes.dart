@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
@@ -15,10 +16,13 @@ class PostRepo {
     'Authorization': ''
   };
 
-  Future createPost({required Post postDat, required String id}) async {
+  Future createPost({
+    required Post postDat,
+  }) async {
+    final currentUser = await SharedService.getUserProfile();
     final Map<String, dynamic> postData = {
       "desc": postDat.desc,
-      "userId": '62cd0d25a06157de0a2496c1',
+      "userId": currentUser!.user!.id,
       "image": postDat.image,
       "comments": [],
       "likes": []
@@ -135,8 +139,8 @@ class PostRepo {
     try {
       final response = await dio.get('$postUrl/$id',
           options: Options(headers: requestHeaders));
-      res = jsonDecode(response.data);
       if (response.statusCode == 200 || response.statusCode == 201) {
+        res = jsonDecode(response.data);
         return res!;
       } else {}
     } catch (e) {
@@ -168,28 +172,28 @@ class PostRepo {
   }
 
   Future<Comment?> addComment(Comment comment) async {
-    List<Comment>? res;
+    final currentUser = await SharedService.getUserProfile();
+    List<Comment>? retrieved;
     Map<String, dynamic> commentedUser = {
       "commentedUserData": {
-        "_id": "62c4b7255c03f763422ce5ae",
-        "username": "krishnan@gmail.com",
-        // "password": """$2b$10$0L2FZBi49v2RQGBmxrWZx.Cd3XfjAElSjSZsHjimh0eFZTL9ibhIC""",
-        "firstname": "krishnan",
-        "lastname": "Das",
+        "_id": currentUser!.user!.id,
+        "username": currentUser.user!.username,
+        "firstname": currentUser.user!.firstname,
+        "lastname": currentUser.user!.lastname,
         "isAdmin": false,
         "auth": true,
-        "followers": [],
-        "following": [],
-        "createdAt": "2022-07-05T22:11:50.135Z",
-        "updatedAt": "2022-07-06T03:41:54.868Z",
-        "__v": 0
+        "followers": currentUser.user!.followers,
+        "following": currentUser.user!.following,
+        "createdAt": currentUser.user!.createdAt.toString(),
+        "updatedAt": currentUser.user!.updatedAt.toString(),
+        "__v": currentUser.user!.v
       }
     };
 
     Map<String, dynamic> data = {
       "postId": comment.postId,
       "commentText": comment.text,
-      "postedBy": comment.postedBy,
+      "postedBy": currentUser.user!.id,
       "userData": jsonEncode(commentedUser)
     };
 
@@ -197,13 +201,11 @@ class PostRepo {
       final response = await dio.post("$postUrl/comments/",
           options: Options(headers: requestHeaders), data: jsonEncode(data));
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data.toString());
-        final retriev = jsonEncode(response.data);
-        // res = Comment()
+        log(response.statusCode.toString());
       }
       return null;
     } on DioError catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } catch (e) {
       log(e.toString());
     }

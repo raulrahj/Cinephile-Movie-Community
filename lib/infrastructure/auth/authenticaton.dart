@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
@@ -18,7 +19,7 @@ class Authentication implements AuthRepo {
     ..interceptors.add(Signup());
 
   @override
-  Future<ProfileModel?> signUp({required UserResp signUpData}) async {
+  Future<Either<String, bool>> signUp({required UserResp signUpData}) async {
     ProfileModel? retrievedUser;
     final data = {
       "username": signUpData.username,
@@ -46,18 +47,33 @@ class Authentication implements AuthRepo {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        retrievedUser = ProfileModel.fromJson(response.data);
+        final retriev = jsonEncode(response.data);
+        retrievedUser = profileModelFromJson(retriev);
+
+        await loginUser(
+                loginData: LoginModel(
+                    username: signUpData.username,
+                    password: signUpData.password!))
+            .then((value) {
+          if (value.isRight()) {
+            print('trueeeeeeeeee');
+            print(value.toString());
+            return right(true);
+          }
+        });
+        return right(true);
         log('user registered');
+        // return Right(retrievedUser);
       } else if (response.statusCode == 400) {
-        print('On sign up Request ${response.statusMessage}');
+        return Left(response.statusMessage!);
       } else if (response.statusCode! >= 500) {
-        print('internal error');
+        return const Left('internal error');
       }
     } on DioError catch (e) {
       if (e.response != null) {
-        print(e.response!.statusMessage);
+        debugPrint(e.response!.statusMessage);
         if (e.response!.statusCode == 400) {
-          print(e.response!.statusMessage);
+          debugPrint(e.response!.statusMessage);
         }
       }
       throw e.error;
@@ -65,11 +81,12 @@ class Authentication implements AuthRepo {
       log(e.toString());
       rethrow;
     }
-    return retrievedUser;
+    return const Left('Something went wrong !!!');
   }
 
   @override
-  Future<ProfileModel?> loginUser({required LoginModel loginData}) async {
+  Future<Either<String, ProfileModel?>> loginUser(
+      {required LoginModel loginData}) async {
     ProfileModel? retrievedUser;
     final data = loginData.toJson();
     try {
@@ -92,27 +109,29 @@ class Authentication implements AuthRepo {
         final retriev = jsonEncode(response.data);
         retrievedUser = profileModelFromJson(retriev);
         SharedService.setLoginDetails(retrievedUser);
-        print('login success');
+        debugPrint('login success');
+        return Right(retrievedUser);
       } else if (response.statusCode == 400) {
-        log('Password Not Matching');
+        return left('Password Not Matching !!!');
       } else if (response.statusCode == 401) {
-        print(response.statusMessage);
+        return left(response.statusMessage!);
       } else if (response.statusCode == 404) {
-        log('User Not Found');
+        return left('User Not Found');
       } else if (response.statusCode == 500) {
-        print(response.statusMessage);
+        return left("response.statusMessage!");
       }
     } on DioError catch (e) {
-      if (e.response!.statusCode == 404) {
-        print(e.response!.statusCode);
-      } else {
-        print(e.message);
-      }
+      // if (e.response!.statusCode == 404) {
+      //   debugPrint(e.response!.statusCode.toString());
+      // } else {
+      debugPrint(e.message);
+      // }
       log(e.message);
     } catch (e) {
       log(e.toString());
     }
-    return retrievedUser;
+    print('reached end');
+    return left("Something went wrong !!!");
   }
 
   Future<ProfileModel?> getUserProfile() async {
@@ -129,7 +148,7 @@ class Authentication implements AuthRepo {
 class Signup extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    print(err.message);
+    debugPrint(err.message);
     super.onError(err, handler);
     // throw err;
     return super.onError(err, handler);

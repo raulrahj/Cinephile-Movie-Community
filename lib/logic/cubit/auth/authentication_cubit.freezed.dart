@@ -17,8 +17,15 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AuthenticationState {
   bool get isLoading => throw _privateConstructorUsedError;
-  ProfileModel? get signUpData => throw _privateConstructorUsedError;
-  ProfileModel? get loginData => throw _privateConstructorUsedError;
+  ProfileModel get signUpData => throw _privateConstructorUsedError;
+  ProfileModel get loginData => throw _privateConstructorUsedError;
+  String get errorText => throw _privateConstructorUsedError;
+  bool get isError => throw _privateConstructorUsedError;
+  bool get isLoginSuccess => throw _privateConstructorUsedError;
+  Option<Either<String, ProfileModel>> get authFSOption =>
+      throw _privateConstructorUsedError;
+  Option<Either<String, bool>> get signupFSOption =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AuthenticationStateCopyWith<AuthenticationState> get copyWith =>
@@ -31,7 +38,14 @@ abstract class $AuthenticationStateCopyWith<$Res> {
           AuthenticationState value, $Res Function(AuthenticationState) then) =
       _$AuthenticationStateCopyWithImpl<$Res>;
   $Res call(
-      {bool isLoading, ProfileModel? signUpData, ProfileModel? loginData});
+      {bool isLoading,
+      ProfileModel signUpData,
+      ProfileModel loginData,
+      String errorText,
+      bool isError,
+      bool isLoginSuccess,
+      Option<Either<String, ProfileModel>> authFSOption,
+      Option<Either<String, bool>> signupFSOption});
 }
 
 /// @nodoc
@@ -48,6 +62,11 @@ class _$AuthenticationStateCopyWithImpl<$Res>
     Object? isLoading = freezed,
     Object? signUpData = freezed,
     Object? loginData = freezed,
+    Object? errorText = freezed,
+    Object? isError = freezed,
+    Object? isLoginSuccess = freezed,
+    Object? authFSOption = freezed,
+    Object? signupFSOption = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: isLoading == freezed
@@ -57,11 +76,31 @@ class _$AuthenticationStateCopyWithImpl<$Res>
       signUpData: signUpData == freezed
           ? _value.signUpData
           : signUpData // ignore: cast_nullable_to_non_nullable
-              as ProfileModel?,
+              as ProfileModel,
       loginData: loginData == freezed
           ? _value.loginData
           : loginData // ignore: cast_nullable_to_non_nullable
-              as ProfileModel?,
+              as ProfileModel,
+      errorText: errorText == freezed
+          ? _value.errorText
+          : errorText // ignore: cast_nullable_to_non_nullable
+              as String,
+      isError: isError == freezed
+          ? _value.isError
+          : isError // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoginSuccess: isLoginSuccess == freezed
+          ? _value.isLoginSuccess
+          : isLoginSuccess // ignore: cast_nullable_to_non_nullable
+              as bool,
+      authFSOption: authFSOption == freezed
+          ? _value.authFSOption
+          : authFSOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<String, ProfileModel>>,
+      signupFSOption: signupFSOption == freezed
+          ? _value.signupFSOption
+          : signupFSOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<String, bool>>,
     ));
   }
 }
@@ -74,7 +113,14 @@ abstract class _$$_AuthenticationStateCopyWith<$Res>
       __$$_AuthenticationStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {bool isLoading, ProfileModel? signUpData, ProfileModel? loginData});
+      {bool isLoading,
+      ProfileModel signUpData,
+      ProfileModel loginData,
+      String errorText,
+      bool isError,
+      bool isLoginSuccess,
+      Option<Either<String, ProfileModel>> authFSOption,
+      Option<Either<String, bool>> signupFSOption});
 }
 
 /// @nodoc
@@ -93,6 +139,11 @@ class __$$_AuthenticationStateCopyWithImpl<$Res>
     Object? isLoading = freezed,
     Object? signUpData = freezed,
     Object? loginData = freezed,
+    Object? errorText = freezed,
+    Object? isError = freezed,
+    Object? isLoginSuccess = freezed,
+    Object? authFSOption = freezed,
+    Object? signupFSOption = freezed,
   }) {
     return _then(_$_AuthenticationState(
       isLoading: isLoading == freezed
@@ -102,11 +153,31 @@ class __$$_AuthenticationStateCopyWithImpl<$Res>
       signUpData: signUpData == freezed
           ? _value.signUpData
           : signUpData // ignore: cast_nullable_to_non_nullable
-              as ProfileModel?,
+              as ProfileModel,
       loginData: loginData == freezed
           ? _value.loginData
           : loginData // ignore: cast_nullable_to_non_nullable
-              as ProfileModel?,
+              as ProfileModel,
+      errorText: errorText == freezed
+          ? _value.errorText
+          : errorText // ignore: cast_nullable_to_non_nullable
+              as String,
+      isError: isError == freezed
+          ? _value.isError
+          : isError // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLoginSuccess: isLoginSuccess == freezed
+          ? _value.isLoginSuccess
+          : isLoginSuccess // ignore: cast_nullable_to_non_nullable
+              as bool,
+      authFSOption: authFSOption == freezed
+          ? _value.authFSOption
+          : authFSOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<String, ProfileModel>>,
+      signupFSOption: signupFSOption == freezed
+          ? _value.signupFSOption
+          : signupFSOption // ignore: cast_nullable_to_non_nullable
+              as Option<Either<String, bool>>,
     ));
   }
 }
@@ -115,18 +186,35 @@ class __$$_AuthenticationStateCopyWithImpl<$Res>
 
 class _$_AuthenticationState implements _AuthenticationState {
   _$_AuthenticationState(
-      {required this.isLoading, this.signUpData, this.loginData});
+      {required this.isLoading,
+      required this.signUpData,
+      required this.loginData,
+      required this.errorText,
+      required this.isError,
+      required this.isLoginSuccess,
+      required this.authFSOption,
+      required this.signupFSOption});
 
   @override
   final bool isLoading;
   @override
-  final ProfileModel? signUpData;
+  final ProfileModel signUpData;
   @override
-  final ProfileModel? loginData;
+  final ProfileModel loginData;
+  @override
+  final String errorText;
+  @override
+  final bool isError;
+  @override
+  final bool isLoginSuccess;
+  @override
+  final Option<Either<String, ProfileModel>> authFSOption;
+  @override
+  final Option<Either<String, bool>> signupFSOption;
 
   @override
   String toString() {
-    return 'AuthenticationState(isLoading: $isLoading, signUpData: $signUpData, loginData: $loginData)';
+    return 'AuthenticationState(isLoading: $isLoading, signUpData: $signUpData, loginData: $loginData, errorText: $errorText, isError: $isError, isLoginSuccess: $isLoginSuccess, authFSOption: $authFSOption, signupFSOption: $signupFSOption)';
   }
 
   @override
@@ -137,7 +225,15 @@ class _$_AuthenticationState implements _AuthenticationState {
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
             const DeepCollectionEquality()
                 .equals(other.signUpData, signUpData) &&
-            const DeepCollectionEquality().equals(other.loginData, loginData));
+            const DeepCollectionEquality().equals(other.loginData, loginData) &&
+            const DeepCollectionEquality().equals(other.errorText, errorText) &&
+            const DeepCollectionEquality().equals(other.isError, isError) &&
+            const DeepCollectionEquality()
+                .equals(other.isLoginSuccess, isLoginSuccess) &&
+            const DeepCollectionEquality()
+                .equals(other.authFSOption, authFSOption) &&
+            const DeepCollectionEquality()
+                .equals(other.signupFSOption, signupFSOption));
   }
 
   @override
@@ -145,7 +241,12 @@ class _$_AuthenticationState implements _AuthenticationState {
       runtimeType,
       const DeepCollectionEquality().hash(isLoading),
       const DeepCollectionEquality().hash(signUpData),
-      const DeepCollectionEquality().hash(loginData));
+      const DeepCollectionEquality().hash(loginData),
+      const DeepCollectionEquality().hash(errorText),
+      const DeepCollectionEquality().hash(isError),
+      const DeepCollectionEquality().hash(isLoginSuccess),
+      const DeepCollectionEquality().hash(authFSOption),
+      const DeepCollectionEquality().hash(signupFSOption));
 
   @JsonKey(ignore: true)
   @override
@@ -156,16 +257,34 @@ class _$_AuthenticationState implements _AuthenticationState {
 
 abstract class _AuthenticationState implements AuthenticationState {
   factory _AuthenticationState(
-      {required final bool isLoading,
-      final ProfileModel? signUpData,
-      final ProfileModel? loginData}) = _$_AuthenticationState;
+          {required final bool isLoading,
+          required final ProfileModel signUpData,
+          required final ProfileModel loginData,
+          required final String errorText,
+          required final bool isError,
+          required final bool isLoginSuccess,
+          required final Option<Either<String, ProfileModel>> authFSOption,
+          required final Option<Either<String, bool>> signupFSOption}) =
+      _$_AuthenticationState;
 
   @override
   bool get isLoading => throw _privateConstructorUsedError;
   @override
-  ProfileModel? get signUpData => throw _privateConstructorUsedError;
+  ProfileModel get signUpData => throw _privateConstructorUsedError;
   @override
-  ProfileModel? get loginData => throw _privateConstructorUsedError;
+  ProfileModel get loginData => throw _privateConstructorUsedError;
+  @override
+  String get errorText => throw _privateConstructorUsedError;
+  @override
+  bool get isError => throw _privateConstructorUsedError;
+  @override
+  bool get isLoginSuccess => throw _privateConstructorUsedError;
+  @override
+  Option<Either<String, ProfileModel>> get authFSOption =>
+      throw _privateConstructorUsedError;
+  @override
+  Option<Either<String, bool>> get signupFSOption =>
+      throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_AuthenticationStateCopyWith<_$_AuthenticationState> get copyWith =>

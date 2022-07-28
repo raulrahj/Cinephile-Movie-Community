@@ -6,6 +6,7 @@ import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/movie_info/movie_info_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/logic/cubit/search/search_cubit.dart';
 import 'package:open_box/view/home/home_screen.dart';
 import 'package:open_box/data/core/di/injectable.dart';
@@ -31,17 +32,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MovieInfoBloc>(
-          create: (context) => getIt<MovieInfoBloc>(),
-        ),
-        BlocProvider<AuthenticationCubit>(
-          create: (context) => getIt<AuthenticationCubit>(),
-        ),
-        BlocProvider<UserBloc>(
-          create: (context) => UserBloc(UserRepo()),
-        ),
+        BlocProvider<UserBloc>(create: (context) => UserBloc(UserRepo())),
+        BlocProvider<MovieInfoBloc>(create: (context) => getIt<MovieInfoBloc>()),
+        BlocProvider<ChatCubit>(create: (context) => ChatCubit()),
+        BlocProvider<AuthenticationCubit>(create: (context) => getIt<AuthenticationCubit>()),
+        BlocProvider<SearchCubit>(create: (context) => SearchCubit()),
         BlocProvider<PostBloc>(create: (context) => PostBloc(PostRepo())),
-        BlocProvider<SearchCubit>(create: (context) => SearchCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -15,13 +15,13 @@ class SharedService {
     );
 
     await APICacheManager().addCacheData(cacheModel);
-    print("LOGIN AND DATA ADDED SUCCESFULLY");
-    print(loginData.user!.username);
+    debugPrint("LOGIN AND DATA ADDED SUCCESFULLY");
+    debugPrint(loginData.user!.username);
   }
 
   static Future<void> logout(BuildContext context) async {
     await APICacheManager().deleteCache(LOGIN_KEY);
-    print('LOG OUT AND DATA CLEARED !!!');
+    debugPrint('LOG OUT AND DATA CLEARED !!!');
     // ignore: use_build_context_synchronously
     Navigator.pushNamedAndRemoveUntil(
       context,

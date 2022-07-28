@@ -7,10 +7,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
+import 'package:open_box/data/util/form_validation.dart';
 import 'package:open_box/infrastructure/auth/authenticaton.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
-import 'package:open_box/view/register/login_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
+import 'package:open_box/view/register/widgets/bg.dart';
 import 'package:open_box/view/register/widgets/or_divider.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
@@ -53,10 +54,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       widget: Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
               AspectRatio(
-                aspectRatio: 2 / 1,
+                aspectRatio: 3 / 2,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -84,46 +86,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         DefaultTextField(
                           label: 'E-mail',
-                          prefix: const Icon(Icons.email),
+                          prefix: Icons.email,
                           controller: _emailController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "* Required";
-                            }
-                            if (!value.contains("@") ||
-                                !value.contains(".com")) {
-                              return "Enter a valid E-mail";
-                            }
-                            return null;
-                          },
+                          keyType: TextInputType.emailAddress,
+                          validator: FormValidation().emailValidation,
                           onSaved: (onsave) => {userName = onsave},
                         ),
                         kHeight1,
                         DefaultTextField(
                           label: 'First Name',
-                          prefix: const Icon(Icons.person_pin),
+                          prefix: Icons.person_pin,
                           controller: _nameController,
-                          validator: (value) =>
-                              value!.isEmpty ? "* Required" : null,
+                          validator: FormValidation().firstnameValidation,
                           onSaved: (onSave) => {firstName = onSave},
                         ),
                         kHeight1,
                         DefaultTextField(
                           label: 'Last Name',
-                          prefix: const Icon(Icons.person_pin),
+                          prefix: Icons.person_pin,
                           controller: _nameController,
-                          validator: (value) =>
-                              value!.isEmpty ? "* Required" : null,
+                          validator: FormValidation().lastnameValidation,
                           onSaved: (onSave) => {lastName = onSave},
                         ),
                         kHeight1,
                         DefaultTextField(
                           label: 'Password',
                           obscureText: true,
-                          prefix: const Icon(Icons.key),
+                          prefix: Icons.key,
                           controller: _passwordController,
-                          validator: (value) =>
-                              value!.isEmpty ? "* Required" : null,
+                          validator: FormValidation().passwordValidation,
                           onSaved: (onsave) => {password = onsave},
                         ),
                         kHeight1,
@@ -164,7 +155,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ),
                               function: () async {
-                                final reg = Authentication();
                                 final form = formKey.currentState;
                                 if (form!.validate()) {
                                   form.save();
@@ -173,11 +163,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       password: password,
                                       username: userName!,
                                       lastname: lastName!);
-                                  final user =
-                                      // await reg.signUp(signUpData: data);
-                                      await context
-                                          .read<AuthenticationCubit>()
-                                          .signUp(signUpData: data);
+                                  await context
+                                      .read<AuthenticationCubit>()
+                                      .signUp(signUpData: data);
                                   if (state.isLoading) {
                                     showDialog(
                                         context: context,
@@ -190,7 +178,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             ],
                                           );
                                         });
-                                  } else {
+                                    print("1");
+                                    print(state.isLoginSuccess);
+                                  }
+                                  print(state.isLoginSuccess);
+                                  print("2");
+                                  if (state.isLoginSuccess == true) {
+                                    print(state.isLoginSuccess);
+                                  }
+                                   else if (!state.isError &&
+                                      !state.isLoading) {
                                     showDialog(
                                         context: context,
                                         builder: (ctx) {
@@ -201,11 +198,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator
-                                                      .pushNamedAndRemoveUntil(
-                                                          context,
-                                                          '/login',
-                                                          (route) => false);
+                                                  Navigator.pop(context);
+                                                  // Navigator
+                                                  //     .pushNamedAndRemoveUntil(
+                                                  //         context,
+                                                  //         '/login',
+                                                  //         (route) => false);
                                                 },
                                                 child: const Text('OK'),
                                               )
@@ -213,20 +211,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           );
                                         });
                                   }
-                                  //     .whenComplete(() {
-                                  //   log('New user Registered');
-                                  // }).then((response) {
-                                  //   if (response != null) {
-
+                                  else if (state.isError) {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(state.errorText)));
+                                  }
                                 }
-                                // });
-                                // } else {}
-
-                                // Navigator.of(context).push(MaterialPageRoute(
-                                //     builder: (context) => const VerifyScreen()));
                               },
                             );
                           },
+                        ),
+
+                        BlocListener<AuthenticationCubit, AuthenticationState>(
+                          listener: (context, state) {
+                            if (state.isLoginSuccess) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/main', (route) => false);
+                            }
+                          },
+                          child: none,
                         ),
                         const OrDivider(),
                         DefaultButton(
@@ -259,7 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             try {
                               await googleSignIn.signIn();
                             } catch (error) {
-                              print(error);
+                              // print(error);
                             }
                           },
                         ),

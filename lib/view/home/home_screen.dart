@@ -4,6 +4,7 @@ import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';
@@ -24,9 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     context.read<PostBloc>().add(GetTimeline());
-
+    context.read<ChatCubit>().getCurrentUser();
+    context.read<ChatCubit>().getUserChats();
     // context.read<PostBloc>().add();
     PostRepo().allPost();
+
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
@@ -53,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onRefresh: () async {
             context.read<PostBloc>().add(GetTimeline());
           },
+
           // context.read<PostBloc>().add(GetAllPost()),
           child: ListView(
             // shrinkWrap: true,
@@ -88,8 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   return const PListed();
                 } else {
                   return const AspectRatio(
-                      aspectRatio: 3 / 3, child: ProgressCircle(),
-                      );
+                    aspectRatio: 3 / 3,
+                    child: ProgressCircle(),
+                  );
                 }
               })
             ],

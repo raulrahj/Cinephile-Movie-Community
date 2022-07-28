@@ -6,7 +6,3 @@ class MovieInfoEvent with _$MovieInfoEvent{
   const factory MovieInfoEvent.getNewReleased() = _GetNewReleased;
 
 }  
-// @freezed
-// class MovieInfoEvent with _$MovieInfoEventEvent {
-//   const factory MovieInfoEventEvent.getNewReleased() = _GetNewReleased;
-// }

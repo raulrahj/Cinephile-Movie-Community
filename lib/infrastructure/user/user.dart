@@ -72,22 +72,22 @@ class UserRepo {
       Response response = await dio.put('$userBaseUrl/$id',
           options: Options(headers: requestHeaders),
           data: jsonEncode(data), onSendProgress: (int r, int l) async {
-        print(jsonEncode(data));
+        debugPrint(jsonEncode(data));
         log("Request Update User");
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Updated Successfully !!!");
+        debugPrint("Updated Successfully !!!");
         // log(jsonDecode(response.data));
         // retrievedUser = ProfileModel.fromJson(response.data);
         final retriev = jsonEncode(response.data);
         retrievedUser = profileModelFromJson(retriev);
         await SharedService.setLoginDetails(retrievedUser);
-        print('Added data in Local !!!');
+        debugPrint('Added data in Local !!!');
       } else if (response.statusCode == 500) {
-        print('Internal Server Error !!!');
+        debugPrint('Internal Server Error !!!');
       } else if (response.statusCode == 403) {
-        print('Access Denied !!!');
+        debugPrint('Access Denied !!!');
       }
     } on DioError catch (e) {
       throw e.error;
@@ -119,9 +119,7 @@ class UserRepo {
           data: body,
         )
             .then((res) async {
-          if (res != null) {
-            await SharedService.logout(context!);
-          }
+          await SharedService.logout(context!);
           return res;
         });
 
@@ -131,14 +129,14 @@ class UserRepo {
           // retrievedUser = ProfileModel.fromJson(dat);
           log("User Removed");
         } else if (response.statusCode == 403) {
-          print('Access Denied !!!');
+          debugPrint('Access Denied !!!');
         } else if (response.statusCode == 500) {
-          print('Server Failure !!!');
+          debugPrint('Server Failure !!!');
           log(response.statusMessage!);
         }
       } on DioError catch (e) {
         log(e.message);
-        print("Make sure the Access of Account");
+        debugPrint("Make sure the Access of Account");
         if (e.response!.statusCode == 403) {
           log('Authorization issue');
         } else if (e.response!.statusCode! >= 400) {
@@ -155,7 +153,7 @@ class UserRepo {
     }
   }
 
-  Future<UserModel?> followUser({required String id}) async {
+  Future followUser({required String id}) async {
     UserModel? retrievedUser;
     final currentUser = await SharedService.getUserProfile();
     if (currentUser != null) {
@@ -163,7 +161,7 @@ class UserRepo {
         "Content-Type": "application/json",
         "authorization": "Bearer ${currentUser.token}"
       };
-      Map<String, dynamic> body = {"_Id": id};
+      // Map<String, dynamic> body = {"_Id": id};
 
       try {
         Response response = await dio.put('$userBaseUrl/$id/follow',
@@ -181,8 +179,7 @@ class UserRepo {
     }
   }
 
-  Future<UserModel?> unFollowUser({required String id}) async {
-    UserModel? retrievedUser;
+  Future unFollowUser({required String id}) async {
     final currentUser = await SharedService.getUserProfile();
     if (currentUser != null) {
       Map<String, dynamic> requestHeaders = {
@@ -195,7 +192,7 @@ class UserRepo {
             options: Options(headers: requestHeaders));
         log(response.statusMessage!);
         if (response.statusCode == 200 || response.statusCode == 201) {
-          retrievedUser = UserModel.fromJson(response.data);
+           UserModel.fromJson(response.data);
         } else if (response.statusCode == 403) {
           print('Not following !!!');
         } else if (response.statusCode == 500) {
@@ -206,7 +203,6 @@ class UserRepo {
       } catch (e) {
         log(e.toString());
       }
-      return retrievedUser;
     }
   }
 }

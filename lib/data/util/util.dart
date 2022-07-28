@@ -88,7 +88,7 @@ class UtilRepo {
                       }
                     }
                   } catch (e) {
-                    print(e);
+                    debugPrint(e.toString());
                   }
                 },
               ),
@@ -128,7 +128,7 @@ class UtilRepo {
         log('Image Uploaded !!!');
         return fileName;
       } else {
-        print(response.statusMessage);
+        debugPrint(response.statusMessage);
         // return null;
       }
     } on DioError catch (e) {

@@ -58,7 +58,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
 
       emit(PostLoading(currentUser: profile!));
       final data =
-          await _postRepo.createPost(postDat: event.postData, id: event.id);
+          await _postRepo.createPost(postDat: event.postData, );
       if (data == null) {
         emit(PostErrorState());
       } else {

@@ -48,14 +48,17 @@ class _NewPostState extends State<NewPost> {
                   aspectRatio: 3 / 1,
                   child: Row(
                     children: [
-                       CircleAvatar(
-                        backgroundImage: NetworkImage(profImg),
-                        radius: dWidth(context)/14,
+                      CircleAvatar(
+                        backgroundImage: const NetworkImage(profImg),
+                        radius: dWidth(context) / 14,
                       ),
                       kWidth1,
                       Text(
                         state.profileData!.user!.firstname,
-                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 18),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(fontSize: 18),
                       ),
                       const Spacer(),
                       Icon(
@@ -114,8 +117,10 @@ class _NewPostState extends State<NewPost> {
                         comments: [],
                         likes: []);
                     await PostRepo()
-                        .createPost(postDat: postData, id: userData.user!.id!);
-                    Navigator.pop(context);
+                        .createPost(
+                          postDat: postData,
+                        )
+                        .then((value) => Navigator.pop(context));
                   },
                   child: const Text('Share'))
             ],

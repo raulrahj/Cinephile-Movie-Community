@@ -6,6 +6,7 @@ import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/profile_screen/post_view_widget.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
@@ -143,8 +144,13 @@ class UserScreen extends StatelessWidget {
                         isWhite: true,
                         text: "Message",
                         function: () {
-                          // Navigator.pushNamed(context, '/personal_chat',
-                          //     arguments: PChatArg(chatdata: chats));
+                          context
+                              .read<ChatCubit>()
+                              .findChat(clientId: state.userData!.id);
+                          Navigator.pushNamed(context, '/personal_chat',
+                              // arguments: PChatArg(
+                              //     chatId: 'd', userData: state.userData!)
+                                  );
                         },
                       ),
                     ),

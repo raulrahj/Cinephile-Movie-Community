@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
 import 'package:open_box/config/constants.dart';
@@ -8,15 +9,16 @@ import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/chat/chat_repo.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/widgets/common.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class PChatArg {
-  final UserModel userData;
-  final String chatId;
-  // final List<MessageModel>? chatdata;
-  PChatArg({required this.chatId, required this.userData});
-}
+// class PChatArg {
+//   final UserModel userData;
+//   final String chatId;
+//   // final List<MessageModel>? chatdata;
+//   PChatArg({required this.chatId, required this.userData});
+// }
 
 class PChatScreen extends StatefulWidget {
   const PChatScreen({Key? key}) : super(key: key);
@@ -74,7 +76,7 @@ class _PChatScreenState extends State<PChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final arg = ModalRoute.of(context)?.settings.arguments as PChatArg;
+    // final arg = ModalRoute.of(context)?.settings.arguments as PChatArg;
     const currentUser = '62be900600b1aef58e50695d';
     _chatBubble(MessageModel messege, bool isMe) {
       if (isMe) {
@@ -197,93 +199,99 @@ class _PChatScreenState extends State<PChatScreen> {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        centerTitle: true,
-        title: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-              text: arg.userData.firstname,
-              style: GoogleFonts.dmSans().copyWith(fontSize: 18),
-              children: const [
-                TextSpan(text: '\n'),
-                TextSpan(text: 'online', style: TextStyle(fontSize: 12))
-              ]),
+    return BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
+      final List<MessageModel> messages = state.connectedUserChat;
+
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          centerTitle: true,
+          title: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+                text: "arg.userData.firstname",
+                style: GoogleFonts.dmSans().copyWith(fontSize: 18),
+                children: const [
+                  TextSpan(text: '\n'),
+                  TextSpan(text: 'online', style: TextStyle(fontSize: 12))
+                ]),
+          ),
+          leading: Row(
+            // mainAxisSize: MainAxisSize.max,
+            children: [
+              pop(context),
+              const CircleAvatar(
+                backgroundImage: NetworkImage(profImg1),
+              )
+            ],
+          ),
         ),
-        leading: Row(
-          // mainAxisSize: MainAxisSize.max,
+        // );
+        // },
+        // ),
+        body: Column(
           children: [
-            pop(context),
-            const CircleAvatar(
-              backgroundImage: NetworkImage(profImg1),
+            // FutureBuilder(
+            //     future: ChatRepo().getMessages(chatId: cha.chatId),
+            //     builder: (context, AsyncSnapshot snapshot) {
+            // snapshot.hasData ? snapshot.data : [];
+            // return
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: messages.length,
+                // reverse: true,
+                itemBuilder: (context, index) {
+                  final MessageModel messege = messages[index];
+                  final bool isMe = messege.senderId == currentUser;
+                  // final bool issameUser =prevUsr==messege.sender;
+                  //  prevUsr = messege.sender;
+                  return _chatBubble(
+                    messege,
+                    isMe,
+                  );
+                },
+              ),
+            ),
+            // }),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.emoji_emotions_outlined,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                Expanded(
+                  child: TextFormField(
+                    controller: _pChatController,
+                    decoration: const InputDecoration.collapsed(
+                        hintText: 'messages here...'),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    ChatRepo().addMessage(
+                        message: MessageModel(
+                            id: DateTime.now().toString(),
+                            chatId: DateTime.now().microsecond.toString(),
+                            senderId: state.currentUser.user!.id!,
+                            text: _pChatController.text,
+                            name: state.currentUser.user!.firstname));
+                    _pChatController.clear();
+                    // sendMessage();
+                  },
+                  icon: Icon(
+                    Icons.send,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                )
+              ],
             )
           ],
         ),
-      ),
-      // ),
-      body: Column(
-        children: [
-          FutureBuilder(
-              future: ChatRepo().getMessage(chatId: arg.chatId),
-              builder: (context, AsyncSnapshot snapshot) {
-                final List<MessageModel> messages =
-                    snapshot.hasData ? snapshot.data : [];
-                return Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: messages.length,
-                    // reverse: true,
-                    itemBuilder: (context, index) {
-                      final MessageModel messege = messages[index];
-                      final bool isMe = messege.senderId == currentUser;
-                      // final bool issameUser =prevUsr==messege.sender;
-                      //  prevUsr = messege.sender;
-                      return _chatBubble(
-                        messege,
-                        isMe,
-                      );
-                    },
-                  ),
-                );
-              }),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.emoji_emotions_outlined,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              Expanded(
-                child: TextFormField(
-                  controller: _pChatController,
-                  decoration: const InputDecoration.collapsed(
-                      hintText: 'messages here...'),
-                ),
-              ),
-              IconButton(
-                onPressed: () async {
-                  ChatRepo().addMessage(
-                      message: MessageModel(
-                          id: "62c1b80b6602f80c1a9",
-                          chatId: "62c1b80b660280c1a954d5dc",
-                          senderId: "62be900600b1aef58e50695d",
-                          text: _pChatController.text,
-                          name: "Arya"));
-                  _pChatController.clear();
-                  // sendMessage();
-                },
-                icon: Icon(
-                  Icons.send,
-                  color: Theme.of(context).primaryColor,
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+      );
+    });
   }
 }

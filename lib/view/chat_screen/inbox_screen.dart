@@ -1,21 +1,23 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/data/models/chat/m_chat.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/chat/chat_repo.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/config/constants.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/widgets/group_chat_view.dart';
 import 'package:open_box/view/chat_screen/widgets/personal_chat_view.dart';
 
 StreamController streamController = StreamController();
 
 class ChatTypes {
-  final List<ChatsModel> groupChat;
-  final List<ChatsModel> perSonalChat;
+  final List<ChatsModel>? groupChat;
+  final List<ChatsModel>? perSonalChat;
 
-  ChatTypes(this.groupChat, this.perSonalChat);
+  ChatTypes({this.groupChat, this.perSonalChat});
 }
 
 class InboxScreen extends StatefulWidget {
@@ -54,27 +56,19 @@ class _InboxScreenState extends State<InboxScreen> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SafeArea(
-        child: FutureBuilder<dynamic>(
-          future: ChatRepo().userChats(userId: "/62be900600b1aef58e50695d"),
-          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-            final ChatTypes chat =
-                snapshot.hasData ? snapshot.data : ChatTypes([], []);
-
-            print("FUTURE COMPLETED");
-
-            return ListView(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 10, left: 8, right: 8),
-                  child: CupertinoSearchTextField(),
-                ),
-                chat.groupChat.isEmpty ? none : GroupChatView(chat: chat),
-                chat.perSonalChat.isEmpty ? none : PersonalChatView(chat: chat)
-              ],
-            );
-          },
-        ),
-      ),
+          child: BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
+        final ChatTypes chat = state.userChats;
+        return ListView(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 10, left: 8, right: 8),
+              child: CupertinoSearchTextField(),
+            ),
+            chat.groupChat!.isEmpty ? none : GroupChatView(chat: chat),
+            chat.perSonalChat!.isEmpty ? none : PersonalChatView(chat: chat)
+          ],
+        );
+      })),
     );
   }
 
@@ -84,12 +78,12 @@ class _InboxScreenState extends State<InboxScreen> {
   }
 
   Future<ChatTypes> getChatType({required List<ChatsModel> chats}) async {
-    ChatTypes types = ChatTypes([], []);
+    ChatTypes types = ChatTypes(groupChat: [], perSonalChat: []);
     for (ChatsModel element in chats) {
       if (element.members.length <= 2) {
-        types.perSonalChat.add(element);
+        types.perSonalChat!.add(element);
       } else {
-        types.groupChat.add(element);
+        types.groupChat!.add(element);
       }
     }
     return types;

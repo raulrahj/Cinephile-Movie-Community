@@ -31,7 +31,7 @@ class KDivider extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
         height: 1,
-        width: dWidth(context) * .4,
+        width: dWidth(context) * .3,
         color: Colors.grey,
       ),
     );

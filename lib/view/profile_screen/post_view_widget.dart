@@ -5,6 +5,7 @@ import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/view/profile_screen/post_view.dart';
 
 import '../intro_screen/splash_screen.dart';
@@ -68,7 +69,7 @@ class PostList extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          dateFormat(data.createdAt),
+                          ParseDate.dFormatDate(data.createdAt),
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!

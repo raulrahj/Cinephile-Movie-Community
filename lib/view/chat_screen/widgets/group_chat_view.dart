@@ -26,10 +26,10 @@ class GroupChatView extends StatelessWidget {
             maxWidth: dWidth(context),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: chat.groupChat.length,
+              itemCount: chat.groupChat!.length,
               itemBuilder: (context, index) => FutureBuilder(
-                future:
-                    UserRepo().getUser(id: chat.groupChat[index].members.first),
+                future: UserRepo()
+                    .getUser(id: chat.groupChat![index].members.first),
                 builder: (context, AsyncSnapshot snapshot) {
                   final UserModel data = snapshot.hasData
                       ? snapshot.data

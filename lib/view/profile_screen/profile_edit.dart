@@ -12,6 +12,7 @@ import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/widgets/common.dart';
 import 'package:open_box/view/widgets/default_button.dart';
 import 'package:open_box/view/widgets/default_textfield.dart';
+import 'package:open_box/view/widgets/linear_textfield.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 
 class ProfileEditArg {

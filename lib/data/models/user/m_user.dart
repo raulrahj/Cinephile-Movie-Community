@@ -1,30 +1,3 @@
-// To parse this JSON data, do
-//
-//     final UserModel = UserModelFromJson(jsonString);
-
-// import 'dart:convert';
-
-// UserModel UserModelFromJson(String str) =>
-//     UserModel.fromJson(json.decode(str));
-
-// String UserModelToJson(UserModel data) => json.encode(data.toJson());
-
-// class UserModel {
-//   UserModel({
-//     this.otherDetails,
-//   });
-
-//   OtherDetails? otherDetails;
-
-//   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-//         otherDetails: OtherDetails.fromJson(json["otherDetails"]),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "otherDetails": otherDetails!.toJson(),
-//       };
-// }
-
 
 import 'dart:convert';
 

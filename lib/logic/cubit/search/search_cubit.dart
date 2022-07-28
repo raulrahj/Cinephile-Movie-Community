@@ -50,7 +50,6 @@ class SearchCubit extends Cubit<SearchState> {
     String reviewUrl =
         "https://api.themoviedb.org/3/movie/$movieId/reviews?api_key=b6feeb28b2559dccfecfb79215695a4b&language=en-US&page=1";
     try {
-      print("in try...");
       final response = await DioClient().get(reviewUrl, '');
       final res = jsonEncode(response);
       final MovieReviewModel list = movieReviewModelFromJson(res);

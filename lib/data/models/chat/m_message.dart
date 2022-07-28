@@ -57,37 +57,3 @@ class MessageModel {
         "__v": v,
       };
 }
-
-// enum ChatId { THE_62_C1_B80_B660280_C1_A954_D5_DC }
-
-// final chatIdValues = EnumValues({
-//     "62c1b80b660280c1a954d5dc": ChatId.THE_62_C1_B80_B660280_C1_A954_D5_DC
-// });
-
-// enum Name { ADARSH, ARYA }
-
-// final nameValues = EnumValues({
-//     "adarsh": Name.ADARSH,
-//     "Arya": Name.ARYA
-// });
-
-// enum SenderId { THE_62_BE900600_B1_AEF58_E50695_D, THE_62_C1_B326596_C16_B570248469 }
-
-// final senderIdValues = EnumValues({
-//     "62be900600b1aef58e50695d": SenderId.THE_62_BE900600_B1_AEF58_E50695_D,
-//     "62c1b326596c16b570248469": SenderId.THE_62_C1_B326596_C16_B570248469
-// });
-
-// class EnumValues<T> {
-//     Map<String, T> map;
-//     Map<T, String> reverseMap;
-
-//     EnumValues(this.map);
-
-//     Map<T, String> get reverse {
-//         if (reverseMap == null) {
-//             reverseMap = map.map((k, v) => new MapEntry(v, k));
-//         }
-//         return reverseMap;
-//     }
-// }

@@ -6,8 +6,8 @@ class MovieInfoState with _$MovieInfoState {
   const factory MovieInfoState({
     required bool isLoading,
     Trending? trendingData,
-    required Option<Either<MainFailure, Trending>> trendingFSOption,
     NewReleases? newReleaseData,
+    required Option<Either<MainFailure, Trending>> trendingFSOption,
     required Option<Either<MainFailure, NewReleases>> newReleaseOption,
   }) = _MovieInfoState;
   factory MovieInfoState.initial() {

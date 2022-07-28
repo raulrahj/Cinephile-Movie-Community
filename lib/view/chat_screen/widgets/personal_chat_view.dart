@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
 import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/chat_screen/widgets/chat_avathar.dart';
@@ -24,25 +26,30 @@ class PersonalChatView extends StatelessWidget {
           ListView.builder(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
-            itemCount: chat.perSonalChat.length,
+            itemCount: chat.perSonalChat!.length,
             itemBuilder: (context, index) {
               return FutureBuilder(
                 future: UserRepo().getUser(
-                    id: chat.perSonalChat[index].members.first ==
+                    id: chat.perSonalChat![index].members.first ==
                             "62be900600b1aef58e50695d"
-                        ? chat.perSonalChat[index].members.last
-                        : chat.perSonalChat[index].members.first),
+                        ? chat.perSonalChat![index].members.last
+                        : chat.perSonalChat![index].members.first),
                 builder: (context, AsyncSnapshot snapshot) {
+                  final chaat = chat.perSonalChat![index];
                   final UserModel data = snapshot.hasData
                       ? snapshot.data
                       : UserModel(
                           id: "4", username: "", firstname: "", lastname: "");
                   return GestureDetector(
                     onTap: () {
+                      context
+                          .read<ChatCubit>()
+                          .getMessages(chatId: chaat.id, clientId: data.id);
                       Navigator.pushNamed(context, '/personal_chat',
-                          arguments: PChatArg(
-                              chatId: "62c1b80b660280c1a954d5dc",
-                              userData: data));
+                          // arguments: PChatArg(
+                          //     chatId: "62c1b80b660280c1a954d5dc",
+                          //     userData: data)
+                              );
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(

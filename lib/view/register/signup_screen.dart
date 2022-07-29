@@ -178,13 +178,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             ],
                                           );
                                         });
-                                    print("1");
-                                    print(state.isLoginSuccess);
-                                  }
-                                  print(state.isLoginSuccess);
-                                  print("2");
-                                  if (state.isLoginSuccess == true) {
-                                    print(state.isLoginSuccess);
                                   }
                                    else if (!state.isError &&
                                       !state.isLoading) {

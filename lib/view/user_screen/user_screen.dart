@@ -144,13 +144,15 @@ class UserScreen extends StatelessWidget {
                         isWhite: true,
                         text: "Message",
                         function: () {
+                          if (state.userData == null) return;
                           context
                               .read<ChatCubit>()
                               .findChat(clientId: state.userData!.id);
-                          Navigator.pushNamed(context, '/personal_chat',
-                              // arguments: PChatArg(
-                              //     chatId: 'd', userData: state.userData!)
-                                  );
+                          Navigator.pushNamed(
+                            context, '/personal_chat',
+                            // arguments: PChatArg(
+                            //     chatId: 'd', userData: state.userData!)
+                          );
                         },
                       ),
                     ),

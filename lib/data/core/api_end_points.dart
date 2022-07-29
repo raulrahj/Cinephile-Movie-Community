@@ -15,7 +15,7 @@ class ApiEndPoints {
   static const user = '$apiBaseUrl/user';
   static const post = '$apiBaseUrl/post';
   static const upLoad = '$apiBaseUrl/upload';
-  static const chat = '$apiBaseUrl/chat';
+  static const chat = '$apiBaseUrl/chat/';
   static const message = '$apiBaseUrl/message';
   static const room = '$apiBaseUrl/room';
 }

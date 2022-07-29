@@ -28,8 +28,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     });
     on<GetTimeline>((event, emit) async {
       final profile = await SharedService.getUserProfile();
+      if (profile == null) return;
+      emit(PostLoading(currentUser: profile));
 
-      emit(PostLoading(currentUser: profile!));
       final data = await _postRepo.getTimeLinePost(id: profile.user!.id!);
       if (data.isEmpty) {
         emit(PostErrorState());
@@ -57,8 +58,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       final profile = await SharedService.getUserProfile();
 
       emit(PostLoading(currentUser: profile!));
-      final data =
-          await _postRepo.createPost(postDat: event.postData, );
+      final data = await _postRepo.createPost(
+        postDat: event.postData,
+      );
       if (data == null) {
         emit(PostErrorState());
       } else {

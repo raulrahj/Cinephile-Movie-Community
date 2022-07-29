@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:open_box/config/core.dart';
 
@@ -28,8 +29,15 @@ class ChatAvatar extends StatelessWidget {
             Border.all(width: .5, color: Theme.of(context).primaryColorLight),
       ),
       child: CircleAvatar(
-        backgroundImage: NetworkImage(imgUrl ?? profImg),
+        backgroundImage:
+            CachedNetworkImageProvider(imgUrl ?? profImg, errorListener: () {}),
         radius: radius,
+        // child: CachedNetworkImage(
+        //   imageUrl: imgUrl!,
+        //   placeholder: (BuildContext context, String str) {
+        //     return const Image(image: NetworkImage(profImg1));
+        //   },
+        // ),
       ),
     );
   }

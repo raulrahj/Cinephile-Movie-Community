@@ -154,9 +154,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                               );
                             });
                       } else if (!state.isError && !state.isLoading) {
+                        print('wrong');
                         // ignore: use_build_context_synchronously
-                        await Navigator.pushNamedAndRemoveUntil(
-                            context, '/main', (route) => false);
+                        // await
                       } else if (state.isError) {
                         // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -166,6 +166,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                   },
                 );
               },
+            ),
+            BlocListener<AuthenticationCubit, AuthenticationState>(
+              listener: (context, state) {
+                if (state.isLoginSuccess) {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/main', (route) => false);
+                }
+              },
+              child: none,
             ),
             kHeight1,
             DefaultButton(

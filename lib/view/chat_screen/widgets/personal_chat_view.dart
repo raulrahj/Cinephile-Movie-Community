@@ -3,17 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';
+import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
-import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/chat_screen/widgets/chat_avathar.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 
 class PersonalChatView extends StatelessWidget {
-  const PersonalChatView({Key? key, required this.chat}) : super(key: key);
+  const PersonalChatView({Key? key, required this.chat, this.currentUser})
+      : super(key: key);
   final ChatTypes chat;
+  final ProfileModel? currentUser;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -31,7 +35,7 @@ class PersonalChatView extends StatelessWidget {
               return FutureBuilder(
                 future: UserRepo().getUser(
                     id: chat.perSonalChat![index].members.first ==
-                            "62be900600b1aef58e50695d"
+                            currentUser?.user!.id
                         ? chat.perSonalChat![index].members.last
                         : chat.perSonalChat![index].members.first),
                 builder: (context, AsyncSnapshot snapshot) {
@@ -45,11 +49,12 @@ class PersonalChatView extends StatelessWidget {
                       context
                           .read<ChatCubit>()
                           .getMessages(chatId: chaat.id, clientId: data.id);
-                      Navigator.pushNamed(context, '/personal_chat',
-                          // arguments: PChatArg(
-                          //     chatId: "62c1b80b660280c1a954d5dc",
-                          //     userData: data)
-                              );
+                      Navigator.pushNamed(
+                        context, '/personal_chat',
+                        // arguments: PChatArg(
+                        //     chatId: "62c1b80b660280c1a954d5dc",
+                        //     userData: data)
+                      );
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(
@@ -58,8 +63,10 @@ class PersonalChatView extends StatelessWidget {
                       child: Row(
                         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const ChatAvatar(
-                            imgUrl: profImg1,
+                          ChatAvatar(
+                            imgUrl: data.profilePicture == null
+                                ? profImg1
+                                : "$kApiImgUrl/${data.profilePicture}",
                             radius: 25.0,
                           ),
                           kWidth1,
@@ -81,9 +88,9 @@ class PersonalChatView extends StatelessWidget {
                                     const Text('message')
                                   ],
                                 ),
-                                const Text(
-                                  "Time",
-                                  style: TextStyle(
+                                Text(
+                                  ParseDate.dFormatTime(chaat.updatedAt!),
+                                  style: const TextStyle(
                                     color: Colors.black54,
                                   ),
                                 ),

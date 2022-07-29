@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/data/models/chat/m_chat.dart';
 import 'package:open_box/data/models/user/m_user.dart';
-import 'package:open_box/infrastructure/chat/chat_repo.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
@@ -65,7 +64,7 @@ class _InboxScreenState extends State<InboxScreen> {
               child: CupertinoSearchTextField(),
             ),
             chat.groupChat!.isEmpty ? none : GroupChatView(chat: chat),
-            chat.perSonalChat!.isEmpty ? none : PersonalChatView(chat: chat)
+            chat.perSonalChat!.isEmpty ? none : PersonalChatView(chat: chat,currentUser: state.currentUser,)
           ],
         );
       })),

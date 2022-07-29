@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
@@ -11,6 +12,7 @@ import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/chat/chat_repo.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/widgets/common.dart';
+import 'package:open_box/view/chat_screen/widgets/chat_bubble.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // class PChatArg {
@@ -77,154 +79,40 @@ class _PChatScreenState extends State<PChatScreen> {
   @override
   Widget build(BuildContext context) {
     // final arg = ModalRoute.of(context)?.settings.arguments as PChatArg;
-    const currentUser = '62be900600b1aef58e50695d';
-    _chatBubble(MessageModel messege, bool isMe) {
-      if (isMe) {
-        return Column(
-          children: [
-            Container(
-              alignment: Alignment.topRight,
-              child: Container(
-                constraints: BoxConstraints(
-                  // minHeight: 5,
-                  // minHeight: dHeight(context)/91,
-                  // maxHeight: dHeight(context) * 80,
-                  maxWidth: dWidth(context) * 80,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(kRadius),
-                      topRight: const Radius.circular(kRadius),
-                      bottomLeft: Radius.circular(isMe ? kRadius : 0)),
-                  //  BorderRadius.circular(kRadius),
-                  boxShadow: [
-                    BoxShadow(
-                        color: isMe ? Colors.grey.withOpacity(0.5) : kBlack,
-                        blurRadius: 2,
-                        spreadRadius: 2)
-                  ],
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Text(
-                  messege.text,
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColorLight,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  ParseDate.dFormatTime(messege.createdAt ?? DateTime.now()),
-                  style: const TextStyle(color: kTextBlack),
-                ),
-                kWidth1,
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5))],
-                  ),
-                  child: const CircleAvatar(
-                    radius: 10,
-                    backgroundImage: NetworkImage(profImg1),
-                  ),
-                ),
-              ],
-            )
-          ],
-        );
-      } else {
-        return Column(
-          children: [
-            Container(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: dWidth(context) * 80,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(!isMe ? 0 : kRadius),
-                      topRight: const Radius.circular(kRadius),
-                      bottomLeft: const Radius.circular(kRadius),
-                      bottomRight: const Radius.circular(kRadius),
-                    ),
-                    //  BorderRadius.circular(kRadius),
-                    boxShadow: [
-                      BoxShadow(
-                          color: isMe ? kBlack : Colors.grey.withOpacity(0.5),
-                          blurRadius: .5,
-                          spreadRadius: .5)
-                    ]),
-                child: Text(
-                  messege.text,
-                  style: const TextStyle(
-                      color: kTextBlack,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(color: Colors.grey.withOpacity(0.5))
-                      ]),
-                  child: const CircleAvatar(
-                    backgroundImage: NetworkImage(profImg1),
-                    radius: 10,
-                  ),
-                ),
-                kWidth1,
-                Text(
-                  ParseDate.dFormatTime(messege.createdAt ?? DateTime.now()),
-                  style: const TextStyle(color: Colors.black54),
-                )
-              ],
-            )
-          ],
-        );
-      }
-    }
+    String currentUser = '';
+   
 
     return BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
       final List<MessageModel> messages = state.connectedUserChat;
-
+      currentUser = state.currentUser.user!.id!;
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          centerTitle: true,
-          title: RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-                text: "arg.userData.firstname",
-                style: GoogleFonts.dmSans().copyWith(fontSize: 18),
-                children: const [
-                  TextSpan(text: '\n'),
-                  TextSpan(text: 'online', style: TextStyle(fontSize: 12))
-                ]),
-          ),
-          leading: Row(
-            // mainAxisSize: MainAxisSize.max,
+          // centerTitle: true,
+          title: Row(
             children: [
-              pop(context),
-              const CircleAvatar(
-                backgroundImage: NetworkImage(profImg1),
-              )
+              CircleAvatar(
+                radius: dWidth(context) / 20,
+                backgroundImage: NetworkImage(
+                    state.connectedUser.profilePicture == null
+                        ? profImg1
+                        : "$kApiImgUrl/${state.connectedUser.profilePicture}"),
+              ),
+              kWidth2,
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: state.connectedUser.firstname,
+                  style: GoogleFonts.dmSans().copyWith(fontSize: 18),
+                  // children: const [
+                  //   TextSpan(text: '\n'),
+                  //   TextSpan(text: '', style: TextStyle(fontSize: 12))
+                  // ]
+                ),
+              ),
             ],
           ),
+          leading: pop(context),
         ),
         // );
         // },
@@ -246,9 +134,10 @@ class _PChatScreenState extends State<PChatScreen> {
                   final bool isMe = messege.senderId == currentUser;
                   // final bool issameUser =prevUsr==messege.sender;
                   //  prevUsr = messege.sender;
-                  return _chatBubble(
+                  return chatBubble(
                     messege,
                     isMe,
+                    context
                   );
                 },
               ),
@@ -272,13 +161,18 @@ class _PChatScreenState extends State<PChatScreen> {
                 ),
                 IconButton(
                   onPressed: () async {
-                    ChatRepo().addMessage(
+                    if (state.chatInfo.id == null ||
+                        _pChatController.text.isEmpty) return;
+                    await ChatRepo().addMessage(
                         message: MessageModel(
                             id: DateTime.now().toString(),
-                            chatId: DateTime.now().microsecond.toString(),
+                            chatId: state.chatInfo.id!,
                             senderId: state.currentUser.user!.id!,
                             text: _pChatController.text,
                             name: state.currentUser.user!.firstname));
+                    context.read<ChatCubit>().getMessages(
+                        chatId: state.chatInfo.id!,
+                        clientId: state.connectedUser.id);
                     _pChatController.clear();
                     // sendMessage();
                   },

@@ -1,12 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_box/infrastructure/search/search_repo.dart';
-import 'package:open_box/view/search_screen/c_appbar.dart';
 import 'package:open_box/view/search_screen/group_search/s_group_search.dart';
 import 'package:open_box/view/search_screen/user_search/s_user_result.dart';
-import 'package:open_box/view/widgets/progress_indicator.dart';
 
 import '../../logic/cubit/search/search_cubit.dart';
 import 'movie_search/s_movie_result.dart';

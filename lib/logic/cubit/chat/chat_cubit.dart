@@ -19,25 +19,28 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future getCurrentUser() async {
     final currentUser = await SharedService.getUserProfile();
-    emit(state.copyWith(currentUser: currentUser!));
+    if (currentUser == null) return;
+    emit(state.copyWith(currentUser: currentUser));
   }
 
-  Future createChat({required ChatModel chat}) async {
-    await ChatRepo().createChat(chat: chat);
+  Future createChat({required String receiverId}) async {
+    await ChatRepo().createChat(recieverId: receiverId);
   }
 
   Future getUserChats() async {
+    if (state.currentUser.user!.id == null) return;
     final ChatTypes userChats =
         await ChatRepo().userChats(userId: state.currentUser.user!.id!);
     emit(state.copyWith(userChats: userChats));
   }
 
   Future findChat({required String clientId}) async {
+    print("HHHHHHHOOOOOOO");
+    print(state.currentUser.user!.id);
     final getStarted = await ChatRepo()
         .findChat(userId: state.currentUser.user!.id!, clientId: clientId);
     final UserModel? conntdctedUser = await UserRepo().getUser(id: clientId);
-    emit(state.copyWith(
-        connectedUserChat: getStarted, connectedUser: conntdctedUser!));
+    emit(state.copyWith(chatInfo: getStarted, connectedUser: conntdctedUser!));
   }
 
   Future addMessage({required MessageModel message}) async {

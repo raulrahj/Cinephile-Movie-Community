@@ -45,10 +45,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
             isLoading: false,
             isError: true,
             errorText: left,
+            isLoginSuccess: false,
             authFSOption: Some(Left(left))),
         (right) => state.copyWith(
             isLoading: false,
             isError: false,
+            isLoginSuccess: true,
             authFSOption: Some(Right(right!)))));
   }
 }

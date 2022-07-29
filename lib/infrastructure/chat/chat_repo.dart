@@ -6,15 +6,23 @@ import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/chat/m_chat.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
 import 'package:open_box/data/util/dio_client.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
 
 class ChatRepo {
-  Future createChat({required ChatModel chat}) async {
+  Future createChat({required String recieverId}) async {
+    final currentUser = await SharedService.getUserProfile();
+    if (currentUser == null) return;
     try {
-      final body = chatModelToJson(chat);
-      Response response =
-          await DioClient().post(ApiEndPoints.chat, '', jsonEncode(body));
-      log(response.data);
+      Map<String, dynamic> data = {
+        "senderId": currentUser.user!.id,
+        "receiverId": recieverId
+      };
+      final body = (data);
+      // ignore: unused_local_variable
+      // final res = chatModelToJson(body);
+      var response = await DioClient().post(ApiEndPoints.chat, '', data);
+      log(response);
     } catch (e) {
       rethrow;
     }
@@ -27,6 +35,7 @@ class ChatRepo {
         ApiEndPoints.chat,
         userId,
       );
+      print(response);
       // streamController.add(response.data);
       final data = jsonEncode(response);
       final res = chatsModelFromJson(data);
@@ -47,17 +56,19 @@ class ChatRepo {
     }
   }
 
-  Future<List<MessageModel>> findChat(
+  Future<ChatModel> findChat(
       {required String userId, required String clientId}) async {
-    List<MessageModel> list;
+    ChatModel list;
 
     try {
-      Response response = await DioClient().get(
+      var response = await DioClient().get(
         ApiEndPoints.chat,
-        "$userId,$clientId",
+        "find/$userId/$clientId",
       );
+      print("what the fuck !!!");
+      print(response);
       final res = jsonEncode(response);
-      list = messageModelFromJson(res);
+      list = chatModelFromJson(res);
       // list = data;
       return list;
     } catch (e) {
@@ -67,8 +78,11 @@ class ChatRepo {
 
   Future addMessage({required MessageModel message}) async {
     try {
+      print("Message request");
       final body = message.toJson();
       await DioClient().post(ApiEndPoints.message, '', (body));
+      print("completed");
+      
     } catch (e) {
       rethrow;
     }

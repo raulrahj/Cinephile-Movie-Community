@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    context.read<PostBloc>().add(GetTimeline());
+    // context.read<PostBloc>().add(GetTimeline());
     context.read<ChatCubit>().getCurrentUser();
     context.read<ChatCubit>().getUserChats();
     // context.read<PostBloc>().add();

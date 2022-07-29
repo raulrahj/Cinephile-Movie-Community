@@ -22,6 +22,7 @@ mixin _$ChatState {
   List<MessageModel> get connectedUserChat =>
       throw _privateConstructorUsedError;
   UserModel get connectedUser => throw _privateConstructorUsedError;
+  ChatModel get chatInfo => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChatStateCopyWith<ChatState> get copyWith =>
@@ -37,7 +38,8 @@ abstract class $ChatStateCopyWith<$Res> {
       ProfileModel currentUser,
       ChatTypes userChats,
       List<MessageModel> connectedUserChat,
-      UserModel connectedUser});
+      UserModel connectedUser,
+      ChatModel chatInfo});
 }
 
 /// @nodoc
@@ -55,6 +57,7 @@ class _$ChatStateCopyWithImpl<$Res> implements $ChatStateCopyWith<$Res> {
     Object? userChats = freezed,
     Object? connectedUserChat = freezed,
     Object? connectedUser = freezed,
+    Object? chatInfo = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: isLoading == freezed
@@ -77,6 +80,10 @@ class _$ChatStateCopyWithImpl<$Res> implements $ChatStateCopyWith<$Res> {
           ? _value.connectedUser
           : connectedUser // ignore: cast_nullable_to_non_nullable
               as UserModel,
+      chatInfo: chatInfo == freezed
+          ? _value.chatInfo
+          : chatInfo // ignore: cast_nullable_to_non_nullable
+              as ChatModel,
     ));
   }
 }
@@ -92,7 +99,8 @@ abstract class _$$_ChatStateCopyWith<$Res> implements $ChatStateCopyWith<$Res> {
       ProfileModel currentUser,
       ChatTypes userChats,
       List<MessageModel> connectedUserChat,
-      UserModel connectedUser});
+      UserModel connectedUser,
+      ChatModel chatInfo});
 }
 
 /// @nodoc
@@ -112,6 +120,7 @@ class __$$_ChatStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
     Object? userChats = freezed,
     Object? connectedUserChat = freezed,
     Object? connectedUser = freezed,
+    Object? chatInfo = freezed,
   }) {
     return _then(_$_ChatState(
       isLoading: isLoading == freezed
@@ -134,6 +143,10 @@ class __$$_ChatStateCopyWithImpl<$Res> extends _$ChatStateCopyWithImpl<$Res>
           ? _value.connectedUser
           : connectedUser // ignore: cast_nullable_to_non_nullable
               as UserModel,
+      chatInfo: chatInfo == freezed
+          ? _value.chatInfo
+          : chatInfo // ignore: cast_nullable_to_non_nullable
+              as ChatModel,
     ));
   }
 }
@@ -146,7 +159,8 @@ class _$_ChatState implements _ChatState {
       required this.currentUser,
       required this.userChats,
       required final List<MessageModel> connectedUserChat,
-      required this.connectedUser})
+      required this.connectedUser,
+      required this.chatInfo})
       : _connectedUserChat = connectedUserChat;
 
   @override
@@ -164,10 +178,12 @@ class _$_ChatState implements _ChatState {
 
   @override
   final UserModel connectedUser;
+  @override
+  final ChatModel chatInfo;
 
   @override
   String toString() {
-    return 'ChatState(isLoading: $isLoading, currentUser: $currentUser, userChats: $userChats, connectedUserChat: $connectedUserChat, connectedUser: $connectedUser)';
+    return 'ChatState(isLoading: $isLoading, currentUser: $currentUser, userChats: $userChats, connectedUserChat: $connectedUserChat, connectedUser: $connectedUser, chatInfo: $chatInfo)';
   }
 
   @override
@@ -182,7 +198,8 @@ class _$_ChatState implements _ChatState {
             const DeepCollectionEquality()
                 .equals(other._connectedUserChat, _connectedUserChat) &&
             const DeepCollectionEquality()
-                .equals(other.connectedUser, connectedUser));
+                .equals(other.connectedUser, connectedUser) &&
+            const DeepCollectionEquality().equals(other.chatInfo, chatInfo));
   }
 
   @override
@@ -192,7 +209,8 @@ class _$_ChatState implements _ChatState {
       const DeepCollectionEquality().hash(currentUser),
       const DeepCollectionEquality().hash(userChats),
       const DeepCollectionEquality().hash(_connectedUserChat),
-      const DeepCollectionEquality().hash(connectedUser));
+      const DeepCollectionEquality().hash(connectedUser),
+      const DeepCollectionEquality().hash(chatInfo));
 
   @JsonKey(ignore: true)
   @override
@@ -206,7 +224,8 @@ abstract class _ChatState implements ChatState {
       required final ProfileModel currentUser,
       required final ChatTypes userChats,
       required final List<MessageModel> connectedUserChat,
-      required final UserModel connectedUser}) = _$_ChatState;
+      required final UserModel connectedUser,
+      required final ChatModel chatInfo}) = _$_ChatState;
 
   @override
   bool get isLoading => throw _privateConstructorUsedError;
@@ -219,6 +238,8 @@ abstract class _ChatState implements ChatState {
       throw _privateConstructorUsedError;
   @override
   UserModel get connectedUser => throw _privateConstructorUsedError;
+  @override
+  ChatModel get chatInfo => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_ChatStateCopyWith<_$_ChatState> get copyWith =>

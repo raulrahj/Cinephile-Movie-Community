@@ -1,14 +1,15 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/data/models/user/m_user.dart';
-import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/chat/chat_repo.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/widgets/common.dart';
@@ -31,43 +32,84 @@ class PChatScreen extends StatefulWidget {
 
 class _PChatScreenState extends State<PChatScreen> {
   late TextEditingController _pChatController;
-  IO.Socket? socket;
-  // void initSocket() {
-  //   socket = IO.io("192.168.100.174:8800", <String, dynamic>{
-  //     "transports": ["websocket"],
-  //     "autoConnect": false,
-  //   }
-  //       // IO.OptionBuilder()
-  //       // .setTransports(['websocket']) // for Flutter or Dart VM
-  //       // .disableAutoConnect()  // disable auto-connection
-  //       // .setExtraHeaders({'foo': 'bar'}) // optional
-  //       // .build()
-  //       );
-  //   socket!.connect();
-  //   // socket!.onconnect(() {
-  //   //   // ignore: avoid_print;
-  //   //   print("Connected");
-  //   // });
-  //   socket!.on("connect", (data) {
-  //     print(data);
-  //   });
-  //   socket!.on("send-message", (data) {
-  //     print(data);
-  //   });
-  //   socket!.on("new-user-add", (id) {
-  //     print(id);
-  //   });
-  // }
+  final ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 0);
+  late IO.Socket socket;
+  void connectToServer() {
+    try {
+      // Configure socket transports must be sepecified
+      socket = IO.io('http://192.168.43.244:8800', <String, dynamic>{
+        'transports': ['websocket'],
+        'autoConnect': false,
+      });
+
+      // Connect to websocket
+      socket.connect();
+      socket.emit('connection', socket);
+      print("print socket is disconnected :${socket.disconnected}");
+      // socket!.emit("")
+      socket.on('connect', (data) {
+        print(socket.connected);
+      });
+      socket.emit('connection', socket);
+
+      print(
+          'FFFFFFFFFuuuuuuuuuuccccccccccckkkkkkkkkkkkk ooooooooooooooffffffffffffffffff');
+      //listen for incoming messages from the Server.
+      socket.on('message', (data) {
+        print(data); //
+      });
+//new user add
+      socket.on('new-user-add', (data) {
+        print(data); //
+      });
+      //listens when the client is disconnected from the Server
+      socket.on('disconnect', (data) {
+        print('disconnect');
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // Send update of user's typing status
+  sendTyping(bool typing) {
+    socket.emit("typing", {
+      "id": socket.id,
+      "typing": typing,
+    });
+  }
+
+  // Listen to update of typing status from connected users
+  void handleTyping(Map<String, dynamic> data) {
+    print(data);
+  }
+
+  // Send a Message to the server
+  sendMessage(String message) {
+    socket.emit(
+      "send-message",
+      {
+        "id": socket.id,
+        "message": message, // Message to be sent
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+      },
+    );
+  }
+
+  // Listen to all message events from connected users
+  void handleMessage(Map<String, dynamic> data) {
+    print(data);
+  }
 
   @override
   void initState() {
     _pChatController = TextEditingController();
     super.initState();
-    // initSocket();
-  }
-
-  void sendMessage() {
-    socket!.emit("send-message" "message");
+    connectToServer();
+    socket.emit('new-user-add', {"newUserId": "1234"});
+    print(
+        'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGgg');
   }
 
   @override
@@ -78,9 +120,11 @@ class _PChatScreenState extends State<PChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
     // final arg = ModalRoute.of(context)?.settings.arguments as PChatArg;
     String currentUser = '';
-   
 
     return BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
       final List<MessageModel> messages = state.connectedUserChat;
@@ -126,6 +170,7 @@ class _PChatScreenState extends State<PChatScreen> {
             // return
             Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(8),
                 itemCount: messages.length,
                 // reverse: true,
@@ -134,11 +179,7 @@ class _PChatScreenState extends State<PChatScreen> {
                   final bool isMe = messege.senderId == currentUser;
                   // final bool issameUser =prevUsr==messege.sender;
                   //  prevUsr = messege.sender;
-                  return chatBubble(
-                    messege,
-                    isMe,
-                    context
-                  );
+                  return chatBubble(messege, isMe, context);
                 },
               ),
             ),
@@ -161,8 +202,17 @@ class _PChatScreenState extends State<PChatScreen> {
                 ),
                 IconButton(
                   onPressed: () async {
+                    socket.emit('connection', socket);
+                    socket.emit('new-user-add', {"newUserId":"q23423"});
+
+                    socket.on('new-user-add', (data) {
+                      print(data); //
+                    });
+                    print('what the fuck is happenng');
+                    print(socket.connected);
+                    sendMessage(_pChatController.text);
                     if (state.chatInfo.id == null ||
-                        _pChatController.text.isEmpty) return;
+                        _pChatController.text.isNotEmpty) return;
                     await ChatRepo().addMessage(
                         message: MessageModel(
                             id: DateTime.now().toString(),

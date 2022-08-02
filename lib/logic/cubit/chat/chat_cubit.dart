@@ -35,8 +35,6 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   Future findChat({required String clientId}) async {
-    print("HHHHHHHOOOOOOO");
-    print(state.currentUser.user!.id);
     final getStarted = await ChatRepo()
         .findChat(userId: state.currentUser.user!.id!, clientId: clientId);
     final UserModel? conntdctedUser = await UserRepo().getUser(id: clientId);

@@ -20,93 +20,91 @@ class PersonalChatView extends StatelessWidget {
   final ProfileModel? currentUser;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          const HeadlineWidget(
-            title: 'Personal chats',
-            color: kBlack,
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: chat.perSonalChat!.length,
-            itemBuilder: (context, index) {
-              return FutureBuilder(
-                future: UserRepo().getUser(
-                    id: chat.perSonalChat![index].members.first ==
-                            currentUser?.user!.id
-                        ? chat.perSonalChat![index].members.last
-                        : chat.perSonalChat![index].members.first),
-                builder: (context, AsyncSnapshot snapshot) {
-                  final chaat = chat.perSonalChat![index];
-                  final UserModel data = snapshot.hasData
-                      ? snapshot.data
-                      : UserModel(
-                          id: "4", username: "", firstname: "", lastname: "");
-                  return GestureDetector(
-                    onTap: () {
-                      context
-                          .read<ChatCubit>()
-                          .getMessages(chatId: chaat.id, clientId: data.id);
-                      Navigator.pushNamed(
-                        context, '/personal_chat',
-                        // arguments: PChatArg(
-                        //     chatId: "62c1b80b660280c1a954d5dc",
-                        //     userData: data)
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 5),
-                      width: dWidth(context),
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ChatAvatar(
-                            imgUrl: data.profilePicture == null
-                                ? profImg1
-                                : "$kApiImgUrl/${data.profilePicture}",
-                            radius: 25.0,
-                          ),
-                          kWidth1,
-                          SizedBox(
-                            width: dWidth(context) * .75,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      data.firstname,
-                                      style: GoogleFonts.dmSans().copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: kTextBlack,
-                                      ),
+    return Column(
+      children: [
+        const HeadlineWidget(
+          title: 'Personal chats',
+          color: kBlack,
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const ClampingScrollPhysics(),
+          itemCount: chat.perSonalChat!.length,
+          itemBuilder: (context, index) {
+            return FutureBuilder(
+              future: UserRepo().getUser(
+                  id: chat.perSonalChat![index].members.first ==
+                          currentUser?.user!.id
+                      ? chat.perSonalChat![index].members.last
+                      : chat.perSonalChat![index].members.first),
+              builder: (context, AsyncSnapshot snapshot) {
+                final chaat = chat.perSonalChat![index];
+                final UserModel data = snapshot.hasData
+                    ? snapshot.data
+                    : UserModel(
+                        id: "4", username: "", firstname: "", lastname: "");
+                return GestureDetector(
+                  onTap: () {
+                    context
+                        .read<ChatCubit>()
+                        .getMessages(chatId: chaat.id, clientId: data.id);
+                    Navigator.pushNamed(
+                      context, '/personal_chat',
+                      // arguments: PChatArg(
+                      //     chatId: "62c1b80b660280c1a954d5dc",
+                      //     userData: data)
+                    );
+                  },
+                  child: Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+                    width: dWidth(context),
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ChatAvatar(
+                          imgUrl: data.profilePicture == null
+                              ? profImg1
+                              : "$kApiImgUrl/${data.profilePicture}",
+                          radius: 25.0,
+                        ),
+                        kWidth1,
+                        SizedBox(
+                          width: dWidth(context) * .75,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    data.firstname,
+                                    style: GoogleFonts.dmSans().copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: kTextBlack,
                                     ),
-                                    const Text('message')
-                                  ],
-                                ),
-                                Text(
-                                  ParseDate.dFormatTime(chaat.updatedAt!),
-                                  style: const TextStyle(
-                                    color: Colors.black54,
                                   ),
+                                  const Text('message')
+                                ],
+                              ),
+                              Text(
+                                ParseDate.dFormatTime(chaat.updatedAt!),
+                                style: const TextStyle(
+                                  color: Colors.black54,
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                  );
-                },
-              );
-            },
-          )
-        ],
-      ),
+                  ),
+                );
+              },
+            );
+          },
+        )
+      ],
     );
   }
 }

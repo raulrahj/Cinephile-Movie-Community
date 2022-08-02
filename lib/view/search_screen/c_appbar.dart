@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 //   @override
 //   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+// ignore: todo
 //     // TODO: implement shouldReclip
 //     throw UnimplementedError();
 //   }

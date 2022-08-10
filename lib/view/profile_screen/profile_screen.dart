@@ -3,13 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/config/strings.dart';
-import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/helper/shared_service.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
-import 'package:open_box/view/profile_screen/post_view.dart';
 import 'package:open_box/view/profile_screen/post_view_widget.dart';
 import 'package:open_box/view/profile_screen/profile_edit.dart';
 import 'package:open_box/view/widgets/common.dart';
@@ -67,7 +64,7 @@ class ProfileScreen extends StatelessWidget {
                               children: [
                                 CircleAvatar(
                                   backgroundImage: NetworkImage(
-                                      "$kApiImgUrl/${state.profileData!.user!.profilePicture}"),
+                                      "${state.profileData!.user!.profilePicture}"),
                                   radius: 44,
                                 ),
                                 // kHeight2,
@@ -166,6 +163,8 @@ class ProfileScreen extends StatelessWidget {
                       if (snapshot.hasData) {
                         return PostList(
                           postData: snapshot.data,
+                          isProfile: true,
+                          profileData: state.profileData,
                         );
                       } else {
                         return const AspectRatio(

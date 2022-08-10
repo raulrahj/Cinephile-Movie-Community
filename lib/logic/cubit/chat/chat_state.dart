@@ -8,6 +8,7 @@ class ChatState with _$ChatState {
     required ChatTypes userChats,
     required List<MessageModel> connectedUserChat,
     required UserModel connectedUser,
+    required ChatModel chatInfo
   }) = _ChatState;
 
   factory ChatState.initial() => ChatState(
@@ -16,6 +17,7 @@ class ChatState with _$ChatState {
       userChats: ChatTypes(groupChat: [], perSonalChat: []),
       connectedUserChat: [],
       isLoading: false,
+      chatInfo: ChatModel(members: [],id: ''),
       connectedUser:
           UserModel(id: '', username: '', firstname: '', lastname: ''));
 }

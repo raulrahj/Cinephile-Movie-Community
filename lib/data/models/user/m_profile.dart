@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 ProfileModel profileModelFromJson(String str) =>
@@ -77,8 +76,8 @@ class UserResp {
         isAdmin: json["isAdmin"],
         followers: List<dynamic>.from(json["followers"].map((x) => x)),
         following: List<dynamic>.from(json["following"].map((x) => x)),
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
+        // createdAt: DateTime.parse(json["createdAt"]),
+        // updatedAt: DateTime.parse(json["updatedAt"]),
         profilePicture: json["profilePicture"],
         coverPicture: json["coverPicture"],
         about: json["about"],
@@ -102,8 +101,12 @@ class UserResp {
         "following": following == null
             ? []
             : List<dynamic>.from(following!.map((x) => x)),
-        "createdAt": createdAt == null ? '' : createdAt!.toIso8601String(),
-        "updatedAt": updatedAt == null ? '' : updatedAt!.toIso8601String(),
+        "createdAt": createdAt == null
+            ? DateTime.now().toIso8601String()
+            : createdAt!.toIso8601String(),
+        "updatedAt": updatedAt == null
+            ? DateTime.now().toIso8601String()
+            : updatedAt!.toIso8601String(),
         "profilePicture": profilePicture,
         "coverPicture": coverPicture,
         "about": about,

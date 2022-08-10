@@ -91,7 +91,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                             .withOpacity(1.0),
                                         colorBlendMode: BlendMode.softLight,
                                         image: NetworkImage(
-                                            "$kApiImgUrl/${state.profileData!.user!.coverPicture}"),
+                                            "${state.profileData!.user!.coverPicture}"),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -115,7 +115,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                       )
                                                     : CircleAvatar(
                                                         backgroundImage: NetworkImage(
-                                                            "$kApiImgUrl/${state.profileData!.user!.profilePicture}"),
+                                                            "${state.profileData!.user!.profilePicture}"),
                                                         radius: 54,
                                                       ),
                                                 Align(

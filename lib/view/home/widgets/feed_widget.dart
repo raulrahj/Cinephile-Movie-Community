@@ -7,11 +7,13 @@ import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
+import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/home/comment_screen.dart';
+import 'package:open_box/view/home/widgets/bottom_sheet.dart';
 import 'package:open_box/view/widgets/placeholders.dart';
 
 class HFeedWdget extends StatefulWidget {
@@ -24,18 +26,18 @@ class HFeedWdget extends StatefulWidget {
 }
 
 class _HFeedWdgetState extends State<HFeedWdget> {
-  bool isExpanded = false;
+  // bool isExpanded = false;
   bool isLiked = false;
   String img = profImg;
   double buttonSize = 30.0;
   ValueNotifier<bool> likeNotifier = ValueNotifier(false);
+  ValueNotifier<bool> expandNotifier = ValueNotifier(false);
+
   @override
   Widget build(BuildContext context) {
     // context.read<PostBloc>().add(GetPostEvent(id: widget.postdata!.id!));
     likeNotifier.value =
-        widget.postdata!.likes!.contains("62e02021ea7fdf9f3e48b59c"
-                // widget.currentUser!.user!.id
-                )
+        widget.postdata!.likes!.contains(widget.currentUser!.user!.id)
             ? true
             : false;
     // return BlocBuilder<PostBloc, PostState>(
@@ -55,24 +57,25 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                 future: UserRepo().getUser(id: widget.postdata!.userId!),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
+                    final UserModel userdata = snapshot.data;
                     return ListTile(
                       onTap: () async {
                         context.read<UserBloc>().add(
                             LoadUserEvent(userId: widget.postdata!.userId!));
-                        // UserRepo user = UserRepo();
-                        // await user
-                        //     .getUser(id: widget.postdata!.userId!)
-                        //     .then((userData) async {
-                        //   await
+
                         Navigator.pushNamed(
                           context,
                           '/user_screen',
                         );
                         // });
                       },
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(img),
-                      ),
+                      leading: userdata.username == "admin"
+                          ? const CircleAvatar(
+                              backgroundImage: AssetImage(logo),
+                            )
+                          : CircleAvatar(
+                              backgroundImage: NetworkImage(img),
+                            ),
                       title: Text(
                         widget.postdata!.userId == "Admin"
                             ? "Cinephile Community"
@@ -95,49 +98,63 @@ class _HFeedWdgetState extends State<HFeedWdget> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: LayoutBuilder(
-              builder: (context, constraints) => Text(
-                widget.postdata!.desc ?? lorem,
-                overflow: TextOverflow.ellipsis,
-                maxLines: isExpanded ? 100 : 2,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontFamily: fH2.fontFamily,
+            child: ValueListenableBuilder(
+                valueListenable: expandNotifier,
+                builder: (context, bool isExpand, _) {
+                  return LayoutBuilder(
+                    builder: (context, constraints) => Text(
+                      widget.postdata!.desc ?? lorem,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: isExpand ? 100 : 2,
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontFamily: fH2.fontFamily,
+                          ),
                     ),
-              ),
-            ),
+                  );
+                }),
           ),
           widget.postdata!.desc!.length > 20
-              ? GestureDetector(
-                  child: const Text(
-                    '  see more',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.grey),
-                  ),
-                  onTap: () {
-                    setState(
-                      () {
-                        isExpanded = !isExpanded;
+              ? ValueListenableBuilder(
+                  valueListenable: expandNotifier,
+                  builder: (context, bool isExpand, _) {
+                    return GestureDetector(
+                      child: Text(
+                        isExpand ? '  show less' : '  see more',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.grey),
+                      ),
+                      onTap: () {
+                        expandNotifier.value = !expandNotifier.value;
+                        expandNotifier.notifyListeners();
                       },
                     );
-                  },
-                )
+                  })
               : none,
           kHeight1,
           ClipRRect(
               borderRadius: BorderRadius.circular(kRadius),
               child: widget.postdata!.image != null
-                  ? Image(
-                      image:
-                          NetworkImage("$kApiImgUrl/${widget.postdata!.image}"),
-                      errorBuilder: ((BuildContext context, _, __) {
-                        return const PTile();
-                      }),
+                  ? Image.network(
+                      "${widget.postdata!.image}",
+                      frameBuilder:
+                          (context, child, frame, wasSynchronouslyLoaded) {
+                        return child;
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return const Center(child: PTile());
+                        }
+                      },
+                      errorBuilder: (BuildContext context, _, __) {
+                        return Image.asset(feedImgPlaceHolder);
+                      },
                     )
                   : null),
           AspectRatio(
             aspectRatio: 3 / .5,
             child: SizedBox(
-              // color: Colors.red,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -148,84 +165,34 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                         return LikeButton(
                           size: buttonSize,
                           circleColor: const CircleColor(
-                              start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                              start: Color.fromARGB(255, 255, 217, 0),
+                              end: Color.fromARGB(255, 204, 139, 0)),
                           bubblesColor: const BubblesColor(
-                            dotPrimaryColor: Color(0xff33b5e5),
-                            dotSecondaryColor: Color(0xff0099cc),
+                            dotPrimaryColor: Color.fromARGB(255, 255, 229, 81),
+                            dotSecondaryColor: Color.fromARGB(255, 19, 98, 124),
                           ),
                           likeBuilder: (isLike) {
-                            print("bool is $isLiked");
                             return Icon(
                               Icons.whatshot,
-                              color: isLiked ? kSecondary : Colors.grey,
+                              color: newBool ? kSecondary : Colors.grey,
                               size: buttonSize,
                             );
                           },
                           likeCount: widget.postdata!.likes!.length,
                           onTap: (isLiked) async {
                             await PostRepo().likePost(id: widget.postdata!.id!);
-                            setState(() {
-                              isLiked = !isLiked;
-                              likeNotifier.value = isLiked;
-                            });
+                            // setState(() {
+                            isLiked = !isLiked;
+                            likeNotifier.value = isLiked;
+                            likeNotifier.notifyListeners();
+                            // });
                             return newBool;
                           },
-                          countBuilder:
-                              (int? count, bool islike, String? text) {
-                            Widget res;
-                            if (count == 0) {
-                              res = const Text(
-                                "show some power",
-                                style: TextStyle(color: Colors.grey),
-                              );
-                            } else {
-                              res = Text(
-                                text!,
-                                style: const TextStyle(color: Colors.grey),
-                              );
-                            }
-                            print(count);
-                            return res;
-                          },
-                          // countBuilder: (int count, bool isLiked, String text) {
-                          //   var color =
-                          //       isLiked ? Colors.deepPurpleAccent : Colors.grey;
-                          //   Widget result;
-                          //   if (count == 0) {
-                          //     result = Text(
-                          //       "love",
-                          //       style: TextStyle(color: color),
-                          //     );
-                          //   } else
-                          //     result = Text(
-                          //       text,
-                          //       style: TextStyle(color: color),
-                          //     );
-                          //   return result;
-                          // },
                         );
                       }),
                   const Spacer(),
                   Row(
                     children: [
-                      // TextButton.icon(
-                      //   style: ButtonStyle(
-                      //       foregroundColor: MaterialStateProperty.all(
-                      //           isLiked ? kSecondary : kBlack)),
-                      //   label: Text(
-                      //     widget.postdata!.likes!.length.toString(),
-                      //     style: Theme.of(context).textTheme.bodySmall,
-                      //   ),
-                      //   onPressed: () async {
-                      //     await PostRepo().likePost(id: widget.postdata!.id!);
-                      //     setState(() {
-                      //       isLiked = !isLiked;
-                      //     });
-                      //     print(isLiked);
-
-                      //   },
-                      //   icon: const Icon(Icons.whatshot_outlined),
-                      // ),
                       IconButton(
                         onPressed: () async {
                           Navigator.pushNamed(context, '/comments',
@@ -238,43 +205,9 @@ class _HFeedWdgetState extends State<HFeedWdget> {
                           color: kBlack,
                         ),
                       ),
-
                       IconButton(
                         onPressed: () {
-                          showModalBottomSheet(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(30),
-                              ),
-                            ),
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SizedBox(
-                                height: dHeight(context) / 3.8,
-                                child: Column(
-                                  children: const [
-                                    Divider(
-                                      thickness: 7,
-                                      indent: 150,
-                                      endIndent: 150,
-                                    ),
-                                    kHeight3,
-                                    ListTile(
-                                      leading: Icon(Icons.group),
-                                      title: Text('share to Group'),
-                                    ),
-                                    div,
-                                    ListTile(
-                                      leading: Icon(Icons.whatsapp),
-                                      title: Text('share to Whatsapp'),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          );
+                          shareBSheet(context, widget.postdata!.desc!);
                         },
                         icon: const Icon(
                           Icons.share,
@@ -289,76 +222,6 @@ class _HFeedWdgetState extends State<HFeedWdget> {
           )
         ],
       ),
-    );
-    //     } else {
-    //       return const AspectRatio(aspectRatio: 3 / 2, child: ProgressCircle());
-    //     }
-    //   },
-    // );
-  }
-}
-
-class SupportButtonW extends StatefulWidget {
-  const SupportButtonW({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<SupportButtonW> createState() => _SupportButtonWState();
-}
-
-class _SupportButtonWState extends State<SupportButtonW>
-    with SingleTickerProviderStateMixin {
-  bool isLiked = false;
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: 500),
-    vsync: this,
-  );
-  late Animation _colorAnimation;
-  @override
-  void initState() {
-    super.initState();
-    // _controller = AnimationController(
-    //   duration: const Duration(milliseconds: 500),
-    //   vsync: this,
-    // );
-
-    _colorAnimation =
-        ColorTween(begin: kBlack, end: Theme.of(context).iconTheme.color)
-            .animate(_controller);
-    // _controller.forward();
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          isLiked = true;
-        });
-      }
-      if (status == AnimationStatus.dismissed) {
-        setState(() {
-          isLiked = false;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) {
-        return IconButton(
-          onPressed: () {
-            isLiked ? _controller.reverse() : _controller.forward();
-          },
-          icon: Icon(Icons.whatshot_outlined, color: _colorAnimation.value),
-        );
-      },
     );
   }
 }

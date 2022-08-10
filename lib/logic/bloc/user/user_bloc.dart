@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/chat/m_chat.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/models/user/m_user.dart';

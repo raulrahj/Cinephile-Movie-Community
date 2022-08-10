@@ -12,6 +12,15 @@ class UserRepo {
 //192.168.43.244
   final dio = Dio(BaseOptions(baseUrl: 'localhost:5000'));
   Future<UserModel?> getUser({required String id}) async {
+    final UserModel admin = UserModel(
+        id: "",
+        username: "admin",
+        firstname: "Cinephile Community",
+        lastname: "");
+    if (id == "Admin") {
+      return admin;
+    }
+
     UserModel? retrievedUser;
     // final data = signUpData.toJson();
     Map<String, String> requestHeaders = {
@@ -27,13 +36,12 @@ class UserRepo {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-
         retrievedUser = UserModel.fromJson(response.data);
 
         log("${response.statusCode.toString()} () user found");
       }
     } on DioError catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } catch (e) {
       log(e.toString());
     }
@@ -57,14 +65,17 @@ class UserRepo {
       // "firstname": userData.firstname ?? profileData.user!.firstname,
       "lastname": userData.lastname.toString(),
       "isAdmin": false,
-      "followers": ["62be900600b1aef58e50695d"],
-      "following": ["62be900600b1aef58e50695d"],
-      "createdAt": "2022-07-03T07:44:14.968Z",
-      "updatedAt": "2022-07-06T20:02:29.898Z",
+      "followers": profileData.user?.followers,
+      "following": profileData.user?.following,
+      "createdAt": profileData.user?.createdAt,
+      "updatedAt": DateTime.now().toIso8601String(),
       "profilePicture": userData.profilePicture ??
           "20220714170501282918image_cropper_1657798489308.jpg",
-      "coverPicture": "20220714171547285772image_cropper_1657799084143.jpg",
-      "about": userData.about.toString(),
+      "coverPicture": userData.coverPicture ??
+          "20220714171547285772image_cropper_1657799084143.jpg",
+      "about": (userData.about == null || userData.about == "")
+          ? profileData.user!.about
+          : userData.about.toString(),
       "__v": 0
     };
 
@@ -93,6 +104,7 @@ class UserRepo {
       throw e.error;
     } catch (e) {
       log(e.toString());
+      print("i think it's the error");
     }
     return retrievedUser;
   }
@@ -192,7 +204,7 @@ class UserRepo {
             options: Options(headers: requestHeaders));
         log(response.statusMessage!);
         if (response.statusCode == 200 || response.statusCode == 201) {
-           UserModel.fromJson(response.data);
+          UserModel.fromJson(response.data);
         } else if (response.statusCode == 403) {
           print('Not following !!!');
         } else if (response.statusCode == 500) {

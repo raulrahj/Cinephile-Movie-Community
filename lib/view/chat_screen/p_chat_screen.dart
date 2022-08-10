@@ -1,16 +1,22 @@
 // ignore_for_file: avoid_print
-
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:emoji_keyboard_flutter/emoji_keyboard_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+// ignore: unused_import
+import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/data/models/user/m_user.dart';
-import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/infrastructure/chat/chat_repo.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/widgets/common.dart';
+import 'package:open_box/view/chat_screen/widgets/chat_bubble.dart';
+// ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // class PChatArg {
@@ -21,210 +27,187 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 // }
 
 class PChatScreen extends StatefulWidget {
-  const PChatScreen({Key? key}) : super(key: key);
-
+  const PChatScreen(
+      {Key? key,
+      required this.receiverID,
+      required this.userID,
+      required this.chatID})
+      : super(key: key);
+  final String userID;
+  final String receiverID;
+  final String chatID;
   @override
   State<PChatScreen> createState() => _PChatScreenState();
 }
 
 class _PChatScreenState extends State<PChatScreen> {
+  final _socketResponse = StreamController<MessageModel>();
+  List<MessageModel> messages = [];
   late TextEditingController _pChatController;
-  IO.Socket? socket;
-  // void initSocket() {
-  //   socket = IO.io("192.168.100.174:8800", <String, dynamic>{
-  //     "transports": ["websocket"],
-  //     "autoConnect": false,
-  //   }
-  //       // IO.OptionBuilder()
-  //       // .setTransports(['websocket']) // for Flutter or Dart VM
-  //       // .disableAutoConnect()  // disable auto-connection
-  //       // .setExtraHeaders({'foo': 'bar'}) // optional
-  //       // .build()
-  //       );
-  //   socket!.connect();
-  //   // socket!.onconnect(() {
-  //   //   // ignore: avoid_print;
-  //   //   print("Connected");
-  //   // });
-  //   socket!.on("connect", (data) {
-  //     print(data);
-  //   });
-  //   socket!.on("send-message", (data) {
-  //     print(data);
-  //   });
-  //   socket!.on("new-user-add", (id) {
-  //     print(id);
-  //   });
-  // }
+  final ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 0);
+  late IO.Socket socket;
+  late String recieverSocketID = '';
+  late List<ActiveUser> activeUsers = [];
+  bool isOnline = false;
+  void connectToServer() async {
+    try {
+      // Configure socket transports must be sepecified
+      socket =
+          IO.io('https://cinephile-socket.herokuapp.com/', <String, dynamic>{
+        'transports': ['websocket'],
+        'autoConnect': false,
+      });
+
+      // Connect to websocket
+      socket.connect();
+      socket.onConnect((data) => print('connected to the Socket Server'));
+      print("print socket is disconnected :${socket.disconnected}");
+      socket.on('connect', (data) {
+        print(socket.connected);
+        socket.emit('new-user-add', widget.userID);
+        socket.on("get-users", (data) {
+          final resp = activeUserFromJson(jsonEncode(data));
+          if (resp.isNotEmpty) {
+            log("THE FILTERED LIST OF ACTIVE USERS ${resp.first.socketId}");
+            activeUsers = resp;
+          }
+        });
+        socket.on('new-user-add', (data) {
+          print(data);
+        });
+      });
+      socket.on('recieve-message', (data) {
+        print(data);
+
+        final MessageModel res = MessageModel.fromJson(jsonDecode(data));
+        _socketResponse.sink.add(res);
+      });
+
+      //listens when the client is disconnected from the Server
+      socket.on('disconnect', (data) {
+        print('disconnect');
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // Send update of user's typing status
+  sendTyping(bool typing) {
+    socket.emit("typing", {
+      "id": socket.id,
+      "typing": typing,
+    });
+  }
+
+  // Listen to update of typing status from connected users
+  void handleTyping(Map<String, dynamic> data) {
+    print(data);
+  }
+
+  // Send a Message to the server
+  sendMessage(String message, String recieverSocketID) {
+    Map<String, dynamic> req = {
+      "_id": DateTime.now().millisecondsSinceEpoch.toString(),
+      "chatId": widget.chatID,
+      "senderId": widget.userID,
+      "name": "name",
+
+      "text": message, // Message to be sent
+      "createdAt": DateTime.now().toIso8601String(),
+      "updatedAt": DateTime.now().toIso8601String(),
+
+      "recieverId": recieverSocketID,
+      "recieverUserId": widget.receiverID
+    };
+    setState(() {
+      messages.add(MessageModel.fromJson(req));
+    });
+
+    socket.emit("send-message", jsonEncode(req));
+  }
+
+  // Listen to all message events from connected users
+  void handleMessage(data) {
+    print(data);
+  }
 
   @override
   void initState() {
+    isOnline=true;
     _pChatController = TextEditingController();
+    context
+        .read<ChatCubit>()
+        .getMessages(chatId: widget.chatID, clientId: widget.userID);
     super.initState();
-    // initSocket();
-  }
+    connectToServer();
+    _socketResponse.stream.listen((event) {
+      print("INSIDE STREAM LISTENER");
+      print(event.text);
+      setState(() {
+        messages.add(event);
+      });
+    }, cancelOnError: false);
+    // _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
 
-  void sendMessage() {
-    socket!.emit("send-message" "message");
+    // socket.emit('new-user-add', {"newUserId": "122234"});
   }
 
   @override
   void dispose() {
     super.dispose();
-    // socket!.disconnect();
+    socket.disconnect();
+    socket.dispose();
+    _socketResponse.close();
   }
 
   @override
   Widget build(BuildContext context) {
+    log('BUILD fUCNCTION CALLING........................................................');
+    //  _socketResponse.sink.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
     // final arg = ModalRoute.of(context)?.settings.arguments as PChatArg;
-    const currentUser = '62be900600b1aef58e50695d';
-    _chatBubble(MessageModel messege, bool isMe) {
-      if (isMe) {
-        return Column(
-          children: [
-            Container(
-              alignment: Alignment.topRight,
-              child: Container(
-                constraints: BoxConstraints(
-                  // minHeight: 5,
-                  // minHeight: dHeight(context)/91,
-                  // maxHeight: dHeight(context) * 80,
-                  maxWidth: dWidth(context) * 80,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(kRadius),
-                      topRight: const Radius.circular(kRadius),
-                      bottomLeft: Radius.circular(isMe ? kRadius : 0)),
-                  //  BorderRadius.circular(kRadius),
-                  boxShadow: [
-                    BoxShadow(
-                        color: isMe ? Colors.grey.withOpacity(0.5) : kBlack,
-                        blurRadius: 2,
-                        spreadRadius: 2)
-                  ],
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Text(
-                  messege.text,
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColorLight,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  ParseDate.dFormatTime(messege.createdAt ?? DateTime.now()),
-                  style: const TextStyle(color: kTextBlack),
-                ),
-                kWidth1,
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5))],
-                  ),
-                  child: const CircleAvatar(
-                    radius: 10,
-                    backgroundImage: NetworkImage(profImg1),
-                  ),
-                ),
-              ],
-            )
-          ],
-        );
-      } else {
-        return Column(
-          children: [
-            Container(
-              alignment: Alignment.topLeft,
-              child: Container(
-                constraints: BoxConstraints(
-                  maxWidth: dWidth(context) * 80,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(!isMe ? 0 : kRadius),
-                      topRight: const Radius.circular(kRadius),
-                      bottomLeft: const Radius.circular(kRadius),
-                      bottomRight: const Radius.circular(kRadius),
-                    ),
-                    //  BorderRadius.circular(kRadius),
-                    boxShadow: [
-                      BoxShadow(
-                          color: isMe ? kBlack : Colors.grey.withOpacity(0.5),
-                          blurRadius: .5,
-                          spreadRadius: .5)
-                    ]),
-                child: Text(
-                  messege.text,
-                  style: const TextStyle(
-                      color: kTextBlack,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(color: Colors.grey.withOpacity(0.5))
-                      ]),
-                  child: const CircleAvatar(
-                    backgroundImage: NetworkImage(profImg1),
-                    radius: 10,
-                  ),
-                ),
-                kWidth1,
-                Text(
-                  ParseDate.dFormatTime(messege.createdAt ?? DateTime.now()),
-                  style: const TextStyle(color: Colors.black54),
-                )
-              ],
-            )
-          ],
-        );
-      }
-    }
+    String currentUser = '';
 
     return BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
-      final List<MessageModel> messages = state.connectedUserChat;
-
+      if (isOnline) {
+        log('BLOC BUILDER CALLING......................');
+        messages.clear();
+        messages.addAll(state.connectedUserChat);
+      }
+      print(messages);
+      currentUser = state.currentUser.user!.id!;
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          centerTitle: true,
-          title: RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-                text: "arg.userData.firstname",
-                style: GoogleFonts.dmSans().copyWith(fontSize: 18),
-                children: const [
-                  TextSpan(text: '\n'),
-                  TextSpan(text: 'online', style: TextStyle(fontSize: 12))
-                ]),
-          ),
-          leading: Row(
-            // mainAxisSize: MainAxisSize.max,
+          // centerTitle: true,
+          title: Row(
             children: [
-              pop(context),
-              const CircleAvatar(
-                backgroundImage: NetworkImage(profImg1),
-              )
+              CircleAvatar(
+                radius: dWidth(context) / 20,
+                backgroundImage: NetworkImage(
+                    state.connectedUser.profilePicture == null
+                        ? profImg1
+                        : "${state.connectedUser.profilePicture}"),
+              ),
+              kWidth2,
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: state.connectedUser.firstname,
+                  style: GoogleFonts.dmSans().copyWith(fontSize: 18),
+                  // children: const [
+                  //   TextSpan(text: '\n'),
+                  //   TextSpan(text: '', style: TextStyle(fontSize: 12))
+                  // ]
+                ),
+              ),
             ],
           ),
+          leading: pop(context),
         ),
         // );
         // },
@@ -238,18 +221,17 @@ class _PChatScreenState extends State<PChatScreen> {
             // return
             Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(8),
                 itemCount: messages.length,
                 // reverse: true,
                 itemBuilder: (context, index) {
+                  log('ITEM BUILDER CALLING................');
                   final MessageModel messege = messages[index];
                   final bool isMe = messege.senderId == currentUser;
                   // final bool issameUser =prevUsr==messege.sender;
                   //  prevUsr = messege.sender;
-                  return _chatBubble(
-                    messege,
-                    isMe,
-                  );
+                  return chatBubble(messege, isMe, context);
                 },
               ),
             ),
@@ -257,7 +239,13 @@ class _PChatScreenState extends State<PChatScreen> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    EmojiKeyboard(
+                        emotionController: _pChatController,
+                        emojiKeyboardHeight: 400,
+                        showEmojiKeyboard: true,
+                        darkMode: true);
+                  },
                   icon: Icon(
                     Icons.emoji_emotions_outlined,
                     color: Theme.of(context).primaryColor,
@@ -272,13 +260,44 @@ class _PChatScreenState extends State<PChatScreen> {
                 ),
                 IconButton(
                   onPressed: () async {
-                    ChatRepo().addMessage(
-                        message: MessageModel(
-                            id: DateTime.now().toString(),
-                            chatId: DateTime.now().microsecond.toString(),
-                            senderId: state.currentUser.user!.id!,
-                            text: _pChatController.text,
-                            name: state.currentUser.user!.firstname));
+                    if (activeUsers.isNotEmpty) {
+                      for (var map in activeUsers) {
+                        if (activeUsers.isEmpty) break;
+                        if (map.userId == widget.receiverID) {
+                          recieverSocketID = map.socketId;
+                          break;
+                        } else {
+                          recieverSocketID = '';
+                          isOnline = false;
+                        }
+                      }
+                    }
+                    final message = MessageModel(
+                      id: DateTime.now().toString(),
+                      chatId: widget.chatID,
+                      senderId: state.currentUser.user!.id!,
+                      text: _pChatController.text,
+                      name: state.currentUser.user!.firstname,
+                    );
+
+                    if (state.chatInfo.id == null ||
+                        _pChatController.text.isEmpty) return;
+                    if (recieverSocketID != '') {
+                      sendMessage(_pChatController.text, recieverSocketID);
+                    } else {
+                      setState(() {
+                        messages.add(message);
+
+                      });
+                    }
+
+                    await ChatRepo().addMessage(
+                      message: message,
+                    );
+                    // ignore: use_build_context_synchronously
+                    // context.read<ChatCubit>().getMessages(
+                    //     chatId: state.chatInfo.id!,
+                    //     clientId: state.connectedUser.id);
                     _pChatController.clear();
                     // sendMessage();
                   },

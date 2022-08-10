@@ -13,7 +13,7 @@ class SettingsContainer extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10, left: 10,right: 10),
       padding: const EdgeInsets.symmetric(vertical:8),
       decoration: BoxDecoration(
-        color: kWhite,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(kRadius),
         boxShadow: [
             BoxShadow(

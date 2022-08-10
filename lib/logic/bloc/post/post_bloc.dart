@@ -16,28 +16,30 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<GetAllPost>((event, emit) async {
       final profile = await SharedService.getUserProfile();
       emit(PostLoading(currentUser: profile!));
+      final currentUser = await SharedService.getUserProfile();
+
       final data = await _postRepo.allPost();
       if (data == null) {
         emit(PostErrorState());
       } else {
         emit(
-          AllPostState(listPost: data),
+          AllPostState(listPost: data, currentUser: currentUser),
         );
         // emit(const OnPostState());
       }
     });
     on<GetTimeline>((event, emit) async {
       final profile = await SharedService.getUserProfile();
+      if (profile == null) return;
+      emit(PostLoading(currentUser: profile));
+      final currentUser = await SharedService.getUserProfile();
 
-      emit(PostLoading(currentUser: profile!));
       final data = await _postRepo.getTimeLinePost(id: profile.user!.id!);
       if (data.isEmpty) {
         emit(PostErrorState());
       } else {
         emit(
-          TimeLinePostState(
-            timelinePosts: data,
-          ),
+          TimeLinePostState(timelinePosts: data, currentUser: currentUser),
         );
         // emit(const OnPostState());
       }
@@ -57,8 +59,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       final profile = await SharedService.getUserProfile();
 
       emit(PostLoading(currentUser: profile!));
-      final data =
-          await _postRepo.createPost(postDat: event.postData, );
+      final data = await _postRepo.createPost(
+        postDat: event.postData,
+      );
       if (data == null) {
         emit(PostErrorState());
       } else {

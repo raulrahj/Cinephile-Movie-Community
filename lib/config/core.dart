@@ -1,6 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+const String p1Title = "Welcome to Cinephile";
+const String p1Body = "The complete movie lovers platform";
+
+const String p2Title = "One thing every movie lover needs";
+const String p2Body =
+    "Review movies, like, comment and even chat with cinephiles";
+const String p3Title = "AppWrite used as a Backend Service";
+const String p3Body =
+    "Appwrite is an Open-Source self-hosted solution that provides developers with a set of easy-to-use and integrate REST APIs to manage their core backend needs.";
+const String logo = 'assets/images/logo.jpg';
+const String oBImg1 ="assets/lottieassets/social.json";
+const String oBImg2 ="assets/lottieassets/social2.json";
+const String feedImgPlaceHolder ="assets/images/feedimg.png";
+const String errorImgPlaceHolder = "assets/images/errorimg.png";
 const String urlImg =
     'https://images.pexels.com/photos/8263314/pexels-photo-8263314.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
 const String lorem =
@@ -19,4 +33,3 @@ const Color kWhite = Color(0xFFF2F2F2);
 const Color kRed = Color(0xFF990000);
 const Color kSecondary = Color(0xFFFFAD32);
 const Color kTextBlack = Color(0xFF333333);
-

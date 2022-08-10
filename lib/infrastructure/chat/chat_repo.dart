@@ -2,22 +2,37 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/chat/m_chat.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
 import 'package:open_box/data/util/dio_client.dart';
+import 'package:open_box/infrastructure/helper/shared_service.dart';
+import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
 
 class ChatRepo {
-  Future createChat({required ChatModel chat}) async {
-    try {
-      final body = chatModelToJson(chat);
-      Response response =
-          await DioClient().post(ApiEndPoints.chat, '', jsonEncode(body));
-      log(response.data);
-    } catch (e) {
-      rethrow;
+  Future<ChatModel> createChat({required String recieverId}) async {
+    ChatModel? retrieved;
+    final currentUser = await SharedService.getUserProfile();
+    if (currentUser != null) {
+      try {
+        Map<String, dynamic> data = {
+          "senderId": currentUser.user!.id,
+          "receiverId": recieverId
+        };
+        // ignore: unused_local_variable
+        final body = (data);
+        // final res = chatModelToJson(body);
+        var response = await DioClient().post(ApiEndPoints.chat, '', data);
+        final res = jsonEncode(response);
+        retrieved = chatModelFromJson(res);
+        return retrieved;
+      } catch (e) {
+        rethrow;
+      }
     }
+    return retrieved!;
   }
 
   Future<ChatTypes> userChats({required String userId}) async {
@@ -47,17 +62,29 @@ class ChatRepo {
     }
   }
 
-  Future<List<MessageModel>> findChat(
-      {required String userId, required String clientId}) async {
-    List<MessageModel> list;
+  Future<ChatModel> findChat(
+      {required String userId,
+      required String clientId,
+      required BuildContext context}) async {
+    print(clientId);
+    ChatModel list;
 
     try {
-      Response response = await DioClient().get(
+      var response = await DioClient().get(
         ApiEndPoints.chat,
-        "$userId,$clientId",
+        "find/$userId/$clientId",
       );
-      final res = jsonEncode(response);
-      list = messageModelFromJson(res);
+      print("PRINTING THE RESPONSE OF FIND CHAT $response");
+      if (response == null) {
+        log("Yeah here create new chat");
+        list = await createChat(recieverId: clientId);
+      } else {
+        final res = jsonEncode(response);
+        list = chatModelFromJson(res);
+        context
+            .read<ChatCubit>()
+            .getMessages(chatId: list.id!, clientId: clientId);
+      }
       // list = data;
       return list;
     } catch (e) {
@@ -68,7 +95,8 @@ class ChatRepo {
   Future addMessage({required MessageModel message}) async {
     try {
       final body = message.toJson();
-      await DioClient().post(ApiEndPoints.message, '', (body));
+      var res = await DioClient().post("${ApiEndPoints.message}/", '', body);
+      print("printing  the $res");
     } catch (e) {
       rethrow;
     }

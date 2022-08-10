@@ -51,7 +51,7 @@ class SettingsScreen extends StatelessWidget {
                         if (state is CurrentUserState) {
                           return ProfiileDisplay(
                             image:
-                                "$kApiImgUrl/${state.profileData!.user!.profilePicture!}",
+                                "${state.profileData!.user!.profilePicture!}",
                             name: state.profileData!.user!.firstname,
                           );
                         } else {

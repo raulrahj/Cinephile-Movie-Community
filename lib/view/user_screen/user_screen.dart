@@ -57,10 +57,10 @@ class UserScreen extends StatelessWidget {
                                 backgroundImage:
                                     state.userData!.profilePicture != null
                                         ? NetworkImage(
-                                            "$kApiImgUrl/${state.userData!.profilePicture}",
+                                            "${state.userData!.profilePicture}",
                                             // "$kApiImgUrl/20220714193609452477image_cropper_1657807561088.jpg",
                                           )
-                                        : NetworkImage(profImg),
+                                        : const NetworkImage(profImg),
                                 radius: 44,
                               ),
                               // kHeight2,
@@ -140,17 +140,27 @@ class UserScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: DButton(
-                        isWhite: true,
-                        text: "Message",
-                        function: () {
-                          context
-                              .read<ChatCubit>()
-                              .findChat(clientId: state.userData!.id);
-                          Navigator.pushNamed(context, '/personal_chat',
-                              // arguments: PChatArg(
-                              //     chatId: 'd', userData: state.userData!)
-                                  );
+                      child: BlocBuilder<ChatCubit, ChatState>(
+                        builder: (context, chatState) {
+                          return DButton(
+                            isWhite: true,
+                            text: "Message",
+                            function: () {
+                              if (state.userData == null) return;
+                              context.read<ChatCubit>().findChat(
+                                  clientId: state.userData!.id,
+                                  context: context);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => PChatScreen(
+                                    userID: chatState.currentUser.user!.id!,
+                                    receiverID: state.userData!.id,
+                                    chatID: chatState.chatInfo.id!,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
@@ -182,9 +192,14 @@ class UserScreen extends StatelessWidget {
                   future: PostRepo().getUserPostes(userId: state.userData!.id),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
-                      return PostList(postData: snapshot.data);
+                      return PostList(
+                        postData: snapshot.data,
+                        userData: state.userData,
+                        isProfile: false,
+                      );
                     } else {
-                      return const ProgressCircle();
+                      return const AspectRatio(
+                          aspectRatio: 3 / 2, child: ProgressCircle());
                     }
                   })
               // div,

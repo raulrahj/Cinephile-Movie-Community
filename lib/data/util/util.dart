@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
@@ -10,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/models/user/m_cloud_image.dart';
 
 class UtilRepo {
   static Future<File?> _cropImage(File? photo) async {
@@ -100,11 +102,14 @@ class UtilRepo {
 
   static Future<String?> uploadImage(File image) async {
     Dio dio = Dio();
+    String imageUrl='';
     String fileName =
         DateTime.now().toString().replaceAll(RegExp(r'[^0-9]+'), '') +
             image.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "name": fileName,
+      // "name": fileName,
+      "upload_preset": "cinephile",
+      "cloud_name": "dpzy031nr",
       "file": await MultipartFile.fromFile(
         image.path,
         filename: fileName,
@@ -120,13 +125,20 @@ class UtilRepo {
 // http.ByteStream(DelegatingStream.typed(image.openRead()));
     try {
       log('Upload Image try block');
-      final response = await dio.post("$kApiUrl/upload/",
-          data: formData, options: Options(headers: requestHeaders));
+      final response = await dio.post(
+          "https://api.cloudinary.com/v1_1/dpzy031nr/image/upload/",
+          data: formData,
+          options: Options(headers: requestHeaders));
       log('Response got');
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         log(response.statusMessage!);
         log('Image Uploaded !!!');
-        return fileName;
+        final res = jsonEncode(response.data);
+        final imageData = cloudImageFromJson(res);
+        // print(imageData.);
+        imageUrl=imageData.secureUrl;
+        return imageUrl;
       } else {
         debugPrint(response.statusMessage);
         // return null;
@@ -137,7 +149,7 @@ class UtilRepo {
     } catch (e) {
       log(e.toString());
     }
-    return fileName;
+    return imageUrl;
   }
 }
 

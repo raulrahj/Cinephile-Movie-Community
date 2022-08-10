@@ -19,8 +19,9 @@ class PostLoading extends PostState {
 
 class AllPostState extends PostState {
   final List<Post?>? listPost;
+  final ProfileModel? currentUser;
 
-  const AllPostState({this.listPost});
+  const AllPostState({this.listPost,this.currentUser});
 }
 
 class TimeLinePostState extends PostState {
@@ -28,8 +29,9 @@ class TimeLinePostState extends PostState {
   final Post? postData;
   final bool? isLiked;
   final UserModel? userProfile;
+  final ProfileModel? currentUser;
   const TimeLinePostState(
-      {this.timelinePosts, this.postData, this.isLiked, this.userProfile});
+      {this.timelinePosts, this.postData, this.isLiked, this.userProfile,this.currentUser});
 
   TimeLinePostState copyWith(
       {List<Post?>? timelinePosts,

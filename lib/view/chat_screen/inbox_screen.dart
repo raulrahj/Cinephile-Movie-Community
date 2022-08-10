@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/data/models/chat/m_chat.dart';
-import 'package:open_box/data/models/user/m_user.dart';
-import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/widgets/group_chat_view.dart';
 import 'package:open_box/view/chat_screen/widgets/personal_chat_view.dart';
+import 'package:open_box/view/widgets/placeholders.dart';
 
 StreamController streamController = StreamController();
 
@@ -33,9 +33,7 @@ class _InboxScreenState extends State<InboxScreen> {
   late Timer _timer;
   @override
   void initState() {
-    // ChatRepo().userChats(userId: "62be900600b1aef58e50695d");
-    // _timer = Timer.periodic(const Duration(seconds: 5),
-    // (timer) => ChatRepo().userChats(userId: "62be900600b1aef58e50695d"));
+    context.read<ChatCubit>().getUserChats();
     super.initState();
   }
 
@@ -57,34 +55,44 @@ class _InboxScreenState extends State<InboxScreen> {
       body: SafeArea(
           child: BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
         final ChatTypes chat = state.userChats;
-        return ListView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 10, left: 8, right: 8),
-              child: CupertinoSearchTextField(),
-            ),
-            chat.groupChat!.isEmpty ? none : GroupChatView(chat: chat),
-            chat.perSonalChat!.isEmpty ? none : PersonalChatView(chat: chat,currentUser: state.currentUser,)
-          ],
-        );
+        if (state.isLoading) {
+          return const PListViewWidget();
+        } else {
+          return InboxChatView(
+            chat: chat,
+            currentUser: state.currentUser,
+          );
+        }
       })),
     );
   }
+}
 
-  Future<UserModel> getChatUser({required String id}) async {
-    final resp = await UserRepo().getUser(id: id);
-    return resp!;
-  }
+class InboxChatView extends StatelessWidget {
+  const InboxChatView({Key? key, required this.chat, required this.currentUser})
+      : super(key: key);
 
-  Future<ChatTypes> getChatType({required List<ChatsModel> chats}) async {
-    ChatTypes types = ChatTypes(groupChat: [], perSonalChat: []);
-    for (ChatsModel element in chats) {
-      if (element.members.length <= 2) {
-        types.perSonalChat!.add(element);
-      } else {
-        types.groupChat!.add(element);
-      }
-    }
-    return types;
+  final ChatTypes chat;
+  final ProfileModel currentUser;
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async => context.read<ChatCubit>().getUserChats(),
+      child: ListView(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 10, left: 8, right: 8),
+            child: CupertinoSearchTextField(),
+          ),
+          chat.groupChat!.isEmpty ? none : GroupChatView(chat: chat),
+          chat.perSonalChat!.isEmpty
+              ? none
+              : PersonalChatView(
+                  chat: chat,
+                  currentUser: currentUser,
+                )
+        ],
+      ),
+    );
   }
 }

@@ -17,6 +17,8 @@ class MessageModel {
     required this.senderId,
     required this.text,
     required this.name,
+    this.recieverId,
+    this.recieverUserId,
     this.createdAt,
     this.updatedAt,
     this.v,
@@ -27,6 +29,8 @@ class MessageModel {
   String senderId;
   String text;
   String name;
+  String? recieverId;
+  String? recieverUserId;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
@@ -37,6 +41,7 @@ class MessageModel {
         senderId: json["senderId"],
         text: json["text"],
         name: json["name"],
+        recieverId: json['recieverId'],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
         v: json["__v"],
@@ -57,3 +62,14 @@ class MessageModel {
         "__v": v,
       };
 }
+class ActiveUser {
+  final String userId;
+  final String socketId;
+  ActiveUser({required this.socketId, required this.userId});
+  factory ActiveUser.fromJson(Map<String, dynamic> json) =>
+      ActiveUser(userId: json['userId'], socketId: json['socketId']);
+  // Map<String, dynamic> toJson() => {"userId": userId, "socketId": socketId};
+}
+
+List<ActiveUser> activeUserFromJson(String str) =>
+    List<ActiveUser>.from(json.decode(str).map((x) => ActiveUser.fromJson(x)));

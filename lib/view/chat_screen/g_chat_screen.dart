@@ -17,12 +17,12 @@ void initSocket() {
     "autoConnect": false,
   });
   socket.connect();
-  socket.onconnect((id) {
-    print("Connected");
-  });
-  socket.on("send-message", (data) {
-    print(data);
-  });
+  // socket.onconnect(() {
+  //   print("Connected");
+  // });
+  // socket.on("send-message", (data) {
+  // print(data);
+  // });
   socket.on("new-user-add", (id) {
     print(id);
   });

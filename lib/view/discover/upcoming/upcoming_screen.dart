@@ -9,34 +9,38 @@ import 'package:open_box/view/widgets/l_headline.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 // import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class UpcomingScreen extends StatelessWidget {
-  const UpcomingScreen({Key? key}) : super(key: key);
+class AllOverScreen extends StatelessWidget {
+  const AllOverScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    context.read<PostBloc>().add(GetAllPost());
-    return ListView(
-      children: [
-        const LargeHeadlineWidget(title: 'Discover'),
-        BlocBuilder<PostBloc, PostState>(
-          builder: (context, state) {
-            if (state is AllPostState) {
-              return ListView.builder(
-                itemCount: state.listPost!.length,
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return HFeedWdget(
-                    postdata: state.listPost![index],
-                  );
-                },
-              );
-            } else {
-              return const ProgressCircle();
-            }
-          },
-        ),
-      ],
+    return RefreshIndicator(
+      onRefresh: () async => context.read<PostBloc>().add(GetAllPost()),
+      child: ListView(
+        children: [
+          const LargeHeadlineWidget(title: 'Discover'),
+          BlocBuilder<PostBloc, PostState>(
+            builder: (context, state) {
+              if (state is AllPostState) {
+                return ListView.builder(
+                  itemCount: state.listPost!.length,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return HFeedWdget(
+                      currentUser: state.currentUser,
+                      postdata: state.listPost![index],
+                    );
+                  },
+                );
+              } else {
+                return const AspectRatio(
+                    aspectRatio: 4 / 5, child: ProgressCircle());
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }

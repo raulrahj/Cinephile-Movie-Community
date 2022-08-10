@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:open_box/config/core.dart';
+import 'package:open_box/config/strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
-import 'package:open_box/config/core.dart';
-import 'package:open_box/config/strings.dart';
-import 'package:open_box/data/models/user/m_profile.dart';
-import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/data/util/date_parse.dart';
+import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/infrastructure/user/user.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/chat_screen/inbox_screen.dart';
-import 'package:open_box/view/chat_screen/widgets/chat_avathar.dart';
+import 'package:open_box/view/chat_screen/p_chat_screen.dart';
 import 'package:open_box/view/register/otp_verification.dart';
+import 'package:open_box/view/chat_screen/widgets/chat_avathar.dart';
 
 class PersonalChatView extends StatelessWidget {
   const PersonalChatView({Key? key, required this.chat, this.currentUser})
@@ -48,11 +49,14 @@ class PersonalChatView extends StatelessWidget {
                     context
                         .read<ChatCubit>()
                         .getMessages(chatId: chaat.id, clientId: data.id);
-                    Navigator.pushNamed(
-                      context, '/personal_chat',
-                      // arguments: PChatArg(
-                      //     chatId: "62c1b80b660280c1a954d5dc",
-                      //     userData: data)
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PChatScreen(
+                          userID: currentUser!.user!.id!,
+                          receiverID: data.id,
+                          chatID: chaat.id,
+                        ),
+                      ),
                     );
                   },
                   child: Container(
@@ -65,7 +69,7 @@ class PersonalChatView extends StatelessWidget {
                         ChatAvatar(
                           imgUrl: data.profilePicture == null
                               ? profImg1
-                              : "$kApiImgUrl/${data.profilePicture}",
+                              : "${data.profilePicture}",
                           radius: 25.0,
                         ),
                         kWidth1,

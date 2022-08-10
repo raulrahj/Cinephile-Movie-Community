@@ -3,16 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/post/m_post.dart';
 import 'package:open_box/infrastructure/post/postes.dart';
+import 'package:open_box/logic/bloc/post/post_bloc.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/logic/cubit/chat/chat_cubit.dart';
 import 'package:open_box/view/home/widgets/feed_widget.dart';
 import 'package:open_box/view/home/widgets/horizontal_list.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/widgets/info_messege.dart';
-import 'package:open_box/view/widgets/placeholders.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
-
-import '../../logic/bloc/post/post_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,8 +21,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    context.read<PostBloc>().add(GetTimeline());
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // context.read<PostBloc>().add(GetTimeline());
     context.read<ChatCubit>().getCurrentUser();
     context.read<ChatCubit>().getUserChats();
     // context.read<PostBloc>().add();
@@ -83,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         final Post data = state.timelinePosts![index]!;
                         return HFeedWdget(
                           postdata: data,
+                          currentUser: state.currentUser,
                         );
                       });
                 } else if (state is PostErrorState) {

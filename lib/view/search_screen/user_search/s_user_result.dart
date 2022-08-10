@@ -52,7 +52,7 @@ class UserSResult extends StatelessWidget {
                             : CircleAvatar(
                                 radius: dWidth(context) / 13.5,
                                 backgroundImage: NetworkImage(
-                                    "$kApiImgUrl/${data.profilePicture}"),
+                                    "${data.profilePicture}"),
                                 backgroundColor:
                                     Colors.transparent.withOpacity(0.5),
                               )),

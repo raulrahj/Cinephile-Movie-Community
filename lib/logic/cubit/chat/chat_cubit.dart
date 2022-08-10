@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:open_box/data/models/chat/m_chat.dart';
 import 'package:open_box/data/models/chat/m_message.dart';
@@ -28,15 +29,19 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   Future getUserChats() async {
+    emit(state.copyWith(isLoading: true));
     if (state.currentUser.user!.id == null) return;
     final ChatTypes userChats =
         await ChatRepo().userChats(userId: state.currentUser.user!.id!);
-    emit(state.copyWith(userChats: userChats));
+    emit(state.copyWith(userChats: userChats, isLoading: false));
   }
 
-  Future findChat({required String clientId}) async {
-    final getStarted = await ChatRepo()
-        .findChat(userId: state.currentUser.user!.id!, clientId: clientId);
+  Future findChat(
+      {required String clientId, required BuildContext context}) async {
+    final getStarted = await ChatRepo().findChat(
+        userId: state.currentUser.user!.id!,
+        clientId: clientId,
+        context: context);
     final UserModel? conntdctedUser = await UserRepo().getUser(id: clientId);
     emit(state.copyWith(chatInfo: getStarted, connectedUser: conntdctedUser!));
   }

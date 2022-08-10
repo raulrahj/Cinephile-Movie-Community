@@ -32,12 +32,7 @@ class ChatAvatar extends StatelessWidget {
         backgroundImage:
             CachedNetworkImageProvider(imgUrl ?? profImg, errorListener: () {}),
         radius: radius,
-        // child: CachedNetworkImage(
-        //   imageUrl: imgUrl!,
-        //   placeholder: (BuildContext context, String str) {
-        //     return const Image(image: NetworkImage(profImg1));
-        //   },
-        // ),
+        
       ),
     );
   }

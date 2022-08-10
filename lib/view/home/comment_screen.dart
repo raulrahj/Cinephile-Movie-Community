@@ -59,13 +59,13 @@ class CommentsScreen extends StatelessWidget {
                                       if (snapshot.hasData) {
                                         final UserModel user = snapshot.data;
                                         return CircleAvatar(
-                                          foregroundImage: NetworkImage(profImg1),
+                                          foregroundImage: const NetworkImage(profImg1),
                                           backgroundImage: NetworkImage(
                                             // user
                                               //     .profilePicture!.isEmpty
                                               // ? profImg1
                                               // : 
-                                              "$kApiImgUrl/${user.profilePicture}"),
+                                              "${user.profilePicture}"),
                                           radius: 15,
                                         );
                                       } else {

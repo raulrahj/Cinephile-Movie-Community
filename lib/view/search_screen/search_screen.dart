@@ -22,55 +22,57 @@ class _SearchScreenState extends State<SearchScreen> {
       // appBar: PreferredSize(
       //     child: SearchAppBar(height: AppBar().preferredSize.height),
       //     preferredSize: Size(double.infinity, 140)),
-      body: Column(
-        // physics: const ScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CupertinoSearchTextField(
-              onChanged: (value) {
-                context.read<SearchCubit>().searchUser(searchQuery: value);
-                context.read<SearchCubit>().searchMovie(movieQuery: value);
+      body: SafeArea(
+        child: Column(
+          // physics: const ScrollPhysics(),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CupertinoSearchTextField(
+                onChanged: (value) {
+                  context.read<SearchCubit>().searchUser(searchQuery: value);
+                  context.read<SearchCubit>().searchMovie(movieQuery: value);
 
-                // SearchRepo().searchUser();
-              },
+                  // SearchRepo().searchUser();
+                },
+              ),
             ),
-          ),
-          Visibility(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ActionChip(
-                    label: const Text('Users'),
-                    onPressed: () {
-                      setState(() {
-                        search = 0;
-                      });
-                    }),
-                ActionChip(
-                    label: const Text('Groups'),
-                    onPressed: () {
-                      setState(() {
-                        search = 1;
-                      });
-                    }),
-                ActionChip(
-                    label: const Text('Movies'),
-                    onPressed: () {
-                      setState(() {
-                        search = 2;
-                      });
-                    }),
-              ],
-            ),
-          )),
-          Expanded(child: _searchresult())
-          // SingleChildScrollView(
-          //   child: ProgressCircle(),
-          // )
-        ],
+            Visibility(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ActionChip(
+                      label: const Text('Users'),
+                      onPressed: () {
+                        setState(() {
+                          search = 0;
+                        });
+                      }),
+                  ActionChip(
+                      label: const Text('Groups'),
+                      onPressed: () {
+                        setState(() {
+                          search = 1;
+                        });
+                      }),
+                  ActionChip(
+                      label: const Text('Movies'),
+                      onPressed: () {
+                        setState(() {
+                          search = 2;
+                        });
+                      }),
+                ],
+              ),
+            )),
+            Expanded(child: _searchresult())
+            // SingleChildScrollView(
+            //   child: ProgressCircle(),
+            // )
+          ],
+        ),
       ),
     );
   }

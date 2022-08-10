@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -30,11 +29,12 @@ class DioClient {
   //POST
   Future<dynamic> post(String baseUrl, String api, dynamic payloadObj) async {
     var uri = Uri.parse(baseUrl + api);
-    var payload = json.encode(payloadObj);
+    // var payload = json.encode(payloadObj);
     try {
       var response = await Dio()
-          .post(baseUrl + api, data: payload)
+          .post(baseUrl + api, data: payloadObj)
           .timeout(const Duration(seconds: TIME_OUT_DURATION));
+          print(response.data);
       return _processResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection', uri.toString());

@@ -9,8 +9,11 @@ class PListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ListTile(
       leading: CustomWidget.circular(height: 44, width: 44),
-      title: CustomWidget.rectangular(height: 14,width: 100,),
-   trailing: Icon(Icons.more_vert_outlined),
+      title: CustomWidget.rectangular(
+        height: 14,
+        width: 100,
+      ),
+      trailing: Icon(Icons.more_vert_outlined),
     );
   }
 }
@@ -45,12 +48,15 @@ class CustomWidget extends StatelessWidget {
 
   const CustomWidget.rectangular(
       {Key? key, this.width = double.infinity, required this.height})
-      : shapeBorder = const RoundedRectangleBorder(), super(key: key);
+      : shapeBorder = const RoundedRectangleBorder(),
+        super(key: key);
 
   const CustomWidget.circular(
-      {Key? key, this.width = double.infinity,
+      {Key? key,
+      this.width = double.infinity,
       required this.height,
-      this.shapeBorder = const CircleBorder()}) : super(key: key);
+      this.shapeBorder = const CircleBorder()})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
@@ -80,6 +86,17 @@ Widget buildMovieShimmer(BuildContext context) => ListTile(
       subtitle: const CustomWidget.rectangular(height: 14),
     );
 
+class PListViewWidget extends StatelessWidget {
+  const PListViewWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: 2,
+      itemBuilder: (context, index) => buildMovieShimmer(context),
+    );
+  }
+}
 // }
 
 // class PListed extends StatelessWidget {

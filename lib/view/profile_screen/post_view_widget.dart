@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/post/m_post.dart';
+import 'package:open_box/data/models/user/m_profile.dart';
+import 'package:open_box/data/models/user/m_user.dart';
 import 'package:open_box/data/util/date_parse.dart';
 import 'package:open_box/view/profile_screen/post_view.dart';
+import 'package:open_box/view/widgets/placeholders.dart';
 
-import '../intro_screen/splash_screen.dart';
 
 class PostList extends StatelessWidget {
-  const PostList({Key? key, required this.postData}) : super(key: key);
+  const PostList(
+      {Key? key,
+      required this.isProfile,
+      required this.postData,
+      this.profileData,
+      this.userData})
+      : super(key: key);
   final List<Post> postData;
+  final UserModel? userData;
+  final ProfileModel? profileData;
+  final bool isProfile;
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      physics:
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics: const BouncingScrollPhysics(),
       // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
       // crossAxisCount: 2,
       // ),
@@ -33,9 +42,11 @@ class PostList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => PostView(
+                          userData: userData,
                           data: data,
+                          isProfile: isProfile,
+                          profileData: profileData,
                         )));
-            print(data.id.toString());
           },
           child: Container(
             height: dHeight(context) * .10,
@@ -48,35 +59,53 @@ class PostList extends StatelessWidget {
                 SizedBox(
                   width: 60,
                   height: 60,
-                  child: Image(
-                    image: data.image != null
-                        ? NetworkImage("$kApiImgUrl/${data.image}")
-                        : const NetworkImage(logo),
-                    fit: BoxFit.cover,
-                  ),
+                  child: data.image != null
+                      ? Image.network(
+                          "${data.image}",
+                          fit: BoxFit.cover,
+                          frameBuilder:
+                              (context, child, frame, wasSynchronouslyLoaded) {
+                            return child;
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return const Center(child: PTile());
+                            }
+                          },
+                          errorBuilder: (BuildContext context, _, __) {
+                            return Image.asset(
+                              errorImgPlaceHolder,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                      : Image.asset(errorImgPlaceHolder),
                 ),
                 kWidth1,
                 Expanded(
-                    flex: 4,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          data.desc ?? lorem,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        Text(
-                          ParseDate.dFormatDate(data.createdAt),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: Colors.grey),
-                        )
-                      ],
-                    )),
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        data.desc ?? lorem,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Text(
+                        ParseDate.dFormatDate(data.createdAt),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Colors.grey),
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

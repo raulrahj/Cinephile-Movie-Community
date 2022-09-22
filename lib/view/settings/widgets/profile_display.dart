@@ -25,6 +25,7 @@ class ProfiileDisplay extends StatelessWidget {
               // color: kBlack
             ),
             child: CircleAvatar(
+              
               backgroundImage: NetworkImage(image ?? profImg),
               radius: 64,
             ),

@@ -22,7 +22,9 @@ const String lorem =
 const String urlImg1 =
     'https://images.unsplash.com/photo-1654481862995-ac7c60ce36d3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1560&q=80';
 const String profImg =
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
+"https://millingtontownship.com/wp-content/uploads/2021/01/default.jpg";
+// "https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg";
+    // 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80';
 const String profImg1 =
     'https://2kimt23ivs9y4ed9t3vimd2h-wpengine.netdna-ssl.com/wp-content/uploads/2022/04/dummy-circle.png';
 final TextStyle fH1 =

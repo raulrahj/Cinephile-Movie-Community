@@ -4,14 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/config/strings.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/util/util.dart';
 import 'package:open_box/infrastructure/user/user.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/widgets/common.dart';
 import 'package:open_box/view/widgets/default_button.dart';
-import 'package:open_box/view/widgets/default_textfield.dart';
 import 'package:open_box/view/widgets/linear_textfield.dart';
 import 'package:open_box/view/widgets/progress_indicator.dart';
 
@@ -82,11 +80,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           if (state is CurrentUserState) {
                             return SizedBox(
                               child: AspectRatio(
-                                aspectRatio: 8 / 4,
+                                aspectRatio: 8 / 4.9,
                                 child: Stack(
                                   children: [
-                                    SizedBox.expand(
+                                    SizedBox(
+                                      width: double.infinity,
                                       child: Image(
+                                        
+                                        errorBuilder:
+                                            (BuildContext context, _, __) {
+                                          return Image.network(
+                                              urlImg1);
+                                        },
                                         color: const Color(0xff0d69ff)
                                             .withOpacity(1.0),
                                         colorBlendMode: BlendMode.softLight,
@@ -114,16 +119,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                         radius: 54,
                                                       )
                                                     : CircleAvatar(
-                                                        backgroundImage: NetworkImage(
-                                                            "${state.profileData!.user!.profilePicture}"),
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${state.profileData!.user!.profilePicture}"),
                                                         radius: 54,
                                                       ),
                                                 Align(
                                                   alignment: Alignment.topRight,
                                                   child: ImageButton(
                                                     onTap: () async {
-                                                      profileImg = await UtilRepo
-                                                          .pickImage(context);
+                                                      profileImg =
+                                                          await UtilRepo
+                                                              .pickImage(
+                                                                  context);
                                                     },
                                                   ),
                                                 )
@@ -138,8 +146,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                state
-                                                    .profileData!.user!.firstname,
+                                                state.profileData!.user!
+                                                    .firstname,
                                                 style: GoogleFonts.oswald()
                                                     .copyWith(
                                                         fontSize: 18,
@@ -153,7 +161,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                               ),
                                               kHeight1,
                                               Text(
-                                                snapshot.data!.about ?? "bio :)",
+                                                snapshot.data!.about ??
+                                                    "bio :)",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge!
@@ -170,8 +179,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         alignment: Alignment.topRight,
                                         child: ImageButton(
                                           onTap: () async {
-                                            coverImg =
-                                                await UtilRepo.pickImage(context);
+                                            coverImg = await UtilRepo.pickImage(
+                                                context);
                                           },
                                           // image: coverImg,
                                         ),
@@ -199,6 +208,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         children: [
                           kHeight1,
                           LinearTextField(
+                            prefix: Icons.person,
                             label: 'First Name',
                             onSaved: (onSaved) {
                               onSaved != null
@@ -209,6 +219,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           ),
                           kHeight1,
                           LinearTextField(
+                            prefix: Icons.person,
+
                             label: 'Last Name',
                             onSaved: (onSaved) {
                               onSaved != null
@@ -219,6 +231,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           ),
                           kHeight1,
                           LinearTextField(
+                            prefix: Icons.edit_note_outlined,
+
                             label: 'Bio',
                             onSaved: (onSaved) {
                               onSaved != null
@@ -276,9 +290,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     UpdateUserEvent(id: data.data.user!.id!, userData: kdata));
 
                 BlocListener<UserBloc, UserState>(listener: (context, state) {
-                  if (state is UserLoadingState) {
-                    print('PROFILE UPDATED AND LISTENER CALLED');
-                  }
+                  if (state is UserLoadingState) {}
                 });
               },
             ),
@@ -316,11 +328,11 @@ class _ImageButtonState extends State<ImageButton> {
         width: 35,
         height: 30,
         child: IconButton(
+          padding: EdgeInsets.zero,
           icon: const Icon(Icons.photo_camera_outlined),
           onPressed: widget.onTap,
         ),
       ),
     );
   }
-
 }

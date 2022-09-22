@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/config/strings.dart';
 import 'package:open_box/logic/bloc/user/user_bloc.dart';
 import 'package:open_box/view/profile_screen/profile_screen.dart';
 import 'package:open_box/view/settings/preferences.dart';
@@ -12,10 +11,21 @@ import 'package:open_box/view/settings/widgets/profile_display.dart';
 import 'package:open_box/view/settings/widgets/s_container.dart';
 import 'package:open_box/view/settings/widgets/s_tile.dart';
 import 'package:open_box/view/settings/widgets/s_title.dart';
-import 'package:open_box/view/widgets/placeholders.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  void initState() {
+    context.read<UserBloc>().add(LoadCurrentUser());
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,36 +41,37 @@ class SettingsScreen extends StatelessWidget {
             children: [
               AspectRatio(
                 aspectRatio: 2 / 1,
-                child: Stack(children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      color: Theme.of(context).primaryColor,
-                      height: dHeight(context) * .13,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        color: Theme.of(context).primaryColor,
+                        height: dHeight(context) * .13,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                        color: kWhite, height: dHeight(context) * .13),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: BlocBuilder<UserBloc, UserState>(
-                      builder: (context, state) {
-                        if (state is CurrentUserState) {
-                          return ProfiileDisplay(
-                            image:
-                                "${state.profileData!.user!.profilePicture!}",
-                            name: state.profileData!.user!.firstname,
-                          );
-                        } else {
-                          return const ProfiileDisplay();
-                        }
-                      },
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                          color: kWhite, height: dHeight(context) * .13),
                     ),
-                  )
-                ]),
+                    Align(
+                      alignment: Alignment.center,
+                      child: BlocBuilder<UserBloc, UserState>(
+                        builder: (context, state) {
+                          if (state is CurrentUserState) {
+                            return ProfiileDisplay(
+                              image: state.profileData!.user!.profilePicture!,
+                              name: state.profileData!.user!.firstname,
+                            );
+                          } else {
+                            return const ProfiileDisplay();
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ),
               kHeight1,
               SettingsContainer(

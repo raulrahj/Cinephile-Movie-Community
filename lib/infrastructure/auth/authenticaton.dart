@@ -56,7 +56,6 @@ class Authentication implements AuthRepo {
                     password: signUpData.password!))
             .then((value) {
           if (value.isRight()) {
-            print('trueeeeeeeeee');
             print(value.toString());
             return right(true);
           }
@@ -130,7 +129,6 @@ class Authentication implements AuthRepo {
     } catch (e) {
       log(e.toString());
     }
-    print('reached end');
     return left("Something went wrong !!!");
   }
 

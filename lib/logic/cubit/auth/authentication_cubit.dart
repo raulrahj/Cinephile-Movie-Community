@@ -20,7 +20,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     final Either<String, bool> signupResp =
         await _authRepo.signUp(signUpData: signUpData);
         // ignore: avoid_print
-        print(signupResp);
     emit(signupResp.fold(
         (left) => state.copyWith(
             isLoading: false,

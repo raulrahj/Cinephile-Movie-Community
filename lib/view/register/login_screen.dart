@@ -177,27 +177,27 @@ class _LoginWidgetState extends State<LoginWidget> {
               child: none,
             ),
             kHeight1,
-            DefaultButton(
-              text: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Continue with",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: Theme.of(context).primaryColor),
-                  ),
-                  kWidth1,
-                  const FaIcon(
-                    FontAwesomeIcons.google,
-                    color: kRed,
-                  )
-                ],
-              ),
-              background: Theme.of(context).primaryColorLight,
-              function: () async {},
-            ),
+            // DefaultButton(
+            //   text: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text(
+            //         "Continue with",
+            //         style: Theme.of(context)
+            //             .textTheme
+            //             .bodyLarge!
+            //             .copyWith(color: Theme.of(context).primaryColor),
+            //       ),
+            //       kWidth1,
+            //       const FaIcon(
+            //         FontAwesomeIcons.google,
+            //         color: kRed,
+            //       )
+            //     ],
+            //   ),
+            //   background: Theme.of(context).primaryColorLight,
+            //   function: () async {},
+            // ),
             kHeight3,
             RichText(
               text: TextSpan(

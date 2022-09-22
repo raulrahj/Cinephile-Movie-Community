@@ -8,9 +8,8 @@ import 'package:flutter/material.dart';
 import "package:http_parser/http_parser.dart";
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
-import 'package:open_box/config/strings.dart';
+import 'package:open_box/data/core/api_end_points.dart';
 import 'package:open_box/data/models/user/m_cloud_image.dart';
 
 class UtilRepo {
@@ -50,49 +49,73 @@ class UtilRepo {
         context: context,
         builder: (ctx) {
           return SimpleDialog(
+            // alignment: Alignment.bottomCenter,
             title: const Text('open'),
             contentPadding: const EdgeInsets.fromLTRB(24.0, 12.0, 5.0, 16.0),
             children: [
-              GestureDetector(
-                child: const Text("Camera"),
-                onTap: () async {
-                  try {
-                    final XFile? photo =
-                        await picker.pickImage(source: ImageSource.camera);
-                    if (photo != null) {
-                      image = await _cropImage(File(photo.path));
-                      if (image != null) {
-                        selectedImg = image;
-                        // _uploadImage(image!);
-                      } else {
-                        selectedImg = File(photo.path);
-                        // _uploadImage(File(photo.path));
+              Row(
+                children: [
+                  TextButton.icon(
+                    icon: const CircleAvatar(
+                      backgroundColor: kRed,
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: kWhite,
+                      ),
+                    ),
+                    label: const Text("Camera"),
+                    onPressed: () async {
+                      try {
+                        final XFile? photo =
+                            await picker.pickImage(source: ImageSource.camera);
+                        if (photo != null) {
+                          image = await _cropImage(File(photo.path));
+                          if (image != null) {
+                            selectedImg = image;
+                            // _uploadImage(image!);
+                          } else {
+                            selectedImg = File(photo.path);
+                            // _uploadImage(File(photo.path));
+                          }
+                        }
+                      } catch (e) {
+                        // debugPrint(e.toString());
                       }
-                    }
-                  } catch (e) {
-                    // debugPrint(e.toString());
-                  }
-                },
+                    },
+                  ),
+                ],
               ),
-              kHeight1,
-              GestureDetector(
-                child: const Text("Gallery"),
-                onTap: () async {
-                  try {
-                    final XFile? photo =
-                        await picker.pickImage(source: ImageSource.gallery);
-                    if (photo != null) {
-                      image = await _cropImage(File(photo.path));
-                      if (image != null) {
-                        selectedImg = image;
-                      } else {
-                        selectedImg = File(photo.path);
+              // kHeight1,
+              Row(
+                children: [
+                  TextButton.icon(
+                    icon: const CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: Icon(
+                        Icons.photo_library_outlined,
+                        color: kWhite,
+                      ),
+                    ),
+                    label: const Text("Gallery"),
+                    onPressed: () async {
+                      try {
+                        final XFile? photo = await picker.pickImage(
+                          source: ImageSource.gallery,
+                        );
+                        if (photo != null) {
+                          image = await _cropImage(File(photo.path));
+                          if (image != null) {
+                            selectedImg = image;
+                          } else {
+                            selectedImg = File(photo.path);
+                          }
+                        }
+                      } catch (e) {
+                        debugPrint(e.toString());
                       }
-                    }
-                  } catch (e) {
-                    debugPrint(e.toString());
-                  }
-                },
+                    },
+                  ),
+                ],
               ),
             ],
           );
@@ -102,7 +125,7 @@ class UtilRepo {
 
   static Future<String?> uploadImage(File image) async {
     Dio dio = Dio();
-    String imageUrl='';
+    String imageUrl = '';
     String fileName =
         DateTime.now().toString().replaceAll(RegExp(r'[^0-9]+'), '') +
             image.path.split('/').last;
@@ -126,22 +149,19 @@ class UtilRepo {
     try {
       log('Upload Image try block');
       final response = await dio.post(
-          "https://api.cloudinary.com/v1_1/dpzy031nr/image/upload/",
+         ApiEndPoints.imgUpload,
           data: formData,
           options: Options(headers: requestHeaders));
       log('Response got');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.statusMessage!);
         log('Image Uploaded !!!');
         final res = jsonEncode(response.data);
         final imageData = cloudImageFromJson(res);
-        // print(imageData.);
-        imageUrl=imageData.secureUrl;
+        imageUrl = imageData.secureUrl;
         return imageUrl;
       } else {
         debugPrint(response.statusMessage);
-        // return null;
       }
     } on DioError catch (e) {
       log(e.message);
@@ -172,7 +192,8 @@ class Glass extends StatelessWidget {
                   width: 200.0,
                   height: 200.0,
                   decoration: BoxDecoration(
-                      color: Colors.grey.shade200.withOpacity(0.5)),
+                    color: Colors.grey.shade200.withOpacity(0.5),
+                  ),
                   child: Center(
                     child: Text('Frosted',
                         style: Theme.of(context).textTheme.bodyLarge),

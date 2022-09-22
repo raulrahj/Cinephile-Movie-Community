@@ -43,7 +43,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   // Future<void> _updateConnectionStatus(ConnectivityResult result) async {
   // setState(() {
-  //   print(result);
   //   // connectionResult = result;
   // });
   // }

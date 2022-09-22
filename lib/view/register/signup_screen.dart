@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,6 @@ import 'package:open_box/config/constants.dart';
 import 'package:open_box/config/core.dart';
 import 'package:open_box/data/models/user/m_profile.dart';
 import 'package:open_box/data/util/form_validation.dart';
-import 'package:open_box/infrastructure/auth/authenticaton.dart';
 import 'package:open_box/logic/cubit/auth/authentication_cubit.dart';
 import 'package:open_box/view/register/otp_verification.dart';
 import 'package:open_box/view/register/widgets/bg.dart';
@@ -225,41 +223,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                           child: none,
                         ),
-                        const OrDivider(),
-                        DefaultButton(
-                          text: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Continue with",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                        color: Theme.of(context).primaryColor),
-                              ),
-                              kWidth1,
-                              const FaIcon(
-                                FontAwesomeIcons.google,
-                                color: kRed,
-                              )
-                            ],
-                          ),
-                          background: Theme.of(context).primaryColorLight,
-                          function: () async {
-                            GoogleSignIn googleSignIn = GoogleSignIn(
-                              scopes: [
-                                'email',
-                                'https://www.googleapis.com/auth/contacts.readonly',
-                              ],
-                            );
-                            try {
-                              await googleSignIn.signIn();
-                            } catch (error) {
-                              // print(error);
-                            }
-                          },
-                        ),
+                        // const OrDivider(),
+                        // DefaultButton(
+                        //   text: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [
+                        //       Text(
+                        //         "Continue with",
+                        //         style: Theme.of(context)
+                        //             .textTheme
+                        //             .bodyLarge!
+                        //             .copyWith(
+                        //                 color: Theme.of(context).primaryColor),
+                        //       ),
+                        //       kWidth1,
+                        //       const FaIcon(
+                        //         FontAwesomeIcons.google,
+                        //         color: kRed,
+                        //       )
+                        //     ],
+                        //   ),
+                        //   background: Theme.of(context).primaryColorLight,
+                        //   function: () async {
+                        //     GoogleSignIn googleSignIn = GoogleSignIn(
+                        //       scopes: [
+                        //         'email',
+                        //         'https://www.googleapis.com/auth/contacts.readonly',
+                        //       ],
+                        //     );
+                        //     try {
+                        //       await googleSignIn.signIn();
+                        //     } catch (error) {
+                        //       // print(error);
+                        //     }
+                        //   },
+                        // ),
                       ],
                     ),
                   ),

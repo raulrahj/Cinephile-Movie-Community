@@ -24,7 +24,7 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: ListView.separated(
           separatorBuilder: (context, index) => const Divider(),
-          itemCount: 10,
+          itemCount: 1,
           itemBuilder: (context, index) {
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -48,7 +48,7 @@ class NotificationsScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 const Text(
-                  'time',
+                  '12:12',
                   style: TextStyle(color: Colors.black54),
                 )
               ]),

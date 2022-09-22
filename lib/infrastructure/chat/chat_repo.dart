@@ -66,7 +66,6 @@ class ChatRepo {
       {required String userId,
       required String clientId,
       required BuildContext context}) async {
-    print(clientId);
     ChatModel list;
 
     try {
@@ -74,7 +73,6 @@ class ChatRepo {
         ApiEndPoints.chat,
         "find/$userId/$clientId",
       );
-      print("PRINTING THE RESPONSE OF FIND CHAT $response");
       if (response == null) {
         log("Yeah here create new chat");
         list = await createChat(recieverId: clientId);
@@ -96,7 +94,6 @@ class ChatRepo {
     try {
       final body = message.toJson();
       var res = await DioClient().post("${ApiEndPoints.message}/", '', body);
-      print("printing  the $res");
     } catch (e) {
       rethrow;
     }

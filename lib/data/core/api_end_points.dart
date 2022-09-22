@@ -8,9 +8,9 @@ class ApiEndPoints {
   // static const apiBaseUrl = 'http://192.168.43.244:5000';
   static const movieSearch =
       "$kHostUrl/search/movie?api_key=$apiKey&language=en-US&query=";
-
+  static const imgUpload =
+      "https://api.cloudinary.com/v1_1/dpzy031nr/image/upload/";
   static const apiBaseUrl = kApiUrl;
-
   static const userAuth = '$apiBaseUrl/auth';
   static const user = '$apiBaseUrl/user';
   static const post = '$apiBaseUrl/post';

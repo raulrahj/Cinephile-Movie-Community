@@ -34,7 +34,6 @@ class DioClient {
       var response = await Dio()
           .post(baseUrl + api, data: payloadObj)
           .timeout(const Duration(seconds: TIME_OUT_DURATION));
-          print(response.data);
       return _processResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection', uri.toString());
